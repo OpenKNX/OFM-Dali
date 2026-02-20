@@ -295,19 +295,19 @@
 
               <ParameterBlock Id="%AID%_PB-nnn" Text="Einzeladresse" Icon="address">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
-
-
                 <op:include href="DaliModule.single.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGW" IsInner="true" />
               </ParameterBlock>
               
               <ParameterBlock Id="%AID%_PB-nnn" Text="Gruppen" Icon="group">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
-
-
                 <op:include href="DaliModule.group.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWG" IsInner="true" />
               </ParameterBlock>
               
-
+              <ParameterBlock Id="%AID%_PB-nnn" Text="Szenen" Icon="counter-custom">
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
+                <op:include href="DaliModule.scene.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWS" IsInner="true" />
+              </ParameterBlock>
+              
               <!-- followed by all channels -->
               <!-- <choose ParamRefId="%AID%_UP-%TT%00001_R-%TT%0000101">
                 <when test="&lt;%N%">
