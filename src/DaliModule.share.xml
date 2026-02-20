@@ -304,7 +304,7 @@
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
 
 
-                <op:include href="DaliModule.group.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGW" IsInner="true" />
+                <op:include href="DaliModule.group.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWG" IsInner="true" />
               </ParameterBlock>
               
 
