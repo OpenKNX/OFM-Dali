@@ -1,0 +1,135 @@
+<KNX CreatedBy="kaenx-creator" ToolVersion="1.0.0" xmlns="http://knx.org/xml/project/20">
+  <ManufacturerData>
+    <Manufacturer RefId="M-00FA">
+      <ApplicationPrograms>
+        <ApplicationProgram>
+          <Static>
+            <ParameterTypes>
+              <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
+                <TypeTime Unit="Minutes" UIHint="Time_hhmm" minInclusive="0" maxInclusive="180" SizeInBit="8" />
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-hclType" Name="hclType">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="Inaktiv" Value="0" Id="%AID%_PT-hclType_EN-0" />
+                  <Enumeration Text="Sonnen Auf-/Untergang" Value="1" Id="%AID%_PT-hclType_EN-1" />
+                  <Enumeration Text="Feste Zeiten" Value="2" Id="%AID%_PT-hclType_EN-2" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-offset" Name="offset">
+                <TypeNumber Type="unsignedInt" minInclusive="0" maxInclusive="15" SizeInBit="4" />
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-HCL" Name="HCL">
+                <TypePicture RefId="%FILE-hcl%" HorizontalAlignment="Right"/>
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Parameter Id="%AID%_P-%TT%%CC%001" Name="%C%type" ParameterType="%AID%_PT-hclType" Text="Ansteuerung über" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%002" Name="%C%name" ParameterType="%AID%_PT-name14" Text="Name" Value="" />
+              <Parameter Id="%AID%_P-%TT%%CC%003" Name="%C%min" ParameterType="%AID%_PT-temperature" Text="Farbtemperatur Min" SuffixText="K" Value="2700">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%004" Name="%C%max" ParameterType="%AID%_PT-temperature" Text="Farbtemperatur Max" SuffixText="K" Value="5000">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%005" Name="%C%picHclSonne" ParameterType="%AID%_PT-HCL" Text="" Value="" />
+              <Parameter Id="%AID%_P-%TT%%CC%006" Name="%C%offsetRiseType" ParameterType="%AID%_PT-offset" Text="Verschiebe Sonnenaufgang" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="2" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%007" Name="%C%offsetRiseMin" ParameterType="%AID%_PT-durationMin" Text="" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="5" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%008" Name="%C%offsetSetType" ParameterType="%AID%_PT-offset" Text="Verschiebe Sonnenuntergang" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="4" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%009" Name="%C%offsetSetMin" ParameterType="%AID%_PT-durationMin" Text="" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="6" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%010" Name="%C%briMin" ParameterType="%AID%_PT-percent" Text="Helligkeit Min" SuffixText="%" Value="10">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%011" Name="%C%briMax" ParameterType="%AID%_PT-percent" Text="Helligkeit Max" SuffixText="%" Value="100">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="8" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%012" Name="%C%checkTemperature" ParameterType="%AID%_PT-checkbox" Text="Farbtemperatur aktivieren" Value="1">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="6" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%TT%%CC%013" Name="%C%checkBrightness" ParameterType="%AID%_PT-checkbox" Text="Helligkeit aktivieren" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="7" />
+              </Parameter>
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef RefId="%AID%_P-%TT%%CC%001" Id="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" Name="type" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%002" Id="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201" Name="name" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%003" Id="%AID%_P-%TT%%CC%003_R-%TT%%CC%00301" Name="min" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%004" Id="%AID%_P-%TT%%CC%004_R-%TT%%CC%00401" Name="max" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%005" Id="%AID%_P-%TT%%CC%005_R-%TT%%CC%00501" Name="picHclSonne" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%006" Id="%AID%_P-%TT%%CC%006_R-%TT%%CC%00601" Name="offsetRiseType" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%007" Id="%AID%_P-%TT%%CC%007_R-%TT%%CC%00701" Name="offsetRiseMin" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%008" Id="%AID%_P-%TT%%CC%008_R-%TT%%CC%00801" Name="offsetSetType" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%009" Id="%AID%_P-%TT%%CC%009_R-%TT%%CC%00901" Name="offsetSetMin" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%010" Id="%AID%_P-%TT%%CC%010_R-%TT%%CC%01001" Name="briMin" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%011" Id="%AID%_P-%TT%%CC%011_R-%TT%%CC%01101" Name="briMax" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%012" Id="%AID%_P-%TT%%CC%012_R-%TT%%CC%01201" Name="checkTemperature" />
+              <ParameterRef RefId="%AID%_P-%TT%%CC%013" Id="%AID%_P-%TT%%CC%013_R-%TT%%CC%01301" Name="checkBrightness" />
+            </ParameterRefs>
+            <ComObjectTable>
+              <ComObject Id="%AID%_O-%TT%%CC%000" Name="%C%hcl_state" Text="HCL Kurve %C%" Number="%K0%" FunctionText="Farbtemperatur" ObjectSize="2 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-600" />
+              <ComObject Id="%AID%_O-%TT%%CC%001" Name="%C%bri_state" Text="HCL Kurve %C%" Number="%K1%" FunctionText="Helligkeit" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+            </ComObjectTable>
+            <ComObjectRefs>
+              <ComObjectRef RefId="%AID%_O-%TT%%CC%000" Id="%AID%_O-%TT%%CC%000_R-%TT%%CC%00001" />
+              <ComObjectRef RefId="%AID%_O-%TT%%CC%001" Id="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" />
+            </ComObjectRefs>
+          </Static>
+          <Dynamic>
+            <ChannelIndependentBlock>
+              <ParameterBlock Id="%AID%_PB-nnn" Text="Kurve %C%: {{0:---}}" TextParameterRefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201">
+                <ParameterRefRef RefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201" />
+                <ParameterRefRef RefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
+                <choose ParamRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101">
+                  <when test="1">
+                    <ParameterRefRef RefId="%AID%_P-%TT%%CC%006_R-%TT%%CC%00601" />
+                    <choose ParamRefId="%AID%_P-%TT%%CC%006_R-%TT%%CC%00601">
+                      <when test="!=0">
+                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%007_R-%TT%%CC%00701" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="%AID%_P-%TT%%CC%008_R-%TT%%CC%00801" />
+                    <choose ParamRefId="%AID%_P-%TT%%CC%008_R-%TT%%CC%00801">
+                      <when test="!=0">
+                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%009_R-%TT%%CC%00901" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="%AID%_P-%TT%%CC%005_R-%TT%%CC%00501" />
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Die aktuelle Farbtemperatur wird nach dem Sonnenauf-/untergang berechnet. " UIHint="Information" />
+                    <ParameterRefRef RefId="%AID%_P-%TT%%CC%012_R-%TT%%CC%01201" />
+                    <choose ParamRefId="%AID%_P-%TT%%CC%012_R-%TT%%CC%01201">
+                      <when test="=1">
+                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%003_R-%TT%%CC%00301" />
+                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%004_R-%TT%%CC%00401" />
+                        <ComObjectRefRef RefId="%AID%_O-%TT%%CC%000_R-%TT%%CC%00001" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="%AID%_P-%TT%%CC%013_R-%TT%%CC%01301" />
+                    <choose ParamRefId="%AID%_P-%TT%%CC%013_R-%TT%%CC%01301">
+                      <when test="=1">
+                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%010_R-%TT%%CC%01001" />
+                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%011_R-%TT%%CC%01101" />
+                        <ComObjectRefRef RefId="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" />
+                      </when>
+                    </choose>
+                  </when>
+                  <when test="2">
+                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Kommt später" UIHint="Information" />
+                  </when>
+                </choose>
+              </ParameterBlock>
+            </ChannelIndependentBlock>
+          </Dynamic>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>

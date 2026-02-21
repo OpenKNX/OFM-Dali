@@ -293,6 +293,11 @@
                 <ParameterRefRef RefId="%AID%_P-80_R-80" /> -->
               </ParameterBlock>
 
+              <ParameterBlock Id="%AID%_PB-nnn" Text="Szenen" Icon="counter-custom">
+                <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
+                <op:include href="DaliModule.scene.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWS" IsInner="true" />
+              </ParameterBlock>
+              
               <ParameterBlock Id="%AID%_PB-nnn" Text="Einzeladresse" Icon="address">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
                 <op:include href="DaliModule.single.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGW" IsInner="true" />
@@ -303,9 +308,9 @@
                 <op:include href="DaliModule.group.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWG" IsInner="true" />
               </ParameterBlock>
               
-              <ParameterBlock Id="%AID%_PB-nnn" Text="Szenen" Icon="counter-custom">
+              <ParameterBlock Id="%AID%_PB-nnn" Text="HCL Kurven" Icon="sun-clock">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
-                <op:include href="DaliModule.scene.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWS" IsInner="true" />
+                <op:include href="DaliModule.hcl.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWH" IsInner="true" />
               </ParameterBlock>
               
               <!-- followed by all channels -->
@@ -323,6 +328,9 @@
         </ApplicationProgram>
       </ApplicationPrograms>
       <Baggages>
+        <Baggage TargetPath="" Name="hcl.png" Id="%FILE-hcl%">
+          <FileInfo TimeInfo="%DATETIME%" />
+        </Baggage>
         <Baggage TargetPath="" Name="Help_de.zip" Id="%FILE-HELP-de%">
           <FileInfo TimeInfo="%DATETIME%" />
         </Baggage>
