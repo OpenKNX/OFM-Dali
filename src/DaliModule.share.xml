@@ -10,7 +10,7 @@
               <!-- Status LEDs-->
               <ParameterType Id="%AID%_PT-SLEDFunc" Name="SLEDFunc">
                 <TypeRestriction Base="Value" SizeInBit="16" UIHint="DropDown">
-                  <Enumeration Text="Dali-Busstatus" Value="40" Id="%ENID%" />
+                  <Enumeration Text="Dali-Busstatus" Value="500" Id="%ENID%" />
                 </TypeRestriction>
               </ParameterType>
 

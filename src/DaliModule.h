@@ -17,6 +17,8 @@
 
 #define DGWS_CountNumber 64
 
+#define LED_FUNC_ID_DALI_BUSSTATE 500
+
 typedef void (*EventHandlerChangedGroupFuncPtr)(uint8_t index, uint8_t value);
 
 class DaliModule : public OpenKNX::Module

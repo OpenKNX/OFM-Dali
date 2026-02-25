@@ -72,57 +72,46 @@ void DaliModule::setup(bool conf)
 #ifdef FUNC1_BUTTON_PIN
 void DaliModule::handleFunc(uint8_t setting)
 {
-    // TODO
-    // switch (setting)
-    // {
-    // case PT_clickAction_on:
-    //     logDebugP("Broadcast on");
-    //     daliMaster.sendCommand(0xFF, Dali::Command::RECALL_MAX, true);
-    //     _currentIdentifyDevice = 0;
-    //     openknx.info1Led.errorCode();
-    //     break;
-    // case PT_clickAction_off:
-    //     logDebugP("Broadcast off");
-    //     daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
-    //     _currentIdentifyDevice = 0;
-    //     openknx.info1Led.errorCode();
-    //     break;
-    // case PT_clickAction_toggle:
-    //     _currentToggleState = !_currentToggleState;
-    //     logDebugP("Broadcast toggle %i", _currentToggleState);
-    //     daliMaster.sendCommand(0xFF, _currentToggleState ? Dali::Command::RECALL_MAX : Dali::Command::OFF, true);
-    //     _currentIdentifyDevice = 0;
-    //     openknx.info1Led.errorCode();
-    //     break;
-    // case PT_clickAction_lock:
-    //     logDebugP("Locking Device");
-    //     _currentLockState = true;
-    //     _currentIdentifyDevice = 0;
-    //     openknx.info1Led.errorCode();
-    //     break;
-    // case PT_clickAction_unlock:
-    //     logDebugP("Unlocking Device");
-    //     _currentLockState = false;
-    //     _currentIdentifyDevice = 0;
-    //     openknx.info1Led.errorCode();
-    //     break;
-    // case PT_clickAction_lock_toggle:
-    //     _currentLockState = !_currentLockState;
-    //     logDebugP("Toggle Lock Device %i", _currentLockState);
-    //     _currentIdentifyDevice = 0;
-    //     openknx.info1Led.errorCode();
-    //     break;
-    // case PT_clickAction_identify:
-    //     _currentToggleState = true;
-    //     openknx.info1Led.errorCode(_currentIdentifyDevice + 1);
-    //     logDebugP("Identify Device %i", _currentIdentifyDevice);
-    //     daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
-    //     daliMaster.sendCommand(_currentIdentifyDevice, Dali::Command::IDENTIFY);
-    //     _currentIdentifyDevice++;
-    //     if (_currentIdentifyDevice > 63)
-    //         _currentIdentifyDevice = 0;
-    //     break;
-    // }
+    switch (setting)
+    {
+    case PT_clickAction_on:
+        logDebugP("Broadcast on");
+        daliMaster.sendCommand(0xFF, Dali::Command::RECALL_MAX, true);
+        _currentIdentifyDevice = 0;
+        // openknx.info1Led.errorCode();
+        break;
+    case PT_clickAction_off:
+        logDebugP("Broadcast off");
+        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+        _currentIdentifyDevice = 0;
+        // openknx.info1Led.errorCode();
+        break;
+    case PT_clickAction_toggle:
+        _currentToggleState = !_currentToggleState;
+        logDebugP("Broadcast toggle %i", _currentToggleState);
+        daliMaster.sendCommand(0xFF, _currentToggleState ? Dali::Command::RECALL_MAX : Dali::Command::OFF, true);
+        _currentIdentifyDevice = 0;
+        // openknx.info1Led.errorCode();
+        break;
+    case PT_clickAction_lock:
+        logDebugP("Locking Device");
+        _currentLockState = true;
+        _currentIdentifyDevice = 0;
+        // openknx.info1Led.errorCode();
+        break;
+    case PT_clickAction_unlock:
+        logDebugP("Unlocking Device");
+        _currentLockState = false;
+        _currentIdentifyDevice = 0;
+        // openknx.info1Led.errorCode();
+        break;
+    case PT_clickAction_lock_toggle:
+        _currentLockState = !_currentLockState;
+        logDebugP("Toggle Lock Device %i", _currentLockState);
+        _currentIdentifyDevice = 0;
+        // openknx.info1Led.errorCode();
+        break;
+    }
 }
 #endif
 
@@ -731,11 +720,10 @@ void DaliModule::loopBusState()
     {
         _lastBusState = state;
 
-        // TODO
-        // if (state)
-        //     openknx.info3Led.activity(daliActivity, true);
-        // else
-        //     openknx.info3Led.off();
+        if (state)
+            openknx.ledFunctions.get(LED_FUNC_ID_DALI_BUSSTATE).activity(daliActivity, true);
+        else
+            openknx.ledFunctions.get(LED_FUNC_ID_DALI_BUSSTATE).off();
     }
 #endif
     if (state != _daliBusStateToSet)
