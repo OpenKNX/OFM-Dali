@@ -372,7 +372,7 @@
             <ParameterBlock Id="%AID%_PB-nnn" Text="A%C-1%: {{0:---}}" TextParameterRefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201" ShowInComObjectTree="true">
               <ParameterRefRef RefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201" />
               <ParameterRefRef RefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <choose ParamRefId="%AID%_P-%TT%00078_R-%TT%0007801">
+              <choose ParamRefId="%AID%_P-4100008_R-410000801">
                 <when test="1">
                   <Button Id="%AID%_B-%TT%%CC%001" Text="Auslesen" Name="read" EventHandler="dali_read" EventHandlerParameters="{ Channel: %C-1% }" EventHandlerOnline="ConnectionOriented" />
                 </when>
@@ -501,7 +501,7 @@
                       </choose>
                     </when>
                   </choose>
-                  <choose ParamRefId="%AID%_P-%TT%00078_R-%TT%0007801">
+                  <choose ParamRefId="%AID%_P-4100008_R-410000801">
                     <when test="1">
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Einstellungen für das EVG bitte links im Tab &quot;DALI Einstellungen&quot; vornehmen." UIHint="Information" />
