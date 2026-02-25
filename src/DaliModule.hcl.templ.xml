@@ -16,7 +16,14 @@
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-offset" Name="offset">
-                <TypeNumber Type="unsignedInt" minInclusive="0" maxInclusive="15" SizeInBit="4" />
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="Deaktiviert" Value="0" Id="%AID%_PT-offset_EN-0" />
+                  <Enumeration Text="Später" Value="1" Id="%AID%_PT-offset_EN-1" />
+                  <Enumeration Text="Früher" Value="2" Id="%AID%_PT-offset_EN-2" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
+                <TypeTime Unit="Minutes" UIHint="Time_hhmm" minInclusive="0" maxInclusive="180" SizeInBit="8" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-HCL" Name="HCL">
                 <TypePicture RefId="%FILE-hcl%" HorizontalAlignment="Right"/>

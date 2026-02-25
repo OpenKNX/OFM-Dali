@@ -540,7 +540,7 @@ void DaliChannel::handleSwitchNormal(GroupObject &ko)
         if(_hclCurve != 255 && _hclIsAutoMode)
         {
             // TODO
-            //hclBriActivated = ParamHCL_checkBrightnessIndex(_hclCurve);
+            //hclBriActivated = ParamDGWH_checkBrightnessIndex(_hclCurve);
             if(hclBriActivated)
             {
                 onValue = DaliHelper::percentToArc(_hclCurrentBri);
@@ -556,7 +556,7 @@ void DaliChannel::handleSwitchNormal(GroupObject &ko)
         if(_hclCurve != 255 && _hclIsAutoMode)
         {
             // TODO
-            //hclTempActivated = ParamHCL_checkTemperatureIndex(_hclCurve);
+            //hclTempActivated = ParamDGWH_checkTemperatureIndex(_hclCurve);
             if(hclTempActivated)
             {
                 logDebugP("Setze Temperatur auf %iK", _hclCurrentTemp);

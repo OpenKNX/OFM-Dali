@@ -1,4 +1,5 @@
 #include "DaliModule.h"
+#include "OpenKNX/DateTime.h"
 
 #ifdef ARDUINO_ARCH_ESP32
 #include "NetworkModule.h"
@@ -52,17 +53,17 @@ void DaliModule::setup(bool conf)
 #ifdef FUNC1_BUTTON_PIN
     openknx.func1Button.onShortClick([this] { 
         logDebugP("Func Button pressed short");
-        uint8_t sett = ParamAPP_funcBtn;
+        uint8_t sett = ParamDGW_funcBtn;
         handleFunc(sett);
     });
     openknx.func1Button.onLongClick([this] { 
         logDebugP("Func Button pressed long");
-        uint8_t sett = ParamAPP_funcBtnLong;
+        uint8_t sett = ParamDGW_funcBtnLong;
         handleFunc(sett);
     });
     openknx.func1Button.onDoubleClick([this] {
         logDebugP("Func Button pressed double");
-        uint8_t sett = ParamAPP_funcBtnDbl;
+        uint8_t sett = ParamDGW_funcBtnDbl;
         handleFunc(sett);
     });
 #endif
@@ -71,56 +72,57 @@ void DaliModule::setup(bool conf)
 #ifdef FUNC1_BUTTON_PIN
 void DaliModule::handleFunc(uint8_t setting)
 {
-    switch (setting)
-    {
-    case PT_clickAction_on:
-        logDebugP("Broadcast on");
-        daliMaster.sendCommand(0xFF, Dali::Command::RECALL_MAX, true);
-        _currentIdentifyDevice = 0;
-        openknx.info1Led.errorCode();
-        break;
-    case PT_clickAction_off:
-        logDebugP("Broadcast off");
-        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
-        _currentIdentifyDevice = 0;
-        openknx.info1Led.errorCode();
-        break;
-    case PT_clickAction_toggle:
-        _currentToggleState = !_currentToggleState;
-        logDebugP("Broadcast toggle %i", _currentToggleState);
-        daliMaster.sendCommand(0xFF, _currentToggleState ? Dali::Command::RECALL_MAX : Dali::Command::OFF, true);
-        _currentIdentifyDevice = 0;
-        openknx.info1Led.errorCode();
-        break;
-    case PT_clickAction_lock:
-        logDebugP("Locking Device");
-        _currentLockState = true;
-        _currentIdentifyDevice = 0;
-        openknx.info1Led.errorCode();
-        break;
-    case PT_clickAction_unlock:
-        logDebugP("Unlocking Device");
-        _currentLockState = false;
-        _currentIdentifyDevice = 0;
-        openknx.info1Led.errorCode();
-        break;
-    case PT_clickAction_lock_toggle:
-        _currentLockState = !_currentLockState;
-        logDebugP("Toggle Lock Device %i", _currentLockState);
-        _currentIdentifyDevice = 0;
-        openknx.info1Led.errorCode();
-        break;
-    case PT_clickAction_identify:
-        _currentToggleState = true;
-        openknx.info1Led.errorCode(_currentIdentifyDevice + 1);
-        logDebugP("Identify Device %i", _currentIdentifyDevice);
-        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
-        daliMaster.sendCommand(_currentIdentifyDevice, Dali::Command::IDENTIFY);
-        _currentIdentifyDevice++;
-        if (_currentIdentifyDevice > 63)
-            _currentIdentifyDevice = 0;
-        break;
-    }
+    // TODO
+    // switch (setting)
+    // {
+    // case PT_clickAction_on:
+    //     logDebugP("Broadcast on");
+    //     daliMaster.sendCommand(0xFF, Dali::Command::RECALL_MAX, true);
+    //     _currentIdentifyDevice = 0;
+    //     openknx.info1Led.errorCode();
+    //     break;
+    // case PT_clickAction_off:
+    //     logDebugP("Broadcast off");
+    //     daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+    //     _currentIdentifyDevice = 0;
+    //     openknx.info1Led.errorCode();
+    //     break;
+    // case PT_clickAction_toggle:
+    //     _currentToggleState = !_currentToggleState;
+    //     logDebugP("Broadcast toggle %i", _currentToggleState);
+    //     daliMaster.sendCommand(0xFF, _currentToggleState ? Dali::Command::RECALL_MAX : Dali::Command::OFF, true);
+    //     _currentIdentifyDevice = 0;
+    //     openknx.info1Led.errorCode();
+    //     break;
+    // case PT_clickAction_lock:
+    //     logDebugP("Locking Device");
+    //     _currentLockState = true;
+    //     _currentIdentifyDevice = 0;
+    //     openknx.info1Led.errorCode();
+    //     break;
+    // case PT_clickAction_unlock:
+    //     logDebugP("Unlocking Device");
+    //     _currentLockState = false;
+    //     _currentIdentifyDevice = 0;
+    //     openknx.info1Led.errorCode();
+    //     break;
+    // case PT_clickAction_lock_toggle:
+    //     _currentLockState = !_currentLockState;
+    //     logDebugP("Toggle Lock Device %i", _currentLockState);
+    //     _currentIdentifyDevice = 0;
+    //     openknx.info1Led.errorCode();
+    //     break;
+    // case PT_clickAction_identify:
+    //     _currentToggleState = true;
+    //     openknx.info1Led.errorCode(_currentIdentifyDevice + 1);
+    //     logDebugP("Identify Device %i", _currentIdentifyDevice);
+    //     daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+    //     daliMaster.sendCommand(_currentIdentifyDevice, Dali::Command::IDENTIFY);
+    //     _currentIdentifyDevice++;
+    //     if (_currentIdentifyDevice > 63)
+    //         _currentIdentifyDevice = 0;
+    //     break;
+    // }
 }
 #endif
 
@@ -153,9 +155,10 @@ bool __isr __time_critical_func(daliTimerInterruptCallback)(repeating_timer *t)
 void DaliModule::loop(bool configured)
 {
     daliMaster.process();
-    if (openknxTimerModule.minuteChanged())
+    OpenKNX::DateTime currentTime = openknx.time.getLocalTime();
+    if (currentTime.minute != _lastTimeMinute)
     {
-        openknxTimerModule.clearMinuteChanged();
+        _lastTimeMinute = currentTime.minute;
         for (int i = 0; i < 3; i++)
             curves[i].loop();
     }
@@ -313,10 +316,11 @@ void DaliModule::loopError()
             break;
         }
     }
-    if (error)
-        openknx.info2Led.on();
-    else
-        openknx.info2Led.off();
+    // TODO
+    // if (error)
+    //     openknx.info2Led.on();
+    // else
+    //     openknx.info2Led.off();
 }
 #endif
 
@@ -727,10 +731,11 @@ void DaliModule::loopBusState()
     {
         _lastBusState = state;
 
-        if (state)
-            openknx.info3Led.activity(daliActivity, true);
-        else
-            openknx.info3Led.off();
+        // TODO
+        // if (state)
+        //     openknx.info3Led.activity(daliActivity, true);
+        // else
+        //     openknx.info3Led.off();
     }
 #endif
     if (state != _daliBusStateToSet)
@@ -1014,28 +1019,28 @@ void DaliModule::processInputKo(GroupObject &ko)
         return;
 
     int koNum = ko.asap();
-    if (koNum >= ADR_KoOffset && koNum < ADR_KoOffset + ADR_KoBlockSize * 64)
+    if (koNum >= DGW_KoOffset && koNum < DGW_KoOffset + DGW_KoBlockSize * 64)
     {
-        int index = floor((koNum - ADR_KoOffset) / ADR_KoBlockSize);
+        int index = floor((koNum - DGW_KoOffset) / DGW_KoBlockSize);
         // logDebugP("For Channel %i", index);
         channels[index].processInputKo(ko);
         return;
     }
 
-    if (koNum >= GRP_KoOffset && koNum < GRP_KoOffset + GRP_KoBlockSize * 16)
+    if (koNum >= DGWG_KoOffset && koNum < DGWG_KoOffset + DGWG_KoBlockSize * 16)
     {
-        int index = floor((koNum - GRP_KoOffset) / GRP_KoBlockSize);
-        int chanIndex = (ko.asap() - GRP_KoOffset) % GRP_KoBlockSize;
+        int index = floor((koNum - DGWG_KoOffset) / DGWG_KoBlockSize);
+        int chanIndex = (ko.asap() - DGWG_KoOffset) % DGWG_KoBlockSize;
         // logDebugP("For Group %i", index);
         groups[index].processInputKo(ko);
 
-        if (chanIndex == GRP_Koswitch_state)
+        if (chanIndex == DGWG_Koswitch_state)
         {
             _lastChangedGroup = index + 16;
             uint8_t value = ko.value(DPT_Switch);
             _lastChangedValue = DaliHelper::percentToArc(value);
         }
-        if (chanIndex == GRP_Kodimm_state)
+        if (chanIndex == DGWG_Kodimm_state)
         {
             _lastChangedGroup = index;
             uint8_t value = ko.value(DPT_Switch);
@@ -1045,15 +1050,15 @@ void DaliModule::processInputKo(GroupObject &ko)
         return;
     }
 
-    if (koNum >= HCL_KoOffset && koNum < HCL_KoOffset + HCL_KoBlockSize * 3)
+    if (koNum >= DGWH_KoOffset && koNum < DGWH_KoOffset + DGWH_KoBlockSize * 3)
     {
-        int index = floor((koNum - HCL_KoOffset) / HCL_KoBlockSize);
-        int chanIndex = (ko.asap() - GRP_KoOffset) % GRP_KoBlockSize;
+        int index = floor((koNum - DGWH_KoOffset) / DGWH_KoBlockSize);
+        int chanIndex = (ko.asap() - DGWG_KoOffset) % DGWG_KoBlockSize;
         // logDebugP("For HCL %i - Ko %i", index, chanIndex);
 
         switch (chanIndex)
         {
-        case HCL_Kohcl_state:
+        case DGWH_Kohcl_state:
         {
             uint16_t kelvin = ko.value(Dpt(7, 600));
             for (int i = 0; i < 64; i++)
@@ -1063,7 +1068,7 @@ void DaliModule::processInputKo(GroupObject &ko)
             break;
         }
 
-        case HCL_Kobri_state:
+        case DGWH_Kobri_state:
         {
             uint8_t brightness = ko.value(Dpt(5, 1));
             for (int i = 0; i < 64; i++)
@@ -1082,26 +1087,26 @@ void DaliModule::processInputKo(GroupObject &ko)
     switch (koNum)
     {
         // broadcast switch
-        case APP_Kobroadcast_switch:
+        case DGW_Kobroadcast_switch:
             koHandleSwitch(ko);
             break;
 
         // broadcast dimm absolute
-        case APP_Kobroadcast_dimm:
+        case DGW_Kobroadcast_dimm:
             koHandleDimm(ko);
             break;
 
         // Tag/Nacht Objekt
-        case APP_Kodaynight:
+        case DGW_Kodaynight:
             koHandleDayNight(ko);
             break;
 
         // Set OnValue Day
-        case APP_KoonValue:
+        case DGW_KoonValue:
             koHandleOnValue(ko);
             break;
 
-        case APP_Koscene:
+        case DGW_Koscene:
             koHandleScene(ko);
             break;
 
@@ -1161,10 +1166,10 @@ void DaliModule::koHandleDimm(GroupObject &ko)
 void DaliModule::koHandleDayNight(GroupObject &ko)
 {
     bool value = ko.value(DPT_Switch);
-    if (ParamAPP_daynight)
+    if (ParamDGW_daynight)
         value = !value;
     logDebugP("Broadcast Day/Night %i", value);
-    if (ParamAPP_daynight)
+    if (ParamDGW_daynight)
         value = !value;
 
     for (int i = 0; i < 64; i++)
@@ -1188,25 +1193,26 @@ void DaliModule::koHandleScene(GroupObject &ko)
 {
     uint8_t gotNumber = ko.value(DPT_SceneNumber);
     logDebugP("KO Scene: %i", gotNumber);
-    for (int i = 0; i < SCE_CountNumber; i++)
+    for (int i = 0; i < DGWS_CountNumber; i++)
     {
-        uint8_t dest = ParamSCE_typeIndex(i);
+        uint8_t _channelIndex = i;
+        uint8_t dest = ParamDGWS_type;
         logDebugP("KO Scene%i: Dest=%i", i, dest);
         if (dest == 0)
             continue;
-        uint8_t number = ParamSCE_numberKnxIndex(i);
+        uint8_t number = ParamDGWS_numberKnx;
         logDebugP("KO Scene%i: Number=%i", i, number - 1);
         if (gotNumber == number - 1)
         {
             bool isSave = ko.value(Dpt(18, 1, 0));
             logDebugP("KO Scene%i: Save=%i", i, isSave);
-            if (isSave && !ParamSCE_saveIndex(i))
+            if (isSave && !ParamDGWS_save)
             {
                 logDebugP("KO Scene%i: Save not allowed", i);
                 continue;
             }
 
-            uint8_t scene = ParamSCE_numberDaliIndex(i);
+            uint8_t scene = ParamDGWS_numberDali;
             logDebugP("KO Scene%i: Scene=%i", i, scene);
             uint8_t addr = 0;
             bool type = false;
@@ -1215,7 +1221,7 @@ void DaliModule::koHandleScene(GroupObject &ko)
             // Address
             case PT_scenetype_address:
             {
-                addr = ParamSCE_addressIndex(i);
+                addr = ParamDGWS_address;
                 logDebugP("KO Scene%i: Addr=%i", i, addr);
                 type = false;
                 break;
@@ -1224,7 +1230,7 @@ void DaliModule::koHandleScene(GroupObject &ko)
             // Group
             case PT_scenetype_group:
             {
-                addr = ParamSCE_groupIndex(i);
+                addr = ParamDGWS_group;
                 logDebugP("KO Scene%i: Grou=%i", i, addr);
                 type = true;
                 break;

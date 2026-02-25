@@ -15,7 +15,7 @@
 #define DALI_WAIT_SEARCH 300
 #endif
 
-#define SCE_CountNumber 64
+#define DGWS_CountNumber 64
 
 typedef void (*EventHandlerChangedGroupFuncPtr)(uint8_t index, uint8_t value);
 
@@ -122,6 +122,7 @@ class DaliModule : public OpenKNX::Module
 
 		uint8_t _lastChangedGroup = 255;
 		uint8_t _lastChangedValue = 0;
+		uint8_t _lastTimeMinute = 255;
 
 		bool _gotInitData = false;
 		bool _daliBusState = true;

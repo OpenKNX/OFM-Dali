@@ -9,13 +9,13 @@
 class HclCurve
 {
     public:
-        void setup(uint8_t index);
+        void setup(uint8_t channelIndex);
         void loop();
 
     private:
         const std::string logPrefix();
         const uint8_t channelIndex();
-        uint8_t _index = 0;
+        uint8_t _channelIndex = 0;
         bool _isConfigured = false;
         uint8_t _type = 0;
 
