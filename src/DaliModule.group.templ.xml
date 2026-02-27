@@ -5,231 +5,231 @@
         <ApplicationProgram>
           <Static>
             <Parameters>
-              <Parameter Id="%AID%_P-%TT%%CC%002" Name="%C%deviceType" ParameterType="%AID%_PT-groupType" Text="Gerätetyp" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%002" Name="%C%deviceType" ParameterType="%AID%_PT-groupType" Text="Gerätetyp" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%001" Name="%C%name" ParameterType="%AID%_PT-name30" Text="Name" Value="" />
-              <Parameter Id="%AID%_P-%TT%%CC%003" Name="%C%lock" ParameterType="%AID%_PT-noyes" Text="Sperrobjekt anzeigen" Value="0" />
-              <Parameter Id="%AID%_P-%TT%%CC%004" Name="%C%type" ParameterType="%AID%_PT-runType" Text="Betriebsart" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%001" Name="%C%name" ParameterType="%AID%_PT-name30" Text="Name" Value="" />
+              <Parameter Id="%AID%_P-%T%3%CC%003" Name="%C%lock" ParameterType="%AID%_PT-noyes" Text="Sperrobjekt anzeigen" Value="0" />
+              <Parameter Id="%AID%_P-%T%3%CC%004" Name="%C%type" ParameterType="%AID%_PT-runType" Text="Betriebsart" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="2" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%005" Name="%C%nachtriggern" ParameterType="%AID%_PT-noyes" Text="Nachtriggern erlauben" Value="1">
+              <Parameter Id="%AID%_P-%T%3%CC%005" Name="%C%nachtriggern" ParameterType="%AID%_PT-noyes" Text="Nachtriggern erlauben" Value="1">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="3" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%006" Name="%C%stairtime" ParameterType="%AID%_PT-time" Text="Nachlaufzeit" Value="60">
+              <Parameter Id="%AID%_P-%T%3%CC%006" Name="%C%stairtime" ParameterType="%AID%_PT-time" Text="Nachlaufzeit" Value="60">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%007" Name="%C%manuoff" ParameterType="%AID%_PT-noyes" Text="Manuelles ausschalten" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%007" Name="%C%manuoff" ParameterType="%AID%_PT-noyes" Text="Manuelles ausschalten" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%008" Name="%C%lockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Sperre" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%008" Name="%C%lockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Sperre" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="5" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%009" Name="%C%lockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
+              <Parameter Id="%AID%_P-%T%3%CC%009" Name="%C%lockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%010" Name="%C%unlockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Entsperren" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%010" Name="%C%unlockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Entsperren" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%011" Name="%C%unlockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
+              <Parameter Id="%AID%_P-%T%3%CC%011" Name="%C%unlockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="5" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%012" Name="%C%onDay" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Tag" SuffixText="%" Value="1.000000000000000E+002">
+              <Parameter Id="%AID%_P-%T%3%CC%012" Name="%C%onDay" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Tag" SuffixText="%" Value="1.000000000000000E+002">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="6" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%013" Name="%C%onNight" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Nacht" SuffixText="%" Value="1.000000000000000E+001">
+              <Parameter Id="%AID%_P-%T%3%CC%013" Name="%C%onNight" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Nacht" SuffixText="%" Value="1.000000000000000E+001">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="8" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%018" Name="%C%locknegate" ParameterType="%AID%_PT-lockNegate" Text="Sperren bei" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%018" Name="%C%locknegate" ParameterType="%AID%_PT-lockNegate" Text="Sperren bei" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%019" Name="%C%colorType" ParameterType="%AID%_PT-colorType" Text="Farbe ansteuern per" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%019" Name="%C%colorType" ParameterType="%AID%_PT-colorType" Text="Farbe ansteuern per" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="2" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%020" Name="%C%colorSpace" ParameterType="%AID%_PT-colorSpace" Text="Farbe übertragen per" Value="1">
+              <Parameter Id="%AID%_P-%T%3%CC%020" Name="%C%colorSpace" ParameterType="%AID%_PT-colorSpace" Text="Farbe übertragen per" Value="1">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%021" Name="%C%tempMin" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Min" SuffixText="K" Value="1500">
+              <Parameter Id="%AID%_P-%T%3%CC%021" Name="%C%tempMin" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Min" SuffixText="K" Value="1500">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="10" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%022" Name="%C%tempMax" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Max" SuffixText="K" Value="10000">
+              <Parameter Id="%AID%_P-%T%3%CC%022" Name="%C%tempMax" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Max" SuffixText="K" Value="10000">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="12" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%023" Name="%C%hcl" ParameterType="%AID%_PT-noyes" Text="HCL aktivieren" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%023" Name="%C%hcl" ParameterType="%AID%_PT-noyes" Text="HCL aktivieren" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%024" Name="%C%xyIgnore" ParameterType="%AID%_PT-noyes" Text="Helligkeit ignorieren? (nur xy verwenden)" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%024" Name="%C%xyIgnore" ParameterType="%AID%_PT-noyes" Text="Helligkeit ignorieren? (nur xy verwenden)" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="5" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%025" Name="%C%dimmStateInterval" ParameterType="%AID%_PT-interval" Text="Dimmstatus Interval bei relativ" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%025" Name="%C%dimmStateInterval" ParameterType="%AID%_PT-interval" Text="Dimmstatus Interval bei relativ" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="14" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%026" Name="%C%queryTime" ParameterType="%AID%_PT-timeSpan" Text="Dimmwert abfragen (0 = deaktiviert)" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%026" Name="%C%queryTime" ParameterType="%AID%_PT-timeSpan" Text="Dimmwert abfragen (0 = deaktiviert)" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="15" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%028" Name="%C%hclCurve" ParameterType="%AID%_PT-hclCurves" Text="Verwende" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%028" Name="%C%hclCurve" ParameterType="%AID%_PT-hclCurves" Text="Verwende" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="6" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%030" Name="%C%hclStart" ParameterType="%AID%_PT-hclStart" Text="HCL anwenden" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%030" Name="%C%hclStart" ParameterType="%AID%_PT-hclStart" Text="HCL anwenden" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="5" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%029" Name="%C%dimmLock" ParameterType="%AID%_PT-dimmLock" Text="Einschalten bei rlativ" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%029" Name="%C%dimmLock" ParameterType="%AID%_PT-dimmLock" Text="Einschalten bei rlativ" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="14" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%031" Name="%C%hcl_manu_bri" ParameterType="%AID%_PT-checkbox" Text="Helligkeit geändert wird" Value="0">
+              <Parameter Id="%AID%_P-%T%3%CC%031" Name="%C%hcl_manu_bri" ParameterType="%AID%_PT-checkbox" Text="Helligkeit geändert wird" Value="0">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="14" BitOffset="6" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%032" Name="%C%hcl_manu_col" ParameterType="%AID%_PT-checkbox" Text="Farbe/Temperatur geändert wird" Value="1">
+              <Parameter Id="%AID%_P-%T%3%CC%032" Name="%C%hcl_manu_col" ParameterType="%AID%_PT-checkbox" Text="Farbe/Temperatur geändert wird" Value="1">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="14" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%033" Name="%C%hcl_auto_off" ParameterType="%AID%_PT-checkbox" Text="das EVG ausgeschaltet wird" Value="1">
+              <Parameter Id="%AID%_P-%T%3%CC%033" Name="%C%hcl_auto_off" ParameterType="%AID%_PT-checkbox" Text="das EVG ausgeschaltet wird" Value="1">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="17" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%034" Name="%C%hcl_auto_day" ParameterType="%AID%_PT-checkbox" Text="der Tag vorbei ist" Value="1">
+              <Parameter Id="%AID%_P-%T%3%CC%034" Name="%C%hcl_auto_day" ParameterType="%AID%_PT-checkbox" Text="der Tag vorbei ist" Value="1">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="17" BitOffset="1" />
               </Parameter>
-              <Parameter Id="%AID%_P-%TT%%CC%035" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
+              <Parameter Id="%AID%_P-%T%3%CC%035" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
             </Parameters>
             <ParameterRefs>
-              <ParameterRef RefId="%AID%_P-%TT%%CC%001" Id="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" Name="name" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%002" Id="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201" Name="deviceType" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%003" Id="%AID%_P-%TT%%CC%003_R-%TT%%CC%00301" Name="lock" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%004" Id="%AID%_P-%TT%%CC%004_R-%TT%%CC%00401" Name="type" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%005" Id="%AID%_P-%TT%%CC%005_R-%TT%%CC%00501" Name="nachtriggern" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%006" Id="%AID%_P-%TT%%CC%006_R-%TT%%CC%00601" Name="stairtime" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%007" Id="%AID%_P-%TT%%CC%007_R-%TT%%CC%00701" Name="manuoff" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%008" Id="%AID%_P-%TT%%CC%008_R-%TT%%CC%00801" Name="lockbehave" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%009" Id="%AID%_P-%TT%%CC%009_R-%TT%%CC%00901" Name="lockvalue" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%010" Id="%AID%_P-%TT%%CC%010_R-%TT%%CC%01001" Name="unlockbehave" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%011" Id="%AID%_P-%TT%%CC%011_R-%TT%%CC%01101" Name="unlockvalue" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%012" Id="%AID%_P-%TT%%CC%012_R-%TT%%CC%01201" Name="onDay" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%013" Id="%AID%_P-%TT%%CC%013_R-%TT%%CC%01301" Name="onNight" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%018" Id="%AID%_P-%TT%%CC%018_R-%TT%%CC%01801" Name="locknegate" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%019" Id="%AID%_P-%TT%%CC%019_R-%TT%%CC%01901" Name="colorType" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%020" Id="%AID%_P-%TT%%CC%020_R-%TT%%CC%02001" Name="colorSpace" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%023" Id="%AID%_P-%TT%%CC%023_R-%TT%%CC%02301" Name="hcl" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%021" Id="%AID%_P-%TT%%CC%021_R-%TT%%CC%02101" Name="tempMin" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%022" Id="%AID%_P-%TT%%CC%022_R-%TT%%CC%02201" Name="tempMax" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%024" Id="%AID%_P-%TT%%CC%024_R-%TT%%CC%02401" Name="xyIgnore" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%025" Id="%AID%_P-%TT%%CC%025_R-%TT%%CC%02501" Name="dimmStateInterval" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%026" Id="%AID%_P-%TT%%CC%026_R-%TT%%CC%02601" Name="queryTime" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%028" Id="%AID%_P-%TT%%CC%028_R-%TT%%CC%02801" Name="hclCurve" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%029" Id="%AID%_P-%TT%%CC%029_R-%TT%%CC%02901" Name="dimmLock" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%030" Id="%AID%_P-%TT%%CC%030_R-%TT%%CC%03001" Name="hclStart" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%031" Id="%AID%_P-%TT%%CC%031_R-%TT%%CC%03101" Name="hcl_auto_bri" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%032" Id="%AID%_P-%TT%%CC%032_R-%TT%%CC%03201" Name="hcl_auto_col" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%033" Id="%AID%_P-%TT%%CC%033_R-%TT%%CC%03301" Name="hcl_manu_off" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%034" Id="%AID%_P-%TT%%CC%034_R-%TT%%CC%03401" Name="hcl_manu_day" />
-              <ParameterRef RefId="%AID%_P-%TT%%CC%035" Id="%AID%_P-%TT%%CC%035_R-%TT%%CC%03501" Name="scene" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%001" Id="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" Name="name" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%002" Id="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201" Name="deviceType" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%003" Id="%AID%_P-%T%3%CC%003_R-%T%3%CC%00301" Name="lock" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%004" Id="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401" Name="type" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%005" Id="%AID%_P-%T%3%CC%005_R-%T%3%CC%00501" Name="nachtriggern" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%006" Id="%AID%_P-%T%3%CC%006_R-%T%3%CC%00601" Name="stairtime" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%007" Id="%AID%_P-%T%3%CC%007_R-%T%3%CC%00701" Name="manuoff" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%008" Id="%AID%_P-%T%3%CC%008_R-%T%3%CC%00801" Name="lockbehave" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%009" Id="%AID%_P-%T%3%CC%009_R-%T%3%CC%00901" Name="lockvalue" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%010" Id="%AID%_P-%T%3%CC%010_R-%T%3%CC%01001" Name="unlockbehave" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%011" Id="%AID%_P-%T%3%CC%011_R-%T%3%CC%01101" Name="unlockvalue" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%012" Id="%AID%_P-%T%3%CC%012_R-%T%3%CC%01201" Name="onDay" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%013" Id="%AID%_P-%T%3%CC%013_R-%T%3%CC%01301" Name="onNight" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%018" Id="%AID%_P-%T%3%CC%018_R-%T%3%CC%01801" Name="locknegate" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%019" Id="%AID%_P-%T%3%CC%019_R-%T%3%CC%01901" Name="colorType" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%020" Id="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001" Name="colorSpace" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%023" Id="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301" Name="hcl" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%021" Id="%AID%_P-%T%3%CC%021_R-%T%3%CC%02101" Name="tempMin" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%022" Id="%AID%_P-%T%3%CC%022_R-%T%3%CC%02201" Name="tempMax" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%024" Id="%AID%_P-%T%3%CC%024_R-%T%3%CC%02401" Name="xyIgnore" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%025" Id="%AID%_P-%T%3%CC%025_R-%T%3%CC%02501" Name="dimmStateInterval" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%026" Id="%AID%_P-%T%3%CC%026_R-%T%3%CC%02601" Name="queryTime" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%028" Id="%AID%_P-%T%3%CC%028_R-%T%3%CC%02801" Name="hclCurve" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%029" Id="%AID%_P-%T%3%CC%029_R-%T%3%CC%02901" Name="dimmLock" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%030" Id="%AID%_P-%T%3%CC%030_R-%T%3%CC%03001" Name="hclStart" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%031" Id="%AID%_P-%T%3%CC%031_R-%T%3%CC%03101" Name="hcl_auto_bri" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%032" Id="%AID%_P-%T%3%CC%032_R-%T%3%CC%03201" Name="hcl_auto_col" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%033" Id="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" Name="hcl_manu_off" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%034" Id="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" Name="hcl_manu_day" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%035" Id="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" Name="scene" />
             </ParameterRefs>
             <ComObjectTable>
-              <ComObject Id="%AID%_O-%TT%%CC%000" Name="%C%switch" Text="G%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%001" Name="%C%switch_state" Text="G%C-1% {{0}}" Number="%K1%" FunctionText="Schalten Status" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%002" Name="%C%dimm_relative" Text="G%C-1% {{0}}" Number="%K2%" FunctionText="Dimmen Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%TT%%CC%003" Name="%C%dimm_absolute" Text="G%C-1% {{0}}" Number="%K3%" FunctionText="Dimmen Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%004" Name="%C%dimm_state" Text="G%C-1% {{0}}" Number="%K4%" FunctionText="Dimmen Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%005" Name="%C%lock" Text="G%C-1% {{0}}" Number="%K5%" FunctionText="Sperren" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%006" Name="%C%color" Text="G%C-1% {{0}}" Number="%K6%" FunctionText="RGB Farbe" ObjectSize="6 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
-              <ComObject Id="%AID%_O-%TT%%CC%007" Name="%C%color_state" Text="G%C-1% {{0}}" Number="%K7%" FunctionText="RGB Farbe Status" ObjectSize="6 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
-              <ComObject Id="%AID%_O-%TT%%CC%008" Name="%C%color_red_rel" Text="G%C-1% {{0}}" Number="%K8%" FunctionText="Rot Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%TT%%CC%009" Name="%C%color_red_abs" Text="G%C-1% {{0}}" Number="%K9%" FunctionText="Rot Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%010" Name="%C%color_red_state" Text="G%C-1% {{0}}" Number="%K10%" FunctionText="Rot Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%011" Name="%C%color_green_rel" Text="G%C-1% {{0}}" Number="%K11%" FunctionText="Grün Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%TT%%CC%012" Name="%C%color_green_abs" Text="G%C-1% {{0}}" Number="%K12%" FunctionText="Grün Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%013" Name="%C%color_green_state" Text="G%C-1% {{0}}" Number="%K13%" FunctionText="Grün Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%014" Name="%C%color_blue_rel" Text="G%C-1% {{0}}" Number="%K14%" FunctionText="Blau Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%TT%%CC%015" Name="%C%color_blue_abs" Text="G%C-1% {{0}}" Number="%K15%" FunctionText="Blau Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%016" Name="%C%color_blue_state" Text="G%C-1% {{0}}" Number="%K16%" FunctionText="Blau Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%TT%%CC%017" Name="%C%hcl_curve" Text="G%C-1% {{0}}" Number="%K17%" FunctionText="HCL Kurve" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPT-5" />
-              <ComObject Id="%AID%_O-%TT%%CC%018" Name="%C%scene" Text="G%C-1% {{0}}" Number="%K18%" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-17-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%000" Name="%C%switch" Text="G%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%001" Name="%C%switch_state" Text="G%C-1% {{0}}" Number="%K1%" FunctionText="Schalten Status" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%002" Name="%C%dimm_relative" Text="G%C-1% {{0}}" Number="%K2%" FunctionText="Dimmen Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%3%CC%003" Name="%C%dimm_absolute" Text="G%C-1% {{0}}" Number="%K3%" FunctionText="Dimmen Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%004" Name="%C%dimm_state" Text="G%C-1% {{0}}" Number="%K4%" FunctionText="Dimmen Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%005" Name="%C%lock" Text="G%C-1% {{0}}" Number="%K5%" FunctionText="Sperren" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%006" Name="%C%color" Text="G%C-1% {{0}}" Number="%K6%" FunctionText="RGB Farbe" ObjectSize="6 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
+              <ComObject Id="%AID%_O-%T%3%CC%007" Name="%C%color_state" Text="G%C-1% {{0}}" Number="%K7%" FunctionText="RGB Farbe Status" ObjectSize="6 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
+              <ComObject Id="%AID%_O-%T%3%CC%008" Name="%C%color_red_rel" Text="G%C-1% {{0}}" Number="%K8%" FunctionText="Rot Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%3%CC%009" Name="%C%color_red_abs" Text="G%C-1% {{0}}" Number="%K9%" FunctionText="Rot Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%010" Name="%C%color_red_state" Text="G%C-1% {{0}}" Number="%K10%" FunctionText="Rot Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%011" Name="%C%color_green_rel" Text="G%C-1% {{0}}" Number="%K11%" FunctionText="Grün Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%3%CC%012" Name="%C%color_green_abs" Text="G%C-1% {{0}}" Number="%K12%" FunctionText="Grün Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%013" Name="%C%color_green_state" Text="G%C-1% {{0}}" Number="%K13%" FunctionText="Grün Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%014" Name="%C%color_blue_rel" Text="G%C-1% {{0}}" Number="%K14%" FunctionText="Blau Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%3%CC%015" Name="%C%color_blue_abs" Text="G%C-1% {{0}}" Number="%K15%" FunctionText="Blau Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%016" Name="%C%color_blue_state" Text="G%C-1% {{0}}" Number="%K16%" FunctionText="Blau Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%3%CC%017" Name="%C%hcl_curve" Text="G%C-1% {{0}}" Number="%K17%" FunctionText="HCL Kurve" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPT-5" />
+              <ComObject Id="%AID%_O-%T%3%CC%018" Name="%C%scene" Text="G%C-1% {{0}}" Number="%K18%" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-17-1" />
             </ComObjectTable>
             <ComObjectRefs>
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%000" Id="%AID%_O-%TT%%CC%000_R-%TT%%CC%00001" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%001" Id="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%002" Id="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%003" Id="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%004" Id="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%005" Id="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%006" Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%007" Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00701" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%008" Id="%AID%_O-%TT%%CC%008_R-%TT%%CC%00801" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%009" Id="%AID%_O-%TT%%CC%009_R-%TT%%CC%00901" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%010" Id="%AID%_O-%TT%%CC%010_R-%TT%%CC%01001" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%011" Id="%AID%_O-%TT%%CC%011_R-%TT%%CC%01101" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%012" Id="%AID%_O-%TT%%CC%012_R-%TT%%CC%01201" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%013" Id="%AID%_O-%TT%%CC%013_R-%TT%%CC%01301" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%014" Id="%AID%_O-%TT%%CC%014_R-%TT%%CC%01401" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%015" Id="%AID%_O-%TT%%CC%015_R-%TT%%CC%01501" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%016" Id="%AID%_O-%TT%%CC%016_R-%TT%%CC%01601" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%006" Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00602" FunctionText="HSV Farbe" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%007" Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00702" FunctionText="HSV Farbe Status" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%008" Id="%AID%_O-%TT%%CC%008_R-%TT%%CC%00802" FunctionText="Farbe Relativ" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%009" Id="%AID%_O-%TT%%CC%009_R-%TT%%CC%00902" FunctionText="Farbe Absolut" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%010" Id="%AID%_O-%TT%%CC%010_R-%TT%%CC%01002" FunctionText="Farbe Status" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%011" Id="%AID%_O-%TT%%CC%011_R-%TT%%CC%01102" FunctionText="Sättigung Relativ" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%012" Id="%AID%_O-%TT%%CC%012_R-%TT%%CC%01202" FunctionText="Sättigung Absolut" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%013" Id="%AID%_O-%TT%%CC%013_R-%TT%%CC%01302" FunctionText="Sättigung Status" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%006" Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00603" FunctionText="Farbtemperatur" DatapointType="DPST-7-600" ObjectSize="2 Bytes" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%007" Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00703" FunctionText="Farbtemperatur Status" DatapointType="DPST-7-600" ObjectSize="2 Bytes" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%006" Id="%AID%_O-%TT%%CC%006_R-%TT%%CC%00604" FunctionText="Farbe xyY / xy" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%007" Id="%AID%_O-%TT%%CC%007_R-%TT%%CC%00704" FunctionText="Farbe xyY / xy Status" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%017" Id="%AID%_O-%TT%%CC%017_R-%TT%%CC%01701" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ComObjectRef RefId="%AID%_O-%TT%%CC%018" Id="%AID%_O-%TT%%CC%018_R-%TT%%CC%01801" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%000" Id="%AID%_O-%T%3%CC%000_R-%T%3%CC%00001" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%001" Id="%AID%_O-%T%3%CC%001_R-%T%3%CC%00101" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%002" Id="%AID%_O-%T%3%CC%002_R-%T%3%CC%00201" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%003" Id="%AID%_O-%T%3%CC%003_R-%T%3%CC%00301" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%004" Id="%AID%_O-%T%3%CC%004_R-%T%3%CC%00401" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%005" Id="%AID%_O-%T%3%CC%005_R-%T%3%CC%00501" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%006" Id="%AID%_O-%T%3%CC%006_R-%T%3%CC%00601" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00701" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%008" Id="%AID%_O-%T%3%CC%008_R-%T%3%CC%00801" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%009" Id="%AID%_O-%T%3%CC%009_R-%T%3%CC%00901" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%010" Id="%AID%_O-%T%3%CC%010_R-%T%3%CC%01001" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%011" Id="%AID%_O-%T%3%CC%011_R-%T%3%CC%01101" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%012" Id="%AID%_O-%T%3%CC%012_R-%T%3%CC%01201" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%013" Id="%AID%_O-%T%3%CC%013_R-%T%3%CC%01301" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%014" Id="%AID%_O-%T%3%CC%014_R-%T%3%CC%01401" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%015" Id="%AID%_O-%T%3%CC%015_R-%T%3%CC%01501" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%016" Id="%AID%_O-%T%3%CC%016_R-%T%3%CC%01601" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%006" Id="%AID%_O-%T%3%CC%006_R-%T%3%CC%00602" FunctionText="HSV Farbe" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00702" FunctionText="HSV Farbe Status" DatapointType="DPST-232-600" ObjectSize="3 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%008" Id="%AID%_O-%T%3%CC%008_R-%T%3%CC%00802" FunctionText="Farbe Relativ" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%009" Id="%AID%_O-%T%3%CC%009_R-%T%3%CC%00902" FunctionText="Farbe Absolut" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%010" Id="%AID%_O-%T%3%CC%010_R-%T%3%CC%01002" FunctionText="Farbe Status" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%011" Id="%AID%_O-%T%3%CC%011_R-%T%3%CC%01102" FunctionText="Sättigung Relativ" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%012" Id="%AID%_O-%T%3%CC%012_R-%T%3%CC%01202" FunctionText="Sättigung Absolut" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%013" Id="%AID%_O-%T%3%CC%013_R-%T%3%CC%01302" FunctionText="Sättigung Status" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%006" Id="%AID%_O-%T%3%CC%006_R-%T%3%CC%00603" FunctionText="Farbtemperatur" DatapointType="DPST-7-600" ObjectSize="2 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00703" FunctionText="Farbtemperatur Status" DatapointType="DPST-7-600" ObjectSize="2 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%006" Id="%AID%_O-%T%3%CC%006_R-%T%3%CC%00604" FunctionText="Farbe xyY / xy" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00704" FunctionText="Farbe xyY / xy Status" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%017" Id="%AID%_O-%T%3%CC%017_R-%T%3%CC%01701" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%018" Id="%AID%_O-%T%3%CC%018_R-%T%3%CC%01801" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
             </ComObjectRefs>
           </Static>
           <Dynamic>
             <ChannelIndependentBlock>
-            <ParameterBlock Id="%AID%_PB-nnn" Text="G%C-1%: {{0:---}}" TextParameterRefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" ShowInComObjectTree="true">
-              <ParameterRefRef RefId="%AID%_P-%TT%%CC%001_R-%TT%%CC%00101" />
-              <ParameterRefRef RefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201" />
+            <ParameterBlock Id="%AID%_PB-nnn" Text="G%C-1%: {{0:---}}" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" ShowInComObjectTree="true">
+              <ParameterRefRef RefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ParameterRefRef RefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201" />
               <ParameterSeparator Id="%AID%_PS-nnn" Text="" />
-              <choose ParamRefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201">
+              <choose ParamRefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201">
                 <when test="!=0">
-                  <ComObjectRefRef RefId="%AID%_O-%TT%%CC%000_R-%TT%%CC%00001" />
-                  <ComObjectRefRef RefId="%AID%_O-%TT%%CC%001_R-%TT%%CC%00101" />
-                  <ParameterRefRef RefId="%AID%_P-%TT%%CC%026_R-%TT%%CC%02601" />
-                  <choose ParamRefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201">
+                  <ComObjectRefRef RefId="%AID%_O-%T%3%CC%000_R-%T%3%CC%00001" />
+                  <ComObjectRefRef RefId="%AID%_O-%T%3%CC%001_R-%T%3%CC%00101" />
+                  <ParameterRefRef RefId="%AID%_P-%T%3%CC%026_R-%T%3%CC%02601" />
+                  <choose ParamRefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201">
                     <when test="&gt;1">
-                      <ComObjectRefRef RefId="%AID%_O-%TT%%CC%002_R-%TT%%CC%00201" />
-                      <ComObjectRefRef RefId="%AID%_O-%TT%%CC%003_R-%TT%%CC%00301" />
-                      <ComObjectRefRef RefId="%AID%_O-%TT%%CC%004_R-%TT%%CC%00401" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%025_R-%TT%%CC%02501" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%029_R-%TT%%CC%02901" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%012_R-%TT%%CC%01201" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%013_R-%TT%%CC%01301" />
+                      <ComObjectRefRef RefId="%AID%_O-%T%3%CC%002_R-%T%3%CC%00201" />
+                      <ComObjectRefRef RefId="%AID%_O-%T%3%CC%003_R-%T%3%CC%00301" />
+                      <ComObjectRefRef RefId="%AID%_O-%T%3%CC%004_R-%T%3%CC%00401" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%025_R-%T%3%CC%02501" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%029_R-%T%3%CC%02901" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%012_R-%T%3%CC%01201" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%013_R-%T%3%CC%01301" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="0 = Einschalten mit letztem Wert" UIHint="Information" />
                     </when>
                   </choose>
-                  <ParameterRefRef RefId="%AID%_P-%TT%%CC%004_R-%TT%%CC%00401" />
-                  <ParameterRefRef RefId="%AID%_P-%TT%%CC%003_R-%TT%%CC%00301" />
-                  <!-- <ParameterRefRef RefId="%AID%_P-%TT%%CC%035_R-%TT%%CC%03501" HelpContext="GRP_scene" /> -->
-                  <ParameterRefRef RefId="%AID%_P-%TT%%CC%035_R-%TT%%CC%03501" />
-                  <choose ParamRefId="%AID%_P-%TT%%CC%023_R-%TT%%CC%02301">
+                  <ParameterRefRef RefId="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401" />
+                  <ParameterRefRef RefId="%AID%_P-%T%3%CC%003_R-%T%3%CC%00301" />
+                  <!-- <ParameterRefRef RefId="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" HelpContext="GRP_scene" /> -->
+                  <ParameterRefRef RefId="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" />
+                  <choose ParamRefId="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301">
                     <when test="=1">
                       <ParameterBlock Id="%AID%_PB-nnn" Text="HCL Einstellungen" Icon="sun-clock">
-                        <ComObjectRefRef RefId="%AID%_O-%TT%%CC%017_R-%TT%%CC%01701" />
-                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%028_R-%TT%%CC%02801" />
-                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%030_R-%TT%%CC%03001" />
+                        <ComObjectRefRef RefId="%AID%_O-%T%3%CC%017_R-%T%3%CC%01701" />
+                        <ParameterRefRef RefId="%AID%_P-%T%3%CC%028_R-%T%3%CC%02801" />
+                        <ParameterRefRef RefId="%AID%_P-%T%3%CC%030_R-%T%3%CC%03001" />
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Der automatische Modus wird verlassen, wenn ..." />
-                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%031_R-%TT%%CC%03101" />
-                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%032_R-%TT%%CC%03201" />
+                        <ParameterRefRef RefId="%AID%_P-%T%3%CC%031_R-%T%3%CC%03101" />
+                        <ParameterRefRef RefId="%AID%_P-%T%3%CC%032_R-%T%3%CC%03201" />
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="Der manuelle Modus wird  verlassen, wenn ..." />
-                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%033_R-%TT%%CC%03301" />
-                        <ParameterRefRef RefId="%AID%_P-%TT%%CC%034_R-%TT%%CC%03401" />
+                        <ParameterRefRef RefId="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" />
+                        <ParameterRefRef RefId="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" />
                       </ParameterBlock>
                     </when>
                   </choose>
-                  <choose ParamRefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201">
+                  <choose ParamRefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201">
                     <when test="=2">
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%023_R-%TT%%CC%02301" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301" />
                     </when>
                     <when test="=3">
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%023_R-%TT%%CC%02301" />
-                      <choose ParamRefId="%AID%_P-%TT%%CC%023_R-%TT%%CC%02301">
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301" />
+                      <choose ParamRefId="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301">
                         <when test="1">
-                          <choose ParamRefId="%AID%_P-%TT%%CC%002_R-%TT%%CC%00201">
+                          <choose ParamRefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201">
                             <when test="!=3">
                               <ParameterSeparator Id="%AID%_PS-nnn" Text="Es wird nur die Helligkeit von der HCL-Kurve berücksichtigt." UIHint="Information" />
                             </when>
@@ -237,49 +237,49 @@
                         </when>
                       </choose>
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Farbe" UIHint="Headline" Icon="palette-custom" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%019_R-%TT%%CC%01901" />
-                      <choose ParamRefId="%AID%_P-%TT%%CC%019_R-%TT%%CC%01901">
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%019_R-%T%3%CC%01901" />
+                      <choose ParamRefId="%AID%_P-%T%3%CC%019_R-%T%3%CC%01901">
                         <when test="=0">
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%020_R-%TT%%CC%02001" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%006_R-%TT%%CC%00602" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%007_R-%TT%%CC%00702" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%008_R-%TT%%CC%00802" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%009_R-%TT%%CC%00902" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%010_R-%TT%%CC%01002" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%011_R-%TT%%CC%01102" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%012_R-%TT%%CC%01202" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%013_R-%TT%%CC%01302" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%006_R-%T%3%CC%00602" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%007_R-%T%3%CC%00702" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%008_R-%T%3%CC%00802" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%009_R-%T%3%CC%00902" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%010_R-%T%3%CC%01002" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%011_R-%T%3%CC%01102" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%012_R-%T%3%CC%01202" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%013_R-%T%3%CC%01302" />
                         </when>
                         <when test="=1">
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%020_R-%TT%%CC%02001" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%006_R-%TT%%CC%00601" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%007_R-%TT%%CC%00701" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%008_R-%TT%%CC%00801" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%009_R-%TT%%CC%00901" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%010_R-%TT%%CC%01001" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%011_R-%TT%%CC%01101" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%012_R-%TT%%CC%01201" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%013_R-%TT%%CC%01301" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%014_R-%TT%%CC%01401" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%015_R-%TT%%CC%01501" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%016_R-%TT%%CC%01601" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%006_R-%T%3%CC%00601" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%007_R-%T%3%CC%00701" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%008_R-%T%3%CC%00801" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%009_R-%T%3%CC%00901" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%010_R-%T%3%CC%01001" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%011_R-%T%3%CC%01101" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%012_R-%T%3%CC%01201" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%013_R-%T%3%CC%01301" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%014_R-%T%3%CC%01401" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%015_R-%T%3%CC%01501" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%016_R-%T%3%CC%01601" />
                         </when>
                         <when test="=2">
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%021_R-%TT%%CC%02101" />
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%022_R-%TT%%CC%02201" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%006_R-%TT%%CC%00603" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%007_R-%TT%%CC%00703" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%021_R-%T%3%CC%02101" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%022_R-%T%3%CC%02201" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%006_R-%T%3%CC%00603" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%007_R-%T%3%CC%00703" />
                         </when>
                         <when test="=3">
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%024_R-%TT%%CC%02401" />
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%020_R-%TT%%CC%02001" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%006_R-%TT%%CC%00604" />
-                          <ComObjectRefRef RefId="%AID%_O-%TT%%CC%007_R-%TT%%CC%00704" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%024_R-%T%3%CC%02401" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%006_R-%T%3%CC%00604" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%007_R-%T%3%CC%00704" />
                         </when>
                       </choose>
-                      <choose ParamRefId="%AID%_P-%TT%%CC%020_R-%TT%%CC%02001">
+                      <choose ParamRefId="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001">
                         <when test="!=0">
-                          <choose ParamRefId="%AID%_P-%TT%%CC%024_R-%TT%%CC%02401">
+                          <choose ParamRefId="%AID%_P-%T%3%CC%024_R-%T%3%CC%02401">
                             <when test="1">
                               <ParameterSeparator Id="%AID%_PS-nnn" Text="Diese Konfiguration ist nicht zulässig. Wenn die Helligkeit bei xyY ignoriert werden soll, MUSS die Ansteuerung über XY erfolgen." UIHint="Error" />
                             </when>
@@ -288,36 +288,36 @@
                       </choose>
                     </when>
                   </choose>
-                  <choose ParamRefId="%AID%_P-%TT%%CC%035_R-%TT%%CC%03501">
+                  <choose ParamRefId="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501">
                     <when test="1">
-                      <ComObjectRefRef RefId="%AID%_O-%TT%%CC%018_R-%TT%%CC%01801" />
+                      <ComObjectRefRef RefId="%AID%_O-%T%3%CC%018_R-%T%3%CC%01801" />
                     </when>
                   </choose>
-                  <choose ParamRefId="%AID%_P-%TT%%CC%003_R-%TT%%CC%00301">
+                  <choose ParamRefId="%AID%_P-%T%3%CC%003_R-%T%3%CC%00301">
                     <when test="1">
-                      <ComObjectRefRef RefId="%AID%_O-%TT%%CC%005_R-%TT%%CC%00501" />
+                      <ComObjectRefRef RefId="%AID%_O-%T%3%CC%005_R-%T%3%CC%00501" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Sperre" UIHint="Headline" Icon="lock-outline" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%018_R-%TT%%CC%01801" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%008_R-%TT%%CC%00801" />
-                      <choose ParamRefId="%AID%_P-%TT%%CC%008_R-%TT%%CC%00801">
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%018_R-%T%3%CC%01801" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%008_R-%T%3%CC%00801" />
+                      <choose ParamRefId="%AID%_P-%T%3%CC%008_R-%T%3%CC%00801">
                         <when test="3">
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%009_R-%TT%%CC%00901" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%009_R-%T%3%CC%00901" />
                         </when>
                       </choose>
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%010_R-%TT%%CC%01001" />
-                      <choose ParamRefId="%AID%_P-%TT%%CC%010_R-%TT%%CC%01001">
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%010_R-%T%3%CC%01001" />
+                      <choose ParamRefId="%AID%_P-%T%3%CC%010_R-%T%3%CC%01001">
                         <when test="3">
-                          <ParameterRefRef RefId="%AID%_P-%TT%%CC%011_R-%TT%%CC%01101" />
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%011_R-%T%3%CC%01101" />
                         </when>
                       </choose>
                     </when>
                   </choose>
-                  <choose ParamRefId="%AID%_P-%TT%%CC%004_R-%TT%%CC%00401">
+                  <choose ParamRefId="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401">
                     <when test="1">
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Treppenlicht" UIHint="Headline" Icon="timer-outline" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%006_R-%TT%%CC%00601" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%007_R-%TT%%CC%00701" />
-                      <ParameterRefRef RefId="%AID%_P-%TT%%CC%005_R-%TT%%CC%00501" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%006_R-%T%3%CC%00601" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%007_R-%T%3%CC%00701" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%005_R-%T%3%CC%00501" />
                     </when>
                   </choose>
                 </when>
