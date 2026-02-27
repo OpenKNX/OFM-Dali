@@ -1,4 +1,4 @@
-<KNX CreatedBy="kaenx-creator" ToolVersion="1.0.0" xmlns="http://knx.org/xml/project/20">
+<KNX CreatedBy="kaenx-creator" ToolVersion="1.0.0" xmlns="http://knx.org/xml/project/20" xmlns:op="http://github.com/OpenKNX/OpenKNXproducer">
   <ManufacturerData>
     <Manufacturer RefId="M-00FA">
       <ApplicationPrograms>
@@ -8,18 +8,18 @@
               <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
                 <TypeTime Unit="Minutes" UIHint="Time_hhmm" minInclusive="0" maxInclusive="180" SizeInBit="8" />
               </ParameterType>
-              <ParameterType Id="%AID%_PT-hclType" Name="hclType">
+              <ParameterType Id="%AID%_PT-hclType" Name="hclType" op:headerExport="define">
                 <TypeRestriction Base="Value" SizeInBit="2">
-                  <Enumeration Text="Inaktiv" Value="0" Id="%AID%_PT-hclType_EN-0" />
-                  <Enumeration Text="Sonnen Auf-/Untergang" Value="1" Id="%AID%_PT-hclType_EN-1" />
-                  <Enumeration Text="Feste Zeiten" Value="2" Id="%AID%_PT-hclType_EN-2" />
+                  <Enumeration Text="Inaktiv" Value="0" Id="%AID%_PT-hclType_EN-0" op:headerName="none" />
+                  <Enumeration Text="Sonnen Auf-/Untergang" Value="1" Id="%AID%_PT-hclType_EN-1" op:headerName="sun" />
+                  <Enumeration Text="Feste Zeiten" Value="2" Id="%AID%_PT-hclType_EN-2" op:headerName="time" />
                 </TypeRestriction>
               </ParameterType>
-              <ParameterType Id="%AID%_PT-offset" Name="offset">
+              <ParameterType Id="%AID%_PT-offset" Name="offset" op:headerExport="define">
                 <TypeRestriction Base="Value" SizeInBit="2">
-                  <Enumeration Text="Deaktiviert" Value="0" Id="%AID%_PT-offset_EN-0" />
-                  <Enumeration Text="Später" Value="1" Id="%AID%_PT-offset_EN-1" />
-                  <Enumeration Text="Früher" Value="2" Id="%AID%_PT-offset_EN-2" />
+                  <Enumeration Text="Deaktiviert" Value="0" Id="%AID%_PT-offset_EN-0" op:headerName="none" />
+                  <Enumeration Text="Später" Value="1" Id="%AID%_PT-offset_EN-1" op:headerName="plus" />
+                  <Enumeration Text="Früher" Value="2" Id="%AID%_PT-offset_EN-2" op:headerName="minus" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">

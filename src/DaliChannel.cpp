@@ -65,7 +65,7 @@ void DaliChannel::setup()
     }
     else
     {
-        _isConfigured = ParamDGW_deviceType != PT_deviceType_Deaktiviert;
+        _isConfigured = ParamDGW_deviceType != PT_deviceType_none;
         if (!_isConfigured)
             return;
 
