@@ -721,9 +721,9 @@ void DaliModule::loopBusState()
         _lastBusState = state;
 
         if (state)
-            openknx.ledFunctions.get(LED_FUNC_ID_DALI_BUSSTATE).activity(daliActivity, true);
+            openknx.ledFunctions.get(LED_FUNC_ID_DALI_BUSSTATE)->activity(daliActivity, true);
         else
-            openknx.ledFunctions.get(LED_FUNC_ID_DALI_BUSSTATE).off();
+            openknx.ledFunctions.get(LED_FUNC_ID_DALI_BUSSTATE)->off();
     }
 #endif
     if (state != _daliBusStateToSet)
