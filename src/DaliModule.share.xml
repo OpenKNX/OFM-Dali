@@ -272,6 +272,7 @@
               </Parameter>
               <Parameter Id="%AID%_P-%T%100012" Name="deleteAll" ParameterType="%AID%_PT-checkbox" Text="" SuffixText="Kurzadressen löschen" Value="0" />
               <Parameter Id="%AID%_P-%T%100013" Name="assignNew" ParameterType="%AID%_PT-checkbox" Text="" SuffixText="Kurzadressen setzen" Value="0" />
+              
             </Parameters>
             <ParameterRefs>
               <ParameterRef Id="%AID%_P-%T%100002_R-%T%10000201" RefId="%AID%_P-%T%100002" Name="ballast0" />
@@ -502,7 +503,7 @@
 
               <ParameterBlock Id="%AID%_PB-nnn" Text="Szenen" Icon="counter-custom">
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
-                <op:include href="DaliModule.scene.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWS" IsInner="true" />
+                <op:include href="DaliModule.scene.share.xml" xpath="//Dynamic/ChannelIndependentBlock/*" prefix="DGWS" />
               </ParameterBlock>
               
               <ParameterBlock Id="%AID%_PB-nnn" Text="Einzeladresse" Icon="address">
