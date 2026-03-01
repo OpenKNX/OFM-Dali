@@ -92,47 +92,51 @@
           </Static>
           <Dynamic>
             <ChannelIndependentBlock>
-              <ParameterBlock Id="%AID%_PB-nnn" Text="Kurve %C%: {{0:---}}" TextParameterRefId="%AID%_P-%T%5%CC%002_R-%T%5%CC%00201">
-                <ParameterRefRef RefId="%AID%_P-%T%5%CC%002_R-%T%5%CC%00201" />
-                <ParameterRefRef RefId="%AID%_P-%T%5%CC%001_R-%T%5%CC%00101" />
-                <choose ParamRefId="%AID%_P-%T%5%CC%001_R-%T%5%CC%00101">
-                  <when test="1">
-                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%006_R-%T%5%CC%00601" />
-                    <choose ParamRefId="%AID%_P-%T%5%CC%006_R-%T%5%CC%00601">
-                      <when test="!=0">
-                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%007_R-%T%5%CC%00701" />
+              <choose ParamRefId="%AID%_UP-%T%500001_R-%T%50000101">
+                <when test="&gt;=%C%">
+                  <ParameterBlock Id="%AID%_PB-nnn" Text="Kurve %C%: {{0:---}}" TextParameterRefId="%AID%_P-%T%5%CC%002_R-%T%5%CC%00201">
+                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%002_R-%T%5%CC%00201" />
+                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%001_R-%T%5%CC%00101" />
+                    <choose ParamRefId="%AID%_P-%T%5%CC%001_R-%T%5%CC%00101">
+                      <when test="1">
+                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%006_R-%T%5%CC%00601" />
+                        <choose ParamRefId="%AID%_P-%T%5%CC%006_R-%T%5%CC%00601">
+                          <when test="!=0">
+                            <ParameterRefRef RefId="%AID%_P-%T%5%CC%007_R-%T%5%CC%00701" />
+                          </when>
+                        </choose>
+                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%008_R-%T%5%CC%00801" />
+                        <choose ParamRefId="%AID%_P-%T%5%CC%008_R-%T%5%CC%00801">
+                          <when test="!=0">
+                            <ParameterRefRef RefId="%AID%_P-%T%5%CC%009_R-%T%5%CC%00901" />
+                          </when>
+                        </choose>
+                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%005_R-%T%5%CC%00501" />
+                        <ParameterSeparator Id="%AID%_PS-nnn" Text="Die aktuelle Farbtemperatur wird nach dem Sonnenauf-/untergang berechnet. " UIHint="Information" />
+                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%012_R-%T%5%CC%01201" />
+                        <choose ParamRefId="%AID%_P-%T%5%CC%012_R-%T%5%CC%01201">
+                          <when test="=1">
+                            <ParameterRefRef RefId="%AID%_P-%T%5%CC%003_R-%T%5%CC%00301" />
+                            <ParameterRefRef RefId="%AID%_P-%T%5%CC%004_R-%T%5%CC%00401" />
+                            <ComObjectRefRef RefId="%AID%_O-%T%5%CC%000_R-%T%5%CC%00001" />
+                          </when>
+                        </choose>
+                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%013_R-%T%5%CC%01301" />
+                        <choose ParamRefId="%AID%_P-%T%5%CC%013_R-%T%5%CC%01301">
+                          <when test="=1">
+                            <ParameterRefRef RefId="%AID%_P-%T%5%CC%010_R-%T%5%CC%01001" />
+                            <ParameterRefRef RefId="%AID%_P-%T%5%CC%011_R-%T%5%CC%01101" />
+                            <ComObjectRefRef RefId="%AID%_O-%T%5%CC%001_R-%T%5%CC%00101" />
+                          </when>
+                        </choose>
+                      </when>
+                      <when test="2">
+                        <ParameterSeparator Id="%AID%_PS-nnn" Text="Kommt später" UIHint="Information" />
                       </when>
                     </choose>
-                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%008_R-%T%5%CC%00801" />
-                    <choose ParamRefId="%AID%_P-%T%5%CC%008_R-%T%5%CC%00801">
-                      <when test="!=0">
-                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%009_R-%T%5%CC%00901" />
-                      </when>
-                    </choose>
-                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%005_R-%T%5%CC%00501" />
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Die aktuelle Farbtemperatur wird nach dem Sonnenauf-/untergang berechnet. " UIHint="Information" />
-                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%012_R-%T%5%CC%01201" />
-                    <choose ParamRefId="%AID%_P-%T%5%CC%012_R-%T%5%CC%01201">
-                      <when test="=1">
-                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%003_R-%T%5%CC%00301" />
-                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%004_R-%T%5%CC%00401" />
-                        <ComObjectRefRef RefId="%AID%_O-%T%5%CC%000_R-%T%5%CC%00001" />
-                      </when>
-                    </choose>
-                    <ParameterRefRef RefId="%AID%_P-%T%5%CC%013_R-%T%5%CC%01301" />
-                    <choose ParamRefId="%AID%_P-%T%5%CC%013_R-%T%5%CC%01301">
-                      <when test="=1">
-                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%010_R-%T%5%CC%01001" />
-                        <ParameterRefRef RefId="%AID%_P-%T%5%CC%011_R-%T%5%CC%01101" />
-                        <ComObjectRefRef RefId="%AID%_O-%T%5%CC%001_R-%T%5%CC%00101" />
-                      </when>
-                    </choose>
-                  </when>
-                  <when test="2">
-                    <ParameterSeparator Id="%AID%_PS-nnn" Text="Kommt später" UIHint="Information" />
-                  </when>
-                </choose>
-              </ParameterBlock>
+                  </ParameterBlock>
+                </when>
+              </choose>
             </ChannelIndependentBlock>
           </Dynamic>
         </ApplicationProgram>

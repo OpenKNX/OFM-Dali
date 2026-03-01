@@ -502,7 +502,6 @@
               </ParameterBlock>
 
               <ParameterBlock Id="%AID%_PB-nnn" Text="Szenen" Icon="counter-custom">
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
                 <op:include href="DaliModule.scene.share.xml" xpath="//Dynamic/ChannelIndependentBlock/*" prefix="DGWS" />
               </ParameterBlock>
               
@@ -517,8 +516,7 @@
               </ParameterBlock>
               
               <ParameterBlock Id="%AID%_PB-nnn" Text="HCL Kurven" Icon="sun-clock">
-                <ParameterSeparator Id="%AID%_PS-nnn" Text="Hier gibts nix zu sehen!" />
-                <op:include href="DaliModule.hcl.templ.xml" xpath="//Dynamic/ChannelIndependentBlock/*" type="template" prefix="DGWH" IsInner="true" />
+                <op:include href="DaliModule.hcl.share.xml" xpath="//Dynamic/ChannelIndependentBlock/*" prefix="DGWH" />
               </ParameterBlock>
               
               <!-- followed by all channels -->
