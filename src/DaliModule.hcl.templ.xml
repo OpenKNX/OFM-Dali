@@ -22,9 +22,6 @@
                   <Enumeration Text="Früher" Value="2" Id="%AID%_PT-offset_EN-2" op:headerName="minus" />
                 </TypeRestriction>
               </ParameterType>
-              <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
-                <TypeTime Unit="Minutes" UIHint="Time_hhmm" minInclusive="0" maxInclusive="180" SizeInBit="8" />
-              </ParameterType>
               <ParameterType Id="%AID%_PT-HCL" Name="HCL">
                 <TypePicture RefId="%FILE-hcl%" HorizontalAlignment="Right"/>
               </ParameterType>
@@ -83,7 +80,7 @@
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%5%CC%000" Name="%C%hcl_state" Text="HCL Kurve %C%" Number="%K0%" FunctionText="Farbtemperatur" ObjectSize="2 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-7-600" />
-              <ComObject Id="%AID%_O-%T%5%CC%001" Name="%C%bri_state" Text="HCL Kurve %C%" Number="%K1%" FunctionText="Helligkeit" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%5%CC%001" Name="%C%bri_state" Text="HCL Kurve %C%" Number="%K3%" FunctionText="Helligkeit" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef RefId="%AID%_O-%T%5%CC%000" Id="%AID%_O-%T%5%CC%000_R-%T%5%CC%00001" />
