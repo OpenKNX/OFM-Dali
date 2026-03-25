@@ -1,8 +1,8 @@
 #pragma once
 
 #include "OpenKNX.h"
-#include "dali/Master.h"
-#include "dali/Commands.h"
+#include "Dali/Master.h"
+#include "Dali/Commands.h"
 #include "colorhelper.h"
 #include "DaliHelper.h"
 

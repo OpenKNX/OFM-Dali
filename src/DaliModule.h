@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include "OpenKNX.h"
-#include "dali/Master.h"
-#include "dali/Commands.h"
+#include "Dali/Master.h"
+#include "Dali/Commands.h"
 #include "DaliChannel.h"
 #include "Ballast.hpp"
 #include "HclCurve.h"
