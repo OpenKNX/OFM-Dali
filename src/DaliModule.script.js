@@ -33,7 +33,7 @@ function arcToPercent(arc) {
 
 function dali_read(device, online, progress, context) {
     // Start read devicetype
-    progress.setText(device.getMessage(2));
+    progress.setText(device.getMessage(4000002));
 
     var data = [2, context.Channel];
     online.connect();
@@ -41,13 +41,13 @@ function dali_read(device, online, progress, context) {
 
     if (resp[0] != 0) {
         // Dali Error:
-        throw new Error(device.getMessage(1) + String(resp[0]));
+        throw new Error(device.getMessage(4000001) + String(resp[0]));
     }
 
     var para = device.getParameterByName("deviceType");
     if (resp[1] == 255) {
         para.value = 0;
-        throw new Error(device.getMessage(14)) // Unknown DeviceType
+        throw new Error(device.getMessage(4000014)) // Unknown DeviceType
     }
 
     para.value = (resp[1] + 1).toString();
@@ -64,11 +64,11 @@ function dali_read(device, online, progress, context) {
     }
 
     // Read Successfully devicetype
-    progress.setText(device.getMessage(3));
+    progress.setText(device.getMessage(4000003));
 }
 
 function dali_settingsRead(device, online, progress, context) {
-    progress.setText(device.getMessage(10)); // Start reading Data from EVG
+    progress.setText(device.getMessage(4000010)); // Start reading Data from EVG
     online.connect();
     var data = online.invokeFunctionProperty(160, 1, [11, context.Channel]);
     progress.setProgress(10);
@@ -144,7 +144,7 @@ function dali_settingsRead(device, online, progress, context) {
 
     for (var i = 0; i < 16; i++)
     {
-        progress.setText(device.getMessage(11) + i.toString()); // Parsing data
+        progress.setText(device.getMessage(4000011) + i.toString()); // Parsing data
         data[2] = i;
 
         resp = online.invokeFunctionProperty(160, 1, data);
@@ -174,15 +174,15 @@ function dali_settingsRead(device, online, progress, context) {
     }
 
     if (errors != "")
-        progress.setText(device.getMessage(13) + errors); // following couldnt be read
+        progress.setText(device.getMessage(4000013) + errors); // following couldnt be read
     else
-        progress.setText(device.getMessage(12)); // reading successfull
+        progress.setText(device.getMessage(4000012)); // reading successfull
 }
 
 function dali_settingsWrite(device, online, progress, context) {
     // if(getParaInt("fadeTime") != "0" &amp;&amp; getParaInt("fadeTimeExtendedMultiplier") != "0")
-    //     throw new Error(device.getMessage(18)); // error 
-    progress.setText(device.getMessage(15)); // start
+    //     throw new Error(device.getMessage(4000018)); // error 
+    progress.setText(device.getMessage(4000015)); // start
 
     var index = 0;
     var data = [];
@@ -235,7 +235,7 @@ function dali_settingsWrite(device, online, progress, context) {
     groups |= getParaInt(device, "g15") << 7;
     data[index++] = groups;
 
-    progress.setText(device.getMessage(16)); // transmit
+    progress.setText(device.getMessage(4000016)); // transmit
     online.connect();
     var resp = online.invokeFunctionProperty(160, 1, data);
     progress.setText("after");
@@ -288,13 +288,13 @@ function dali_settingsWrite(device, online, progress, context) {
             }
         }
 
-        progress.setText(device.getMessage(21) + i); // Übertrage Szene i
+        progress.setText(device.getMessage(4000021) + i); // Übertrage Szene i
         resp = online.invokeFunctionProperty(160, 1, data);
         progress.setProgress(i * 5 + 25);
     }
 
     online.disconnect();
-    progress.setText(device.getMessage(17)); // fin
+    progress.setText(device.getMessage(4000017)); // fin
 }
 
 function dali_assingAddr(device, online, progress, context) {
@@ -302,7 +302,7 @@ function dali_assingAddr(device, online, progress, context) {
     var ashort = device.getParameterByName("shortAddr");
 
     //assign address to device
-    progress.setText(device.getMessage(5));
+    progress.setText(device.getMessage(4000005));
 
     var bytes = [4, parseInt(ashort.value)];
     for (var c = 0; c < along.value.length; c += 2)
@@ -327,28 +327,28 @@ function dali_assingAddr(device, online, progress, context) {
         switch (resp[1]) {
             case 0:
                 //address set successfully
-                progress.setText(device.getMessage(7));
+                progress.setText(device.getMessage(4000007));
                 return;
 
             case 1:
                 //address is already in use
-                throw new Error(device.getMessage(6));
+                throw new Error(device.getMessage(4000006));
 
             case 2:
                 //device wont answer
-                throw new Error(device.getMessage(4));
+                throw new Error(device.getMessage(4000004));
 
             case 3:
                 //long address dont exists
-                throw new Error(device.getMessage(8));
+                throw new Error(device.getMessage(4000008));
 
             case 12:
                 //short address confirm failed
-                throw new Error(device.getMessage(9));
+                throw new Error(device.getMessage(4000009));
 
             default:
                 //dali error
-                progress.setText(device.getMessage(1));
+                progress.setText(device.getMessage(4000001));
                 return;
 
         }
