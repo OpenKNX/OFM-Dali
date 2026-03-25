@@ -374,6 +374,29 @@
               <ComObjectRef Id="%AID%_O-%T%100004_R-%T%10000401" RefId="%AID%_O-%T%100004" />
               <ComObjectRef Id="%AID%_O-%T%100005_R-%T%10000501" RefId="%AID%_O-%T%100005" />
             </ComObjectRefs>
+            <Messages>
+              <Message Id="%AID%_M-%TT%00001" Name="dali_error" Text="Dali Error: " />
+              <Message Id="%AID%_M-%TT%00002" Name="devicetype_read" Text="Lese nun DeviceType aus..." />
+              <Message Id="%AID%_M-%TT%00003" Name="devicetype_success" Text="Auslesen war erfolgreich" />
+              <Message Id="%AID%_M-%TT%00004" Name="response_timeout" Text="Keine Antwort erhalten" />
+              <Message Id="%AID%_M-%TT%00005" Name="addr_start" Text="Setze Adresse für Gerät" />
+              <Message Id="%AID%_M-%TT%00006" Name="addr_double" Text="Adresse wird bereits verwendet" />
+              <Message Id="%AID%_M-%TT%00007" Name="addr_success" Text="Addresse wurde erfolgreich gesetzt" />
+              <Message Id="%AID%_M-%TT%00008" Name="addr_long_dont_exists" Text="Long Adresse existiert nicht" />
+              <Message Id="%AID%_M-%TT%00009" Name="addr_confirm_failed" Text="Kurz Adresse wurde nicht übernommen" />
+              <Message Id="%AID%_M-%TT%00010" Name="evgReadStart" Text="Lese Daten aus EVG" />
+              <Message Id="%AID%_M-%TT%00011" Name="evgReadScene" Text="Lese Szene " />
+              <Message Id="%AID%_M-%TT%00012" Name="evgReadFin" Text="EVG wurde erfolgreich ausgelesen" />
+              <Message Id="%AID%_M-%TT%00013" Name="evgReadError" Text="Folgendes konnte nicht ausgelesen werden: " />
+              <Message Id="%AID%_M-%TT%00014" Name="devicetype_unknown" Text="Unbekannter Gerätetyp" />
+              <Message Id="%AID%_M-%TT%00015" Name="evgWriteStart" Text="Sammle Daten" />
+              <Message Id="%AID%_M-%TT%00016" Name="evgWriteTransmit" Text="Übermittle Daten" />
+              <Message Id="%AID%_M-%TT%00017" Name="evgWriteFin" Text="Daten erfolgreich übertragen" />
+              <Message Id="%AID%_M-%TT%00018" Name="evgWriteErrorFade" Text="FateTime und FadeTimeExtended dürfen nicht gleichzeitig aktiv sein" />
+              <Message Id="%AID%_M-%TT%00019" Name="loadErrorManu" Text="Herstellerkennung inkompatibel!" />
+              <Message Id="%AID%_M-%TT%00020" Name="loadErrorApp" Text="Hardware-Type oder Firmware-Version inkompatibel!" />
+              <Message Id="%AID%_M-%TT%00021" Name="evgWriteScene" Text="Übertrage Szene " />
+            </Messages>
             <Script>
               <op:include href="DaliModule.script.js" prefix="DGW" type="script" />
             </Script>
