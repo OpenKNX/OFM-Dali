@@ -277,7 +277,7 @@ function dali_settingsWrite(device, online, progress, context) {
                 var kelvin = getParaInt(device, "s" + i + "ct");
                 Log.info(kelvin);
                 data[8] = kelvin >> 8;
-                data[9] = kelvin & 256;
+                data[9] = kelvin & 255;
             } else { //it is RGB
                 var etsval = device.getParameterByName("s" + i + "cc").value;
                 if (etsval < 0)
