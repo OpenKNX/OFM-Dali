@@ -41,7 +41,7 @@ function dali_read(device, online, progress, context) {
 
     if (resp[0] != 0) {
         // Dali Error:
-        throw new Error(device.getMessage(4000001) + String(resp[0]));
+        throw new Error(device.getMessage(calcMessage("DGW_dali_error")) + String(resp[0]));
     }
 
     var para = device.getParameterByName("deviceType");
@@ -359,22 +359,22 @@ function dali_scan(device, online, progress, context) {
     online.connect();
 
     var data = [3];
-    var para2 = device.getParameterByName("onlyUnaddressed");
+    var para2 = device.getParameterByName("DGW_onlyUnaddressed");
     data.push(parseInt(para2.value));
-    para2 = device.getParameterByName("dontRandomize");
+    para2 = device.getParameterByName("DGW_dontRandomize");
     data.push(parseInt(para2.value));
-    para2 = device.getParameterByName("deleteAll");
+    para2 = device.getParameterByName("DGW_deleteAll");
     data.push(parseInt(para2.value));
-    para2 = device.getParameterByName("assignNew");
+    para2 = device.getParameterByName("DGW_assignNew");
     data.push(parseInt(para2.value));
 
     //start addressing
     online.invokeFunctionProperty(160, 1, data);
-    progress.setText("Suche Geräte");
+    progress.setText(device.getMessage(calcMessage("DGW_scanStart")));
 
     for (var i = 0; i < 64; i++)
     {
-        var para = device.getParameterByName("ballast" + i);
+        var para = device.getParameterByName("DGW_ballast" + i);
         para.value = "";
     }
 
@@ -389,7 +389,7 @@ function dali_scan(device, online, progress, context) {
 
         var resp = online.readFunctionProperty(160, 1, [3]);
         if (resp[0]) break;
-        progress.setText(resp[1] + " Geräte gefunden");
+        progress.setText(resp[1] + " " + device.getMessage(calcMessage("DGW_scanFound")));
         progress.setProgress((100.0 / 64) * resp[1]);
 
         //just skip some time so we dont overkill the 
@@ -421,7 +421,7 @@ function dali_scan(device, online, progress, context) {
             high += resp[2].toString(16);
             if (resp[3] < 16) high += "0";
             high += resp[3].toString(16);
-            var para = device.getParameterByName("ballast" + counter);
+            var para = device.getParameterByName("DGW_ballast" + counter);
             high = "0x" + high;
             if (resp[4] < 99)
             high += " -&gt; " + resp[4];
@@ -432,5 +432,5 @@ function dali_scan(device, online, progress, context) {
         }
     }
 
-    progress.setText(counter + " Geräte gefunden");
+    progress.setText(counter + " " + device.getMessage(calcMessage("DGW_scanFound"))); // finished
 }

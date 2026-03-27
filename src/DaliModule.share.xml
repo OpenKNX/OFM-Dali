@@ -9,6 +9,8 @@
   <op:nowarn id="3" regex="setPara" />
   <op:nowarn id="3" regex="arcToPercent" />
   
+  <op:minOpenKNXproducerVersion value="4.3.2" />
+  
   <ManufacturerData>
     <Manufacturer RefId="M-00FA">
       <ApplicationPrograms>
@@ -396,6 +398,10 @@
               <Message Id="%AID%_M-%TT%00019" Name="loadErrorManu" Text="Herstellerkennung inkompatibel!" />
               <Message Id="%AID%_M-%TT%00020" Name="loadErrorApp" Text="Hardware-Type oder Firmware-Version inkompatibel!" />
               <Message Id="%AID%_M-%TT%00021" Name="evgWriteScene" Text="Übertrage Szene " />
+              <Message Id="%AID%_M-%TT%00022" Name="scanStart" Text="Suche Geräte" />
+              <Message Id="%AID%_M-%TT%00023" Name="scanFound" Text="Gerät gefunden" />
+              <Message Id="%AID%_M-%TT%00024" Name="evgWriteScene" Text="Übertrage Szene " />
+              <Message Id="%AID%_M-%TT%00025" Name="evgWriteScene" Text="Übertrage Szene " />
             </Messages>
             <Script>
               <op:include href="DaliModule.script.js" prefix="DGW" type="script" />
