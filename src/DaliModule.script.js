@@ -424,7 +424,7 @@ function dali_scan(device, online, progress, context) {
             var para = device.getParameterByName("DGW_ballast" + counter);
             high = "0x" + high;
             if (resp[4] < 99)
-            high += " -&gt; " + resp[4];
+            high += " -> " + resp[4];
             para.value = high;
             counter++;
         } else {
