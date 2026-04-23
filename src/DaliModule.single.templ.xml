@@ -374,7 +374,7 @@
               <ParameterRefRef RefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101" />
               <choose ParamRefId="%AID%_P-%T%100008_R-%T%10000801">
                 <when test="1">
-                  <Button Id="%AID%_B-%T%2%CC%001" Text="Auslesen" Name="read" EventHandler="dali_read" EventHandlerParameters="{ Channel: %C-1% }" EventHandlerOnline="ConnectionOriented" />
+                  <Button Id="%AID%_B-%T%2%CC%001" Text="Auslesen" Name="read" EventHandler="dali_read" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
                 </when>
               </choose>
               <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />
@@ -506,8 +506,8 @@
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Einstellungen für das EVG bitte links im Tab &quot;DALI Einstellungen&quot; vornehmen." UIHint="Information" />
                       <ParameterBlock Id="%AID%_PB-nnn" Text="DALI Einstellungen" Name="evg" Icon="idea">
-                        <Button Id="%AID%_B-%T%2%CC%002" Text="Aus Gerät lesen" Name="settingsRead" EventHandler="dali_settingsRead" EventHandlerParameters="{ &quot;Channel&quot;: %C-1% }" EventHandlerOnline="ConnectionOriented" />
-                        <Button Id="%AID%_B-%T%2%CC%003" Text="Auf Gerät übertragen" Name="settingsWrite" EventHandler="dali_settingsWrite" EventHandlerParameters="{ &quot;Channel&quot;: %C-1% }" EventHandlerOnline="ConnectionOriented" />
+                        <Button Id="%AID%_B-%T%2%CC%002" Text="Aus Gerät lesen" Name="settingsRead" EventHandler="dali_settingsRead" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
+                        <Button Id="%AID%_B-%T%2%CC%003" Text="Auf Gerät übertragen" Name="settingsWrite" EventHandler="dali_settingsWrite" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
                         <ParameterSeparator Id="%AID%_PS-nnn" Text="EVG Einstellungen" UIHint="Headline" Icon="cog-outline" />
                         <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
                           <Rows>
