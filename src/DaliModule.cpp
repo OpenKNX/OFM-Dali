@@ -23,9 +23,6 @@ const std::string DaliModule::version()
 // only if knx.configured == true
 void DaliModule::setup(bool conf)
 {
-    pinMode(REG1_APP_PIN7, INPUT);
-    daliMaster.init(REG1_APP_PIN6, REG1_APP_PIN7);
-
     #ifdef ARDUINO_ARCH_ESP32
         openknxNetwork.webserver.addLink("Dali Wiki", "https://github.com/OpenKNX/GW-REG1-Dali/wiki");
     #endif
@@ -115,6 +112,11 @@ void DaliModule::handleFunc(uint8_t setting)
 }
 #endif
 
+void DaliModule::setup1(bool conf) {
+    pinMode(REG1_APP_PIN7, INPUT);
+    daliMaster.init(REG1_APP_PIN6, REG1_APP_PIN7);
+}
+
 #ifdef DALI_NO_TIMER
 bool __isr __time_critical_func(daliTimerInterruptCallback)(repeating_timer *t)
 {
@@ -123,27 +125,8 @@ bool __isr __time_critical_func(daliTimerInterruptCallback)(repeating_timer *t)
 }
 #endif
 
-// void DaliModule::setup1(bool conf)
-// {
-//     dali = new DaliClass();
-//     dali->begin(DALI_TX, DALI_RX);
-// #ifdef DALI_NO_TIMER
-//     alarm_pool_t *_alarmPool1 = alarm_pool_create(2, 16);
-//     alarm_pool_add_repeating_timer_us(_alarmPool1, -417, daliTimerInterruptCallback, NULL, &_timer);
-// #endif
-//     dali->setErrorCallback([](daliReturnValue errorCode)
-//     {
-//         _lastDaliError = errorCode;
-//     });
-//     dali->setActivityCallback([]
-//     {
-//         daliActivity = millis();
-//     });
-// }
-
 void DaliModule::loop(bool configured)
 {
-    daliMaster.process();
     OpenKNX::DateTime currentTime = openknx.time.getLocalTime();
     if (currentTime.minute != _lastTimeMinute)
     {
@@ -188,29 +171,10 @@ void DaliModule::loop(bool configured)
     }
 }
 
-// void DaliModule::loop1(bool configured)
-// {
-//     if (_adrState != AddressingState::OFF)
-//         return;
-
-
-//     if (!configured)
-//         return;
-
-//     loopGroupState();
-// #ifdef INFO2_LED_PIN
-//     loopError();
-// #endif
-
-//     for (int i = 0; i < 64; i++)
-//     {
-//         channels[i].loop1();
-//     }
-//     for (int i = 0; i < 16; i++)
-//     {
-//         groups[i].loop1();
-//     }
-// }
+void DaliModule::loop1(bool configured)
+{
+    daliMaster.process();
+}
 
 void DaliModule::loopInitData()
 {
