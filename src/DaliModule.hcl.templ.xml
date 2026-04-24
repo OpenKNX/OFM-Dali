@@ -5,7 +5,7 @@
         <ApplicationProgram>
           <Static>
             <ParameterTypes>
-              <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
+              <!-- <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
                 <TypeTime Unit="Minutes" UIHint="Time_hhmm" minInclusive="0" maxInclusive="180" SizeInBit="8" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-hclType" Name="hclType" op:headerExport="define">
@@ -24,7 +24,7 @@
               </ParameterType>
               <ParameterType Id="%AID%_PT-HCL" Name="HCL">
                 <TypePicture RefId="%FILE-hcl%" HorizontalAlignment="Right"/>
-              </ParameterType>
+              </ParameterType> -->
             </ParameterTypes>
             <Parameters>
               <Parameter Id="%AID%_P-%T%5%CC%001" Name="%C%type" ParameterType="%AID%_PT-hclType" Text="Ansteuerung über" Value="0">

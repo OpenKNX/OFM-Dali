@@ -44,7 +44,7 @@ function dali_read(device, online, progress, context) {
         throw new Error(device.getMessage(calcMessage("DGW_dali_error")) + String(resp[0]));
     }
 
-    let prefix = "DGW" + "_" + context.Channel;
+    var prefix = "DGW" + "_" + context.Channel;
 
     var para = device.getParameterByName(prefix + "deviceType");
     if (resp[1] == 255) {
@@ -70,7 +70,7 @@ function dali_read(device, online, progress, context) {
 }
 
 function dali_settingsRead(device, online, progress, context) {
-    let prefix = "DGW" + "_" + context.Channel;
+    var prefix = "DGW" + "_" + context.Channel;
     Log.info("Start reading settings from EVG");
     Log.info("Prefix: " + prefix);
     progress.setText(device.getMessage(calcMessage("DGW_evgReadStart"))); // Start reading Data from EVG
@@ -185,7 +185,7 @@ function dali_settingsRead(device, online, progress, context) {
 }
 
 function dali_settingsWrite(device, online, progress, context) {
-    let prefix = "DGW" + "_" + context.Channel;
+    var prefix = "DGW" + "_" + context.Channel;
     Log.info("Start writing settings to EVG");
     Log.info("Prefix: " + prefix);
     // if(getParaInt("fadeTime") != "0" &amp;&amp; getParaInt("fadeTimeExtendedMultiplier") != "0")

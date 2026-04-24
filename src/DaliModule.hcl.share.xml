@@ -10,6 +10,26 @@
               <ParameterType Id="%AID%_PT-DGWHNumChannels" Name="DGWHNumChannels">
                 <TypeNumber SizeInBit="8" Type="unsignedInt" minInclusive="1" maxInclusive="%DGWH_N%" />
               </ParameterType>
+              <ParameterType Id="%AID%_PT-durationMin" Name="durationMin">
+                <TypeTime Unit="Minutes" UIHint="Time_hhmm" minInclusive="0" maxInclusive="180" SizeInBit="8" />
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-hclType" Name="hclType" op:headerExport="define">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="Inaktiv" Value="0" Id="%AID%_PT-hclType_EN-0" op:headerName="none" />
+                  <Enumeration Text="Sonnen Auf-/Untergang" Value="1" Id="%AID%_PT-hclType_EN-1" op:headerName="sun" />
+                  <Enumeration Text="Feste Zeiten" Value="2" Id="%AID%_PT-hclType_EN-2" op:headerName="time" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-offset" Name="offset" op:headerExport="define">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Text="Deaktiviert" Value="0" Id="%AID%_PT-offset_EN-0" op:headerName="none" />
+                  <Enumeration Text="Später" Value="1" Id="%AID%_PT-offset_EN-1" op:headerName="plus" />
+                  <Enumeration Text="Früher" Value="2" Id="%AID%_PT-offset_EN-2" op:headerName="minus" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-HCL" Name="HCL">
+                <TypePicture RefId="%FILE-hcl%" HorizontalAlignment="Right"/>
+              </ParameterType>
             </ParameterTypes>
             <Parameters>
               <Union SizeInBit="8">
