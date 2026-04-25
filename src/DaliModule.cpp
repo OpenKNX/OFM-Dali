@@ -1121,8 +1121,6 @@ void DaliModule::koHandleDayNight(GroupObject &ko)
     if (ParamDGW_daynight)
         value = !value;
     logDebugP("Broadcast Day/Night %i", value);
-    if (ParamDGW_daynight)
-        value = !value;
 
     for (int i = 0; i < 64; i++)
         channels[i].isNight = value;
