@@ -1294,8 +1294,8 @@ void DaliModule::funcHandleType(uint8_t *data, uint8_t *resultData, uint8_t &res
     resultData[0] = 0x00;
     resultData[1] = deviceType;
 
-    // DeviceType Color
-    if (deviceType == PT_deviceType_DT8)
+    // The device type numbers defined in PT_deviceType_* and used in knxprod are all one higher than the types specified in Dali (62386-102 Annex B)
+    if ((deviceType + 1) == PT_deviceType_DT8)
     {
         daliMaster.sendSpecialCommand(Dali::SpecialCommand::ENABLE_DT, 0x08);
         resp = getInfo(data[1], Dali::ExtendedCommandDT8::QUERY_COLOUR_TYPE_FEATURES);
