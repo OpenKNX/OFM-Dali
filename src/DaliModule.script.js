@@ -306,8 +306,8 @@ function dali_settingsWrite(device, online, progress, context) {
 }
 
 function dali_assingAddr(device, online, progress, context) {
-    var along = device.getParameterByName("longAddr");
-    var ashort = device.getParameterByName("shortAddr");
+    var along = device.getParameterByName("DGW_longAddr");
+    var ashort = device.getParameterByName("DGW_shortAddr");
 
     //assign address to device
     progress.setText(device.getMessage(calcMessage("DGW_addr_start")));
