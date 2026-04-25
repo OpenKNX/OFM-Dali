@@ -167,10 +167,10 @@ function dali_settingsRead(device, online, progress, context) {
                     // data[7] = kelvin &gt;&gt; 8;
                     // data[8] = kelvin &amp; 256;
                 } else { //it is RGB
-                    var color = (resp[1] << 16) | color;
-                    color = (resp[2] << 8) | color;
-                    color = resp[3];
-                    setPara(device, prefix + "s" + i + "cc", color.toString());
+                    var color = (resp[1] << 16) | (resp[2] << 8) | resp[3];
+                    var hexString = "#" + ("000000" + color.toString(16).toUpperCase()).slice(-6);
+                    progress.setText(hexString);
+                    setPara(device, prefix + "s" + i + "cc", hexString);
                 }
             }
         }
