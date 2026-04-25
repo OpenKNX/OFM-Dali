@@ -1132,6 +1132,7 @@ void DaliModule::koHandleOnValue(GroupObject &ko)
 {
     uint8_t value = ko.value(Dpt(5, 1));
     logDebugP("KO OnValue: %i", value);
+    value = DaliHelper::percentToArc(value);
 
     for (int i = 0; i < 64; i++)
         channels[i].setOnValue(value);
