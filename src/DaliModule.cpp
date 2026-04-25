@@ -1058,7 +1058,7 @@ void DaliModule::processInputKo(GroupObject &ko)
             koHandleOnValue(ko);
             break;
 
-        case DGW_Koscene:
+        case DGW_Koscenes:
             koHandleScene(ko);
             break;
 
