@@ -182,6 +182,18 @@
             <ParameterBlock Id="%AID%_PB-nnn" Text="G%C-1%: {{0:---}}" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" ShowInComObjectTree="true">
               <ParameterRefRef RefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
               <ParameterRefRef RefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201" />
+              <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                <Rows>
+                  <Row Id="%AID%_PB-nnn_R-1" Name="r0" />
+                </Rows>
+                <Columns>
+                  <Column Id="%AID%_PB-nnn_C-1" Name="c1" Width="50%" />
+                  <Column Id="%AID%_PB-nnn_C-2" Name="c2" Width="25%" />
+                  <Column Id="%AID%_PB-nnn_C-3" Name="c3" Width="25%" />
+                </Columns>
+                <Button Id="%AID%_B-%T%3%CC%001" Text="Identifizieren" Name="identify" EventHandler="dali_identify" EventHandlerParameters="{ &quot;Channel&quot;: %C%, &quot;stop&quot;: false, &quot;group&quot;: true }" EventHandlerOnline="ConnectionOriented" Cell="2,2"/>
+                <Button Id="%AID%_B-%T%3%CC%002" Text="Ident. stoppen" Name="stop_identify" EventHandler="dali_identify" EventHandlerParameters="{ &quot;Channel&quot;: %C%, &quot;stop&quot;: true, &quot;group&quot;: true }" EventHandlerOnline="ConnectionOriented" Cell="2,3"/>
+              </ParameterBlock>
               <ParameterSeparator Id="%AID%_PS-nnn" Text="" />
               <choose ParamRefId="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201">
                 <when test="!=0">

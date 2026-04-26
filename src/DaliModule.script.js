@@ -442,3 +442,22 @@ function dali_scan(device, online, progress, context) {
 
     progress.setText(counter + " " + device.getMessage(calcMessage("DGW_scanFound"))); // finished
 }
+
+function dali_identify(device, online, progress, context) {
+    var channel = context.Channel - 1;
+    if (context.stop) {
+        progress.setText("stop identify");
+    } else {
+        if (context.group) {
+            progress.setText("identify group: " + channel);
+        } else {
+            progress.setText("identify address: " + channel);
+        }
+    }
+    online.connect();
+    var data = [14];
+    data.push(channel);
+    data.push(context.group);
+    data.push(context.stop);
+    online.invokeFunctionProperty(160, 1, data);
+}

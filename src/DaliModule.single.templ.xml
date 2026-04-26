@@ -374,7 +374,20 @@
               <ParameterRefRef RefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101" />
               <choose ParamRefId="%AID%_P-%T%100008_R-%T%10000801">
                 <when test="1">
-                  <Button Id="%AID%_B-%T%2%CC%001" Text="Auslesen" Name="read" EventHandler="dali_read" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
+                  <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                    <Rows>
+                      <Row Id="%AID%_PB-nnn_R-1" Name="r0" />
+                      <Row Id="%AID%_PB-nnn_R-2" Name="r1" />
+                    </Rows>
+                    <Columns>
+                      <Column Id="%AID%_PB-nnn_C-1" Name="c1" Width="50%" />
+                      <Column Id="%AID%_PB-nnn_C-2" Name="c2" Width="25%" />
+                      <Column Id="%AID%_PB-nnn_C-3" Name="c3" Width="25%" />
+                    </Columns>
+                    <Button Id="%AID%_B-%T%2%CC%001" Text="Typ auslesen" Name="read" EventHandler="dali_read" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" Cell="1,2"/>
+                    <Button Id="%AID%_B-%T%2%CC%004" Text="Identifizieren" Name="identify" EventHandler="dali_identify" EventHandlerParameters="{ &quot;Channel&quot;: %C%, &quot;stop&quot;: false, &quot;group&quot;: false }" EventHandlerOnline="ConnectionOriented" Cell="2,2"/>
+                    <Button Id="%AID%_B-%T%2%CC%005" Text="Ident. stoppen" Name="stop_identify" EventHandler="dali_identify" EventHandlerParameters="{ &quot;Channel&quot;: %C%, &quot;stop&quot;: true, &quot;group&quot;: false }" EventHandlerOnline="ConnectionOriented" Cell="2,3"/>
+                  </ParameterBlock>
                 </when>
               </choose>
               <ParameterSeparator Id="%AID%_PS-nnn" Text="" UIHint="HorizontalRuler" />

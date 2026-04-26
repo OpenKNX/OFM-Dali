@@ -1735,8 +1735,22 @@ void DaliModule::funcHandleGetScene(uint8_t *data, uint8_t *resultData, uint8_t 
 
 void DaliModule::funcHandleIdentify(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
-    daliMaster.sendCommand(data[1], Dali::Command::RECALL_MAX);
+    bool isGroupAddress = data[2] == 1;
+    uint8_t address = data[1];
+    bool isStopCommand = data[3];
+    logDebugP("Got identify for %s: %u. Stop: %u", isGroupAddress ? "group" : "address", address, isStopCommand);
+    
+    if (isStopCommand)
+    {
+        daliMaster.sendSpecialCommand(Dali::SpecialCommand::TERMINATE, 0);
+        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+    }
+    else
+    {
+        daliMaster.sendSpecialCommand(Dali::SpecialCommand::INITIALISE, 0);
+        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+        daliMaster.sendCommand(address, Dali::Command::RECALL_MAX, isGroupAddress);
+    }
     resultLength = 0;
 }
 
