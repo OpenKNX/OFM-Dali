@@ -135,7 +135,7 @@ void DaliChannel::loopDimming()
             {
                 if (currentDimmType == DimmType::Brigthness)
                 {
-                    _queryId = daliMaster.sendCommand(_isGroup ? _dimmReferenceAddress : _channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, _isGroup, true);
+                    this->queryActualLevel();
                     daliMaster.sendCommand(_channelIndex, Dali::Command::UP, _isGroup);
                 }
 
@@ -156,7 +156,7 @@ void DaliChannel::loopDimming()
             {
                 if (currentDimmType == DimmType::Brigthness)
                 {
-                    _queryId = daliMaster.sendCommand(_isGroup ? _dimmReferenceAddress : _channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, _isGroup, true);
+                    this->queryActualLevel();
                     daliMaster.sendCommand(_channelIndex, Dali::Command::DOWN, _isGroup);
                 }
 
@@ -241,7 +241,7 @@ void DaliChannel::loopQueryLevel()
         _lastValueQuery = millis();
         if(_lastValueQuery == 0) _lastValueQuery++;
 
-        _queryId = daliMaster.sendCommand(_channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, false, true);
+        this->queryActualLevel();
         logDebugP("id: %i", _queryId);
         return;
     }
@@ -634,7 +634,7 @@ void DaliChannel::koHandleDimmRel(GroupObject &ko)
                 daliMaster.sendCommand(_channelIndex, Dali::Command::RECALL_MIN, _isGroup, true);
                 *currentDimmValue = _min;
                 currentState = true;
-                _queryId = daliMaster.sendCommand(_isGroup ? _dimmReferenceAddress : _channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, _isGroup, true);
+                this->queryActualLevel();
                 logDebugP("starting with min %i", _min);
                 _dimmLast = millis();
             }
@@ -878,6 +878,11 @@ bool DaliChannel::isDimmOffLocked() {
     return dimmLock == PT_dimmLock_noBoth || dimmLock == PT_dimmLock_noOff;
 }
 
+void DaliChannel::queryActualLevel()
+{
+    _queryId = daliMaster.sendCommand(_isGroup ? _dimmReferenceAddress : _channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, false, true);
+}
+
 void DaliChannel::sendColor()
 {
     // TODO senden nur alle 100? ms
@@ -1043,22 +1048,30 @@ void DaliChannel::setOnValue(uint8_t value)
     _onDay = value;
 }
 
-void DaliChannel::setGroups(uint16_t groups)
+void DaliChannel::setGroups(uint16_t groupBits, DaliChannel* groups)
 {
-    _groups = groups;
+    _groups = groupBits;
 
     // Set Reference Address to get current value from evg
     // when relative dimming a group
-    if(_isGroup && _dimmReferenceAddress == 255)
+    if(!_isGroup)
     {
         for(int i = 0; i < 16; i++)
         {
-            if((groups >> i) & 1)
+            if((groupBits >> i) & 1)
             {
-                _dimmReferenceAddress = i;
-                return;
+                groups[i].setDeimmRef(_channelIndex);
             }
         }
+    }
+}
+
+void DaliChannel::setDeimmRef(uint8_t ref)
+{
+    if(_isGroup && _dimmReferenceAddress == 255)
+    {
+        logDebugP("Set Dimmref for %u to %u", _channelIndex, ref);
+        _dimmReferenceAddress = ref;
     }
 }
 

@@ -186,14 +186,14 @@ void DaliModule::loopInitData()
         if (_adrFound == 0)
             daliMaster.sendArc(0xFF, DaliHelper::percentToArc((uint8_t)10), true);
 
-        uint16_t groups = 0;
+        uint16_t groupBits = 0;
         int16_t resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_GROUPS_0_7);
         if (resp < 0)
         {
             logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
             return;
         }
-        groups = resp;
+        groupBits = resp;
 
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_GROUPS_8_15);
         if (resp < 0)
@@ -201,8 +201,8 @@ void DaliModule::loopInitData()
             logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
             return;
         }
-        groups |= resp << 8;
-        channel.setGroups(groups);
+        groupBits |= resp << 8;
+        channel.setGroups(groupBits, this->groups);
 
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_MIN_LEVEL);
         if (resp < 0)
@@ -1508,13 +1508,13 @@ void DaliModule::funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t 
 
     // 1byte free
 
-    uint16_t groups = data[12];
-    groups |= data[13] << 8;
-    channel.setGroups(groups);
+    uint16_t groupBits = data[12];
+    groupBits |= data[13] << 8;
+    channel.setGroups(groupBits, this->groups);
 
     for (int i = 0; i < 16; i++)
     {
-        if ((groups >> i) & 0x1)
+        if ((groupBits >> i) & 0x1)
         {
             logDebugP("add to Group %i", i);
             daliMaster.sendCommand(data[1], Dali::Command::ADD_TO_GROUP | i);
