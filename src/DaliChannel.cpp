@@ -56,6 +56,7 @@ void DaliChannel::setup()
             interval = ParamDGWG_stairtime;
         _onDay = DaliHelper::percentToArc((float)ParamDGWG_onDay);
         _onNight = DaliHelper::percentToArc((float)ParamDGWG_onNight);
+        _queryInterval = ParamDGWG_queryTime;
         _dimmStatusInterval = ParamDGWG_dimmStateInterval;
         if(ParamDGWG_hcl)
         {
