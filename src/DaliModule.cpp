@@ -1142,70 +1142,59 @@ void DaliModule::koHandleOnValue(GroupObject &ko)
 
 void DaliModule::koHandleScene(GroupObject &ko)
 {
-    uint8_t gotNumber = ko.value(DPT_SceneNumber);
-    logDebugP("KO Scene: %i", gotNumber);
+    uint8_t knxSceneNumber = ko.value(DPT_SceneNumber);
+    bool save = ko.value(DPT_SceneControl);
+    logDebugP("KO Scene: %u, save: %u", knxSceneNumber, save);
+
     for (int i = 0; i < DGWS_CountNumber; i++)
     {
         uint8_t _channelIndex = i;
         uint8_t dest = ParamDGWS_type;
-        logDebugP("KO Scene%i: Dest=%i", i, dest);
-        if (dest == 0)
-            continue;
-        uint8_t number = ParamDGWS_numberKnx;
-        logDebugP("KO Scene%i: Number=%i", i, number - 1);
-        if (gotNumber == number - 1)
+        if (dest == PT_scenetype_none)
         {
-            bool isSave = ko.value(Dpt(18, 1, 0));
-            logDebugP("KO Scene%i: Save=%i", i, isSave);
-            if (isSave && !ParamDGWS_save)
-            {
-                logDebugP("KO Scene%i: Save not allowed", i);
-                continue;
-            }
-
-            uint8_t scene = ParamDGWS_numberDali;
-            logDebugP("KO Scene%i: Scene=%i", i, scene);
-            uint8_t addr = 0;
-            bool type = false;
-            switch (dest)
-            {
-            // Address
+            continue;
+        }
+        logDebugP("Found scene number: %u, save: %u", i, save);
+        if (save && !ParamDGWS_save)
+        {
+            logDebugP("Save not allowed. Skip!");
+            continue;
+        }
+        uint8_t daliScene = ParamDGWS_numberKnx;
+        uint8_t daliAddr = 0;
+        bool isGroup = false;
+        switch (dest)
+        {
             case PT_scenetype_address:
             {
-                addr = ParamDGWS_address;
-                logDebugP("KO Scene%i: Addr=%i", i, addr);
-                type = false;
+                daliAddr = ParamDGWS_address;
+                logDebugP("send dali scene: %u to Address: %i", i, daliAddr);
                 break;
             }
-
-            // Group
             case PT_scenetype_group:
             {
-                addr = ParamDGWS_group;
-                logDebugP("KO Scene%i: Grou=%i", i, addr);
-                type = true;
+                daliAddr = ParamDGWS_group;
+                logDebugP("send dali scene: %u to Group: %i", i, daliAddr);
+                isGroup = true;
                 break;
             }
-
-            // Broadcast
             case PT_scenetype_broadcast:
             {
-                addr = 0xFF;
-                logDebugP("KO Scene%i: Broadcast", i);
-                type = true;
+                daliAddr = 0xFF;
+                logDebugP("send dali scene: %u to Broadcast", i);
                 break;
             }
-            }
-
-            if (isSave)
-            {
-                daliMaster.sendCommand(addr, Dali::Command::ARC_TO_DTR, type);
-                daliMaster.sendCommand(addr, Dali::Command::DTR_AS_SCENE | scene, type);
-            }
-            else
-            {
-                daliMaster.sendCommand(addr, Dali::Command::GO_TO_SCENE | scene, type);
-            }
+            default:
+                break;
+        }
+        if (save)
+        {
+            daliMaster.sendCommand(daliAddr, Dali::Command::ARC_TO_DTR, isGroup);
+            daliMaster.sendCommand(daliAddr, Dali::Command::DTR_AS_SCENE | daliScene, isGroup);
+        }
+        else
+        {
+            daliMaster.sendCommand(daliAddr, Dali::Command::GO_TO_SCENE | daliScene, isGroup);
         }
     }
 }
