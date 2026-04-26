@@ -120,6 +120,8 @@ class DaliChannel : public OpenKNX::Channel
 		void sendKoStateOnChange(uint16_t koNr, const KNXValue &value, const Dpt &type);
 		void setTemperature(uint16_t value);
 		void setBrightness(uint8_t value);
+		bool isDimmOnLocked();
+		bool isDimmOffLocked();
 		
 		void koHandleSwitch(GroupObject &ko);
 		void koHandleDimmRel(GroupObject &ko);
