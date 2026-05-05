@@ -162,13 +162,13 @@ void DaliChannel::loopDimming()
 
                 *currentDimmValue = *currentDimmValue - 1;
                 if (*currentDimmValue <= _min || *currentDimmValue == 0) {
-                    logDebugP("Dimm Stop at: %i", currentDimmValue);
+                    logDebugP("Dimm Stop at: %i", *currentDimmValue);
                     updateCurrentDimmValue();
                     if (this->isDimmOffLocked()) {
                         logDebugP("Stop here because Dimm off is locked!");
                         _dimmDirection = DimmDirection::None;
                     } else {
-                        logDebugP("Turn off deice");
+                        logDebugP("Turn off device");
                         daliMaster.sendCommand(_channelIndex, Dali::Command::OFF, _isGroup);
                     }
                 }
