@@ -1499,7 +1499,7 @@ void DaliModule::funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t 
 
     uint16_t groupBits = data[12];
     groupBits |= data[13] << 8;
-    channel.setGroups(groupBits, this->groups);
+    channels[data[1]].setGroups(groupBits, this->groups);
 
     for (int i = 0; i < 16; i++)
     {

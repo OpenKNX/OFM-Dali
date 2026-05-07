@@ -880,6 +880,12 @@ bool DaliChannel::isDimmOffLocked() {
 
 void DaliChannel::queryActualLevel()
 {
+    if (_isGroup && _dimmReferenceAddress == 255)
+    {
+        logDebugP("Skip QUERY_ACTUAL_LEVEL: no valid dimm reference address set for group");
+        return;
+    }
+
     _queryId = daliMaster.sendCommand(_isGroup ? _dimmReferenceAddress : _channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, false, true);
 }
 
