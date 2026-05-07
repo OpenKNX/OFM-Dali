@@ -186,14 +186,14 @@ void DaliModule::loopInitData()
         if (_adrFound == 0)
             daliMaster.sendArc(0xFF, DaliHelper::percentToArc((uint8_t)10), true);
 
-        uint16_t groups = 0;
+        uint16_t groupBits = 0;
         int16_t resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_GROUPS_0_7);
         if (resp < 0)
         {
             logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
             return;
         }
-        groups = resp;
+        groupBits = resp;
 
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_GROUPS_8_15);
         if (resp < 0)
@@ -201,8 +201,8 @@ void DaliModule::loopInitData()
             logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
             return;
         }
-        groups |= resp << 8;
-        channel.setGroups(groups);
+        groupBits |= resp << 8;
+        channel.setGroups(groupBits, this->groups);
 
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_MIN_LEVEL);
         if (resp < 0)
@@ -1058,7 +1058,7 @@ void DaliModule::processInputKo(GroupObject &ko)
             koHandleOnValue(ko);
             break;
 
-        case DGW_Koscene:
+        case DGW_Koscenes:
             koHandleScene(ko);
             break;
 
@@ -1121,8 +1121,6 @@ void DaliModule::koHandleDayNight(GroupObject &ko)
     if (ParamDGW_daynight)
         value = !value;
     logDebugP("Broadcast Day/Night %i", value);
-    if (ParamDGW_daynight)
-        value = !value;
 
     for (int i = 0; i < 64; i++)
         channels[i].isNight = value;
@@ -1134,6 +1132,7 @@ void DaliModule::koHandleOnValue(GroupObject &ko)
 {
     uint8_t value = ko.value(Dpt(5, 1));
     logDebugP("KO OnValue: %i", value);
+    value = DaliHelper::percentToArc(value);
 
     for (int i = 0; i < 64; i++)
         channels[i].setOnValue(value);
@@ -1143,70 +1142,59 @@ void DaliModule::koHandleOnValue(GroupObject &ko)
 
 void DaliModule::koHandleScene(GroupObject &ko)
 {
-    uint8_t gotNumber = ko.value(DPT_SceneNumber);
-    logDebugP("KO Scene: %i", gotNumber);
+    uint8_t knxSceneNumber = ko.value(DPT_SceneNumber);
+    bool save = ko.value(DPT_SceneControl);
+    logDebugP("KO Scene: %u, save: %u", knxSceneNumber, save);
+
     for (int i = 0; i < DGWS_CountNumber; i++)
     {
         uint8_t _channelIndex = i;
         uint8_t dest = ParamDGWS_type;
-        logDebugP("KO Scene%i: Dest=%i", i, dest);
-        if (dest == 0)
-            continue;
-        uint8_t number = ParamDGWS_numberKnx;
-        logDebugP("KO Scene%i: Number=%i", i, number - 1);
-        if (gotNumber == number - 1)
+        if (dest == PT_scenetype_none)
         {
-            bool isSave = ko.value(Dpt(18, 1, 0));
-            logDebugP("KO Scene%i: Save=%i", i, isSave);
-            if (isSave && !ParamDGWS_save)
-            {
-                logDebugP("KO Scene%i: Save not allowed", i);
-                continue;
-            }
-
-            uint8_t scene = ParamDGWS_numberDali;
-            logDebugP("KO Scene%i: Scene=%i", i, scene);
-            uint8_t addr = 0;
-            bool type = false;
-            switch (dest)
-            {
-            // Address
+            continue;
+        }
+        logDebugP("Found scene number: %u, save: %u", i, save);
+        if (save && !ParamDGWS_save)
+        {
+            logDebugP("Save not allowed. Skip!");
+            continue;
+        }
+        uint8_t daliScene = ParamDGWS_numberKnx;
+        uint8_t daliAddr = 0;
+        bool isGroup = false;
+        switch (dest)
+        {
             case PT_scenetype_address:
             {
-                addr = ParamDGWS_address;
-                logDebugP("KO Scene%i: Addr=%i", i, addr);
-                type = false;
+                daliAddr = ParamDGWS_address;
+                logDebugP("send dali scene: %u to Address: %i", i, daliAddr);
                 break;
             }
-
-            // Group
             case PT_scenetype_group:
             {
-                addr = ParamDGWS_group;
-                logDebugP("KO Scene%i: Grou=%i", i, addr);
-                type = true;
+                daliAddr = ParamDGWS_group;
+                logDebugP("send dali scene: %u to Group: %i", i, daliAddr);
+                isGroup = true;
                 break;
             }
-
-            // Broadcast
             case PT_scenetype_broadcast:
             {
-                addr = 0xFF;
-                logDebugP("KO Scene%i: Broadcast", i);
-                type = true;
+                daliAddr = 0xFF;
+                logDebugP("send dali scene: %u to Broadcast", i);
                 break;
             }
-            }
-
-            if (isSave)
-            {
-                daliMaster.sendCommand(addr, Dali::Command::ARC_TO_DTR, type);
-                daliMaster.sendCommand(addr, Dali::Command::DTR_AS_SCENE | scene, type);
-            }
-            else
-            {
-                daliMaster.sendCommand(addr, Dali::Command::GO_TO_SCENE | scene, type);
-            }
+            default:
+                break;
+        }
+        if (save)
+        {
+            daliMaster.sendCommand(daliAddr, Dali::Command::ARC_TO_DTR, isGroup);
+            daliMaster.sendCommand(daliAddr, Dali::Command::DTR_AS_SCENE | daliScene, isGroup);
+        }
+        else
+        {
+            daliMaster.sendCommand(daliAddr, Dali::Command::GO_TO_SCENE | daliScene, isGroup);
         }
     }
 }
@@ -1294,8 +1282,8 @@ void DaliModule::funcHandleType(uint8_t *data, uint8_t *resultData, uint8_t &res
     resultData[0] = 0x00;
     resultData[1] = deviceType;
 
-    // DeviceType Color
-    if (deviceType == PT_deviceType_DT8)
+    // The device type numbers defined in PT_deviceType_* and used in knxprod are all one higher than the types specified in Dali (62386-102 Annex B)
+    if ((deviceType + 1) == PT_deviceType_DT8)
     {
         daliMaster.sendSpecialCommand(Dali::SpecialCommand::ENABLE_DT, 0x08);
         resp = getInfo(data[1], Dali::ExtendedCommandDT8::QUERY_COLOUR_TYPE_FEATURES);
@@ -1509,13 +1497,13 @@ void DaliModule::funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t 
 
     // 1byte free
 
-    uint16_t groups = data[12];
-    groups |= data[13] << 8;
-    channel.setGroups(groups);
+    uint16_t groupBits = data[12];
+    groupBits |= data[13] << 8;
+    channels[data[1]].setGroups(groupBits, this->groups);
 
     for (int i = 0; i < 16; i++)
     {
-        if ((groups >> i) & 0x1)
+        if ((groupBits >> i) & 0x1)
         {
             logDebugP("add to Group %i", i);
             daliMaster.sendCommand(data[1], Dali::Command::ADD_TO_GROUP | i);
@@ -1747,8 +1735,22 @@ void DaliModule::funcHandleGetScene(uint8_t *data, uint8_t *resultData, uint8_t 
 
 void DaliModule::funcHandleIdentify(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
-    daliMaster.sendCommand(data[1], Dali::Command::RECALL_MAX);
+    bool isGroupAddress = data[2] == 1;
+    uint8_t address = data[1];
+    bool isStopCommand = data[3];
+    logDebugP("Got identify for %s: %u. Stop: %u", isGroupAddress ? "group" : "address", address, isStopCommand);
+    
+    if (isStopCommand)
+    {
+        daliMaster.sendSpecialCommand(Dali::SpecialCommand::TERMINATE, 0);
+        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+    }
+    else
+    {
+        daliMaster.sendSpecialCommand(Dali::SpecialCommand::INITIALISE, 0);
+        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+        daliMaster.sendCommand(address, Dali::Command::RECALL_MAX, isGroupAddress);
+    }
     resultLength = 0;
 }
 

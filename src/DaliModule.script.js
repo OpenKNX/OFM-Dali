@@ -167,10 +167,10 @@ function dali_settingsRead(device, online, progress, context) {
                     // data[7] = kelvin &gt;&gt; 8;
                     // data[8] = kelvin &amp; 256;
                 } else { //it is RGB
-                    var color = (resp[1] << 16) | color;
-                    color = (resp[2] << 8) | color;
-                    color = resp[3];
-                    setPara(device, prefix + "s" + i + "cc", color.toString());
+                    var color = (resp[1] << 16) | (resp[2] << 8) | resp[3];
+                    var hexString = "#" + ("000000" + color.toString(16).toUpperCase()).slice(-6);
+                    progress.setText(hexString);
+                    setPara(device, prefix + "s" + i + "cc", hexString);
                 }
             }
         }
@@ -306,8 +306,8 @@ function dali_settingsWrite(device, online, progress, context) {
 }
 
 function dali_assingAddr(device, online, progress, context) {
-    var along = device.getParameterByName("longAddr");
-    var ashort = device.getParameterByName("shortAddr");
+    var along = device.getParameterByName("DGW_longAddr");
+    var ashort = device.getParameterByName("DGW_shortAddr");
 
     //assign address to device
     progress.setText(device.getMessage(calcMessage("DGW_addr_start")));
@@ -441,4 +441,23 @@ function dali_scan(device, online, progress, context) {
     }
 
     progress.setText(counter + " " + device.getMessage(calcMessage("DGW_scanFound"))); // finished
+}
+
+function dali_identify(device, online, progress, context) {
+    var channel = context.Channel - 1;
+    if (context.stop) {
+        progress.setText("stop identify");
+    } else {
+        if (context.group) {
+            progress.setText("identify group: " + channel);
+        } else {
+            progress.setText("identify address: " + channel);
+        }
+    }
+    online.connect();
+    var data = [14];
+    data.push(channel);
+    data.push(context.group);
+    data.push(context.stop);
+    online.invokeFunctionProperty(160, 1, data);
 }

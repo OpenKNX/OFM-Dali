@@ -367,7 +367,7 @@
               <ComObject Id="%AID%_O-%T%100002" Name="broadcast_dimm" Text="Dali: Broadcast" Number="2" FunctionText="Dimmen Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
               <ComObject Id="%AID%_O-%T%100003" Name="daynight" Text="Dali: Allgemein" Number="3" FunctionText="Tag/Nacht" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
               <ComObject Id="%AID%_O-%T%100004" Name="onValue" Text="Dali: Allgemein" Number="4" FunctionText="Einschaltwert Tag" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%100005" Name="scenes" Text="Dali: Allgemein" Number="5" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-17-1" />
+              <ComObject Id="%AID%_O-%T%100005" Name="scenes" Text="Dali: Allgemein" Number="5" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-18-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef Id="%AID%_O-%T%100001_R-%T%10000101" RefId="%AID%_O-%T%100001" />
