@@ -178,7 +178,7 @@ void DaliModule::loop1(bool configured)
 
 void DaliModule::loopInitData()
 {
-    DaliChannel channel = channels[_adrFound];
+    DaliChannel& channel = channels[_adrFound];
     _adrFound++;
 
     if (channel.isConfigured())
@@ -1151,16 +1151,17 @@ void DaliModule::koHandleScene(GroupObject &ko)
         uint8_t _channelIndex = i;
         uint8_t dest = ParamDGWS_type;
         if (dest == PT_scenetype_none)
-        {
             continue;
-        }
+        if((ParamDGWS_numberKnx - 1) != knxSceneNumber)
+            continue;
+
         logDebugP("Found scene number: %u, save: %u", i, save);
         if (save && !ParamDGWS_save)
         {
             logDebugP("Save not allowed. Skip!");
             continue;
         }
-        uint8_t daliScene = ParamDGWS_numberKnx;
+        uint8_t daliScene = ParamDGWS_numberDali;
         uint8_t daliAddr = 0;
         bool isGroup = false;
         switch (dest)
@@ -1181,11 +1182,14 @@ void DaliModule::koHandleScene(GroupObject &ko)
             case PT_scenetype_broadcast:
             {
                 daliAddr = 0xFF;
+                isGroup = true;
                 logDebugP("send dali scene: %u to Broadcast", i);
                 break;
             }
             default:
-                break;
+                // this should not happen, because of the check above, but just in case
+                logErrorP("Invalid scene type configuration. Skip! scene %u", i);
+                continue;
         }
         if (save)
         {

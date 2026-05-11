@@ -135,7 +135,7 @@ void DaliChannel::loopDimming()
             {
                 if (currentDimmType == DimmType::Brigthness)
                 {
-                    this->queryActualLevel();
+                    queryActualLevel();
                     daliMaster.sendCommand(_channelIndex, Dali::Command::UP, _isGroup);
                 }
 
@@ -156,7 +156,7 @@ void DaliChannel::loopDimming()
             {
                 if (currentDimmType == DimmType::Brigthness)
                 {
-                    this->queryActualLevel();
+                    queryActualLevel();
                     daliMaster.sendCommand(_channelIndex, Dali::Command::DOWN, _isGroup);
                 }
 
@@ -164,7 +164,7 @@ void DaliChannel::loopDimming()
                 if (*currentDimmValue <= _min || *currentDimmValue == 0) {
                     logDebugP("Dimm Stop at: %i", *currentDimmValue);
                     updateCurrentDimmValue();
-                    if (this->isDimmOffLocked()) {
+                    if (isDimmOffLocked()) {
                         logDebugP("Stop here because Dimm off is locked!");
                         _dimmDirection = DimmDirection::None;
                     } else {
@@ -241,7 +241,7 @@ void DaliChannel::loopQueryLevel()
         _lastValueQuery = millis();
         if(_lastValueQuery == 0) _lastValueQuery++;
 
-        this->queryActualLevel();
+        queryActualLevel();
         logDebugP("id: %i", _queryId);
         return;
     }
@@ -621,9 +621,9 @@ void DaliChannel::koHandleDimmRel(GroupObject &ko)
     _dimmDirection = ko.value(Dpt(3, 7, 0)) ? DimmDirection::Up : DimmDirection::Down;
     if (_dimmDirection == DimmDirection::Up)
     {
-        if(!currentState )
+        if(!currentState)
         {
-            if (this->isDimmOnLocked())
+            if (isDimmOnLocked())
             {
                 logDebugP("ignored because Dimm On is locked!");
                 _dimmDirection = DimmDirection::None;
@@ -634,7 +634,7 @@ void DaliChannel::koHandleDimmRel(GroupObject &ko)
                 daliMaster.sendCommand(_channelIndex, Dali::Command::RECALL_MIN, _isGroup, true);
                 *currentDimmValue = _min;
                 currentState = true;
-                this->queryActualLevel();
+                queryActualLevel();
                 logDebugP("starting with min %i", _min);
                 _dimmLast = millis();
             }
@@ -1066,13 +1066,13 @@ void DaliChannel::setGroups(uint16_t groupBits, DaliChannel* groups)
         {
             if((groupBits >> i) & 1)
             {
-                groups[i].setDeimmRef(_channelIndex);
+                groups[i].setDimmRef(_channelIndex);
             }
         }
     }
 }
 
-void DaliChannel::setDeimmRef(uint8_t ref)
+void DaliChannel::setDimmRef(uint8_t ref)
 {
     if(_isGroup && _dimmReferenceAddress == 255)
     {
