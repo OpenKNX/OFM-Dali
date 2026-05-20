@@ -1,9 +1,9 @@
 #include "DaliDT8.h"
 
 DaliDT8::DaliDT8(Dali::Master &master, uint8_t address, bool isGroup,
-                 uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
-                 uint8_t fadeTime, bool errorState)
-    : DaliEVGBase(master, address, 8, isGroup, minLevel, maxLevel, onLevel, fadeTime, errorState, false),
+                                 uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
+                                 uint8_t fadeTime, uint8_t fadeRate, bool errorState)
+        : DaliEVGBase(master, address, 8, isGroup, minLevel, maxLevel, onLevel, fadeTime, fadeRate, errorState, false),
       coordinateX(0),
       coordinateY(0),
       colourTemperature(0),

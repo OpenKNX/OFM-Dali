@@ -21,9 +21,9 @@ static constexpr float FADE_DURATION_SECONDS[16] = {
 std::array<DaliEVGBase *, DaliEVGBase::MAX_SHORT_ADDRESSES> DaliEVGBase::instances = {};
 
 DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceType, bool isGroup,
-                         uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
-                         uint8_t fadeTime, bool errorState, bool startOn,
-                         bool realDevicePresent)
+                                                 uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
+                                                 uint8_t fadeTime, uint8_t fadeRate, bool errorState, bool startOn,
+                                                 bool realDevicePresent)
     : daliMaster(master),
       address(address),
       deviceType(deviceType),
@@ -32,7 +32,8 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       maxLevel(maxLevel),
       onLevel(onLevel),
       nightOnLevel(onLevel),
-      fadeTime(fadeTime),
+            fadeTime(fadeTime),
+            fadeRate(fadeRate),
       errorState(errorState),
       onState(startOn),
       currentLevel(startOn ? onLevel : 0),
@@ -44,7 +45,8 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       fadeTargetLevel(currentLevel),
       fadeActive(false),
       fadeLastMs(0),
-      fadeAccumulator(0.0f)
+    fadeAccumulator(0.0f),
+    fadeStepsPerSecOverride(0.0f)
 {
     registerInstance(address, this);
 }
@@ -172,6 +174,11 @@ uint8_t DaliEVGBase::getFadeTime() const
     return fadeTime;
 }
 
+uint8_t DaliEVGBase::getFadeRate() const
+{
+    return fadeRate;
+}
+
 uint16_t DaliEVGBase::getGroupBits() const
 {
     return groupBits;
@@ -215,6 +222,8 @@ void DaliEVGBase::setGroups(uint16_t groupBitsValue)
 
 void DaliEVGBase::startFadeTo(uint8_t targetLevel, uint32_t nowMs)
 {
+    // Clear any rate-based override when starting a normal fade
+    fadeStepsPerSecOverride = 0.0f;
     fadeTargetLevel = targetLevel;
     if (fadeTargetLevel == currentLevel) {
         fadeActive = false;
@@ -261,9 +270,14 @@ void DaliEVGBase::update(uint32_t nowMs)
         durationSeconds = FADE_DURATION_SECONDS[fadeTime];
     }
 
-    // Convert fadeTime duration to an effective level step rate.
-    // Use full-scale range 0..254 for the fade duration.
-    float stepsPerSec = (durationSeconds > 0.0f) ? (254.0f / durationSeconds) : 254.0f;
+    // Convert fadeTime duration to an effective level step rate unless overridden
+    // by a rate-based fade (e.g. UP/DOWN). Use full-scale range 0..254 for the fade duration.
+    float stepsPerSec = 0.0f;
+    if (fadeStepsPerSecOverride > 0.0f) {
+        stepsPerSec = fadeStepsPerSecOverride;
+    } else {
+        stepsPerSec = (durationSeconds > 0.0f) ? (254.0f / durationSeconds) : 254.0f;
+    }
     float steps = stepsPerSec * (elapsedMs / 1000.0f);
     fadeAccumulator += steps;
     int32_t stepCount = (int32_t)floor(fadeAccumulator);
@@ -284,6 +298,8 @@ void DaliEVGBase::update(uint32_t nowMs)
         if (move >= diff) {
             currentLevel = fadeTargetLevel;
             fadeActive = false;
+            // clear override when fade completes
+            fadeStepsPerSecOverride = 0.0f;
         } else {
             currentLevel += (uint8_t)move;
         }
@@ -293,6 +309,8 @@ void DaliEVGBase::update(uint32_t nowMs)
         if (move >= diff) {
             currentLevel = fadeTargetLevel;
             fadeActive = false;
+            // clear override when fade completes
+            fadeStepsPerSecOverride = 0.0f;
         } else {
             currentLevel -= (uint8_t)move;
         }
@@ -419,24 +437,41 @@ bool DaliEVGBase::handleCommand(uint8_t command, uint8_t parameter, const Parsed
         return true;
     }
     if (command == static_cast<uint8_t>(Dali::Command::UP)) {
-        if (currentLevel + 10 > maxLevel) {
-            currentLevel = maxLevel;
-        } else {
-            currentLevel += 10;
+        // Start/continue a rate-based fade for 200 ms using fadeRate mapping
+        float stepsPerSec = FADE_STEPS_PER_SEC[0];
+        if (fadeRate < 16) stepsPerSec = FADE_STEPS_PER_SEC[fadeRate];
+        // amount to move during 200 ms
+        int delta = (int)ceil(stepsPerSec * (UPDOWN_FADE_INTERVAL_MS * 0.001f));
+        if (delta < 1) delta = 1;
+        uint8_t target = currentLevel + (uint8_t)delta;
+        if (target > maxLevel) target = maxLevel;
+        if (target != currentLevel) {
+            fadeTargetLevel = target;
+            fadeActive = true;
+            fadeStepsPerSecOverride = stepsPerSec;
+            // initialize timing for update()
+            fadeLastMs = 0;
+            fadeAccumulator = 0.0f;
         }
         onState = currentLevel > 0;
-        if (onState) {
-            lastNonZeroLevel = currentLevel;
-        }
+        if (onState) lastNonZeroLevel = currentLevel;
         return true;
     }
     if (command == static_cast<uint8_t>(Dali::Command::DOWN)) {
-        if (currentLevel <= 10) {
-            currentLevel = 0;
-            onState = false;
-        } else {
-            currentLevel -= 10;
+        // Start/continue a rate-based fade for 200 ms using fadeRate mapping
+        float stepsPerSec = FADE_STEPS_PER_SEC[0];
+        if (fadeRate < 16) stepsPerSec = FADE_STEPS_PER_SEC[fadeRate];
+        int delta = (int)ceil(stepsPerSec * (UPDOWN_FADE_INTERVAL_MS * 0.001f));
+        if (delta < 1) delta = 1;
+        uint8_t target = (currentLevel <= (uint8_t)delta) ? 0 : (currentLevel - (uint8_t)delta);
+        if (target != currentLevel) {
+            fadeTargetLevel = target;
+            fadeActive = true;
+            fadeStepsPerSecOverride = stepsPerSec;
+            fadeLastMs = 0;
+            fadeAccumulator = 0.0f;
         }
+        if (target == 0) onState = false;
         return true;
     }
     if (command >= static_cast<uint8_t>(Dali::Command::GO_TO_SCENE)

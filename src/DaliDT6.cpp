@@ -1,10 +1,10 @@
 #include "DaliDT6.h"
 
 DaliDT6::DaliDT6(Dali::Master &master, uint8_t address, bool isGroup,
-                 uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
-                 uint8_t fadeTime, bool errorState, uint8_t fastFadeTime)
-    : DaliEVGBase(master, address, 6, isGroup, minLevel, maxLevel, onLevel, fadeTime, errorState, false),
-      fastFadeTime(fastFadeTime)
+                                 uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
+                                 uint8_t fadeTime, uint8_t fadeRate, bool errorState, uint8_t fastFadeTime)
+        : DaliEVGBase(master, address, 6, isGroup, minLevel, maxLevel, onLevel, fadeTime, fadeRate, errorState, false),
+            fastFadeTime(fastFadeTime)
 {
 }
 

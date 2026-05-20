@@ -6,12 +6,15 @@
 #include "Dali/Commands.h"
 #include <array>
 
+// Interval used for UP/DOWN rate steps (milliseconds)
+static constexpr uint32_t UPDOWN_FADE_INTERVAL_MS = 200;
+
 class DaliEVGBase
 {
 public:
     DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceType, bool isGroup = false,
                 uint8_t minLevel = 0, uint8_t maxLevel = 254, uint8_t onLevel = 254,
-                uint8_t fadeTime = 0, bool errorState = false, bool startOn = false,
+                uint8_t fadeTime = 0, uint8_t fadeRate = 0, bool errorState = false, bool startOn = false,
                 bool realDevicePresent = false);
     virtual ~DaliEVGBase();
 
@@ -32,6 +35,7 @@ public:
     uint8_t getOnLevel() const;
     uint8_t getNightOnLevel() const;
     uint8_t getFadeTime() const;
+    uint8_t getFadeRate() const;
     uint16_t getGroupBits() const;
 
     void setErrorState(bool errorState);
@@ -39,6 +43,7 @@ public:
     void setOffLevel(uint8_t arcLevel);
     void setNightOnLevel(uint8_t arcLevel);
     void setFadeTime(uint8_t fadeTime);
+    void setFadeRate(uint8_t fadeRate);
     void setGroups(uint16_t groupBits);
     bool isMemberOfGroup(uint8_t group) const;
     
@@ -87,6 +92,7 @@ protected:
     uint8_t onLevel;
     uint8_t nightOnLevel;
     uint8_t fadeTime;
+    uint8_t fadeRate;
     bool errorState;
     bool onState;
     uint8_t currentLevel;
@@ -100,5 +106,7 @@ protected:
     bool fadeActive;
     uint32_t fadeLastMs;
     float fadeAccumulator;
+    // Optional override: when >0, update() uses this steps/sec rate
+    float fadeStepsPerSecOverride;
     // Note: fadeTime (0..15) maps to a steps/sec table implemented in cpp
 };

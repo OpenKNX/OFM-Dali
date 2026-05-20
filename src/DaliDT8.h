@@ -6,9 +6,9 @@
 class DaliDT8 : public DaliEVGBase
 {
 public:
-    DaliDT8(Dali::Master &master, uint8_t address, bool isGroup = false,
+        DaliDT8(Dali::Master &master, uint8_t address, bool isGroup = false,
             uint8_t minLevel = 0, uint8_t maxLevel = 254, uint8_t onLevel = 254,
-            uint8_t fadeTime = 0, bool errorState = false);
+            uint8_t fadeTime = 0, uint8_t fadeRate = 0, bool errorState = false);
 
     uint16_t getCoordinateX() const;
     uint16_t getCoordinateY() const;
