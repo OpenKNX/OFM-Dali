@@ -245,12 +245,21 @@ void DaliChannel::loopQueryLevel()
         logDebugP("id: %i", _queryId);
         return;
     }
-    if(_queryId != 0)
+    if (_queryId == 0 && _queryActualLevelTimer > 0 && delayCheck(_queryActualLevelTimer, _queryActualLevelDelay))
+    {
+        _queryActualLevelDelay = 0;
+        _queryActualLevelTimer = 0;
+        queryActualLevel();
+        logDebugP("Query-Id: %i", _queryId);
+        if (daliMaster._debugRef == 0) daliMaster._debugRef = _queryId;
+    }
+    else if(_queryId != 0)
     {
         Dali::Response response = daliMaster.getResponse(_queryId);
         if(response.state == Dali::ResponseState::NOT_REGISTERED)
         {
             // There is no response we can wait for
+            logDebugP("Query-Id %i not registered!", _queryId);
             _queryId = 0;
             return;
         }
@@ -272,9 +281,9 @@ void DaliChannel::loopQueryLevel()
             } else {
                 uint8_t data = response.frame.data & 0xFF;
                 logDebugP("Got new actual level %i%%-%i", DaliHelper::arcToPercent(data), data);
-                setDimmState(data, false, true);
+                setDimmState(data, true, true);
 
-                if(currentDimmType == DimmType::Brigthness)
+                if(currentDimmType == DimmType::Brigthness && currentDimmValue != nullptr)
                     *currentDimmValue = data;
             }
         }
@@ -295,12 +304,12 @@ void DaliChannel::processInputKo(GroupObject &ko)
     if (_isGroup)
     {
         chanIndex = (ko.asap() - DGWG_KoOffset) % DGWG_KoBlockSize;
-        //logDebugP("Got GROUP KO %i", chanIndex);
+        logInfoP("Got GROUP KO %i", chanIndex);
     }
     else
     {
         chanIndex = (ko.asap() - DGW_KoOffset) % DGW_KoBlockSize;
-        //logDebugP("Got SHORT KO %i", chanIndex);
+        logInfoP("Got SHORT KO %i", chanIndex);
     }
 
     switch (chanIndex)
@@ -404,7 +413,7 @@ void DaliChannel::koHandleHclCurve(GroupObject &ko)
 void DaliChannel::koHandleScene(GroupObject &ko)
 {
     uint8_t number = ko.value(Dpt(17,1));
-    logDebugP("Szene KNX %i to DALI %i", number + 1, number);
+    logInfoP("Szene KNX %i to DALI %i", number + 1, number);
     if(number > 15)
     {
         logErrorP("Szene ignoriert, da zu hoch: %i, max 15", number);
@@ -412,6 +421,7 @@ void DaliChannel::koHandleScene(GroupObject &ko)
     }
 
     daliMaster.sendCommand(_channelIndex, Dali::Command::GO_TO_SCENE | number, _isGroup);
+    queryActualLevel(700);
 }
 
 void DaliChannel::koHandleColorRel(GroupObject &ko, uint8_t index)
@@ -887,6 +897,13 @@ void DaliChannel::queryActualLevel()
     }
 
     _queryId = daliMaster.sendCommand(_isGroup ? _dimmReferenceAddress : _channelIndex, Dali::Command::QUERY_ACTUAL_LEVEL, false, true);
+    logDebugP("Send QUERY_ACTUAL_LEVEL, id: %u", _queryId);
+}
+
+void DaliChannel::queryActualLevel(uint32_t delay)
+{
+    _queryActualLevelTimer = delayTimerInit();
+    _queryActualLevelDelay = delay; // add some time for each channel to avoid all answers at the same time
 }
 
 void DaliChannel::sendColor()
@@ -978,10 +995,11 @@ void DaliChannel::setSwitchState(bool value, bool isSwitchCommand)
 
     // logDebugP("AutoConfSwitch %i %i %i", value, ParamDGW_hcl_auto_off, _hclIsAutoMode);
 
-    // bool currentState = knx.getGroupObject(calcKoNumber(_isGroup ? DGWG_Koswitch_state : DGW_Koswitch_state)).value(DPT_Switch);
-    // if (value == currentState)
-    //     return;
-    knx.getGroupObject(calcKoNumber(_isGroup ? DGWG_Koswitch_state : DGW_Koswitch_state)).value(value, DPT_Switch);
+    GroupObject &ko = knx.getGroupObject(calcKoNumber(_isGroup ? DGWG_Koswitch_state : DGW_Koswitch_state));
+    bool currentState = ko.value(DPT_Switch);
+    if (value == currentState && ko.initialized())
+        return;
+    ko.value(value, DPT_Switch);
 }
 
 void DaliChannel::setDimmState(uint8_t value, bool isDimmCommand, bool isLastCommand)

@@ -101,6 +101,8 @@ class DaliChannel : public OpenKNX::Channel
 		uint32_t _queryId = 0;
 		uint16_t _queryInterval = 0;
 		unsigned long _lastValueQuery = 0;
+		uint32_t _queryActualLevelTimer = 0;
+		uint32_t _queryActualLevelDelay = 0;
 
 		//Einschalten mit letztem Wert
 		uint8_t _lastDayValue = 100;
@@ -124,6 +126,7 @@ class DaliChannel : public OpenKNX::Channel
 		bool isDimmOnLocked();
 		bool isDimmOffLocked();
 		void queryActualLevel();
+		void queryActualLevel(uint32_t delay);
 		
 		void koHandleSwitch(GroupObject &ko);
 		void koHandleDimmRel(GroupObject &ko);
