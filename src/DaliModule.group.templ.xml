@@ -91,36 +91,36 @@
               <Parameter Id="%AID%_P-%T%3%CC%035" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
             </Parameters>
             <ParameterRefs>
-              <ParameterRef RefId="%AID%_P-%T%3%CC%001" Id="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" Name="name" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%002" Id="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201" Name="deviceType" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%003" Id="%AID%_P-%T%3%CC%003_R-%T%3%CC%00301" Name="lock" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%004" Id="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401" Name="type" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%005" Id="%AID%_P-%T%3%CC%005_R-%T%3%CC%00501" Name="nachtriggern" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%006" Id="%AID%_P-%T%3%CC%006_R-%T%3%CC%00601" Name="stairtime" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%007" Id="%AID%_P-%T%3%CC%007_R-%T%3%CC%00701" Name="manuoff" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%008" Id="%AID%_P-%T%3%CC%008_R-%T%3%CC%00801" Name="lockbehave" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%009" Id="%AID%_P-%T%3%CC%009_R-%T%3%CC%00901" Name="lockvalue" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%010" Id="%AID%_P-%T%3%CC%010_R-%T%3%CC%01001" Name="unlockbehave" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%011" Id="%AID%_P-%T%3%CC%011_R-%T%3%CC%01101" Name="unlockvalue" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%012" Id="%AID%_P-%T%3%CC%012_R-%T%3%CC%01201" Name="onDay" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%013" Id="%AID%_P-%T%3%CC%013_R-%T%3%CC%01301" Name="onNight" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%018" Id="%AID%_P-%T%3%CC%018_R-%T%3%CC%01801" Name="locknegate" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%019" Id="%AID%_P-%T%3%CC%019_R-%T%3%CC%01901" Name="colorType" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%020" Id="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001" Name="colorSpace" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%023" Id="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301" Name="hcl" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%021" Id="%AID%_P-%T%3%CC%021_R-%T%3%CC%02101" Name="tempMin" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%022" Id="%AID%_P-%T%3%CC%022_R-%T%3%CC%02201" Name="tempMax" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%024" Id="%AID%_P-%T%3%CC%024_R-%T%3%CC%02401" Name="xyIgnore" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%025" Id="%AID%_P-%T%3%CC%025_R-%T%3%CC%02501" Name="dimmStateInterval" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%026" Id="%AID%_P-%T%3%CC%026_R-%T%3%CC%02601" Name="queryTime" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%028" Id="%AID%_P-%T%3%CC%028_R-%T%3%CC%02801" Name="hclCurve" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%029" Id="%AID%_P-%T%3%CC%029_R-%T%3%CC%02901" Name="dimmLock" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%030" Id="%AID%_P-%T%3%CC%030_R-%T%3%CC%03001" Name="hclStart" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%031" Id="%AID%_P-%T%3%CC%031_R-%T%3%CC%03101" Name="hcl_auto_bri" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%032" Id="%AID%_P-%T%3%CC%032_R-%T%3%CC%03201" Name="hcl_auto_col" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%033" Id="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" Name="hcl_manu_off" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%034" Id="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" Name="hcl_manu_day" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%035" Id="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" Name="scene" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%001" Id="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" Name="%C%name" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%002" Id="%AID%_P-%T%3%CC%002_R-%T%3%CC%00201" Name="%C%deviceType" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%003" Id="%AID%_P-%T%3%CC%003_R-%T%3%CC%00301" Name="%C%lock" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%004" Id="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401" Name="%C%type" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%005" Id="%AID%_P-%T%3%CC%005_R-%T%3%CC%00501" Name="%C%nachtriggern" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%006" Id="%AID%_P-%T%3%CC%006_R-%T%3%CC%00601" Name="%C%stairtime" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%007" Id="%AID%_P-%T%3%CC%007_R-%T%3%CC%00701" Name="%C%manuoff" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%008" Id="%AID%_P-%T%3%CC%008_R-%T%3%CC%00801" Name="%C%lockbehave" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%009" Id="%AID%_P-%T%3%CC%009_R-%T%3%CC%00901" Name="%C%lockvalue" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%010" Id="%AID%_P-%T%3%CC%010_R-%T%3%CC%01001" Name="%C%unlockbehave" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%011" Id="%AID%_P-%T%3%CC%011_R-%T%3%CC%01101" Name="%C%unlockvalue" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%012" Id="%AID%_P-%T%3%CC%012_R-%T%3%CC%01201" Name="%C%onDay" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%013" Id="%AID%_P-%T%3%CC%013_R-%T%3%CC%01301" Name="%C%onNight" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%018" Id="%AID%_P-%T%3%CC%018_R-%T%3%CC%01801" Name="%C%locknegate" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%019" Id="%AID%_P-%T%3%CC%019_R-%T%3%CC%01901" Name="%C%colorType" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%020" Id="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001" Name="%C%colorSpace" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%023" Id="%AID%_P-%T%3%CC%023_R-%T%3%CC%02301" Name="%C%hcl" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%021" Id="%AID%_P-%T%3%CC%021_R-%T%3%CC%02101" Name="%C%tempMin" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%022" Id="%AID%_P-%T%3%CC%022_R-%T%3%CC%02201" Name="%C%tempMax" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%024" Id="%AID%_P-%T%3%CC%024_R-%T%3%CC%02401" Name="%C%xyIgnore" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%025" Id="%AID%_P-%T%3%CC%025_R-%T%3%CC%02501" Name="%C%dimmStateInterval" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%026" Id="%AID%_P-%T%3%CC%026_R-%T%3%CC%02601" Name="%C%queryTime" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%028" Id="%AID%_P-%T%3%CC%028_R-%T%3%CC%02801" Name="%C%hclCurve" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%029" Id="%AID%_P-%T%3%CC%029_R-%T%3%CC%02901" Name="%C%dimmLock" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%030" Id="%AID%_P-%T%3%CC%030_R-%T%3%CC%03001" Name="%C%hclStart" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%031" Id="%AID%_P-%T%3%CC%031_R-%T%3%CC%03101" Name="%C%hcl_auto_bri" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%032" Id="%AID%_P-%T%3%CC%032_R-%T%3%CC%03201" Name="%C%hcl_auto_col" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%033" Id="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" Name="%C%hcl_manu_off" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%034" Id="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" Name="%C%hcl_manu_day" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%035" Id="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" Name="%C%scene" />
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%3%CC%000" Name="%C%switch" Text="G%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
