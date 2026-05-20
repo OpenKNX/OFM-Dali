@@ -2,12 +2,20 @@
 
 static constexpr uint8_t DALI_BROADCAST_ADDRESS = 0x3F;
 
-// Fade-rate table (steps per second) for fadeTime values 0..15
 static constexpr float FADE_STEPS_PER_SEC[16] = {
     45.3f, 32.0f, 22.6f, 16.0f,
     11.2f, 7.9f, 5.6f, 3.9f,
     2.8f, 2.0f, 1.4f, 1.0f,
     0.7f, 0.5f, 0.35f, 0.25f
+};
+
+// Fade duration table (seconds for a full-scale fade) for fadeTime values 0..15
+// fadeTime==0 means instant change, so the first entry is 0.0f.
+static constexpr float FADE_DURATION_SECONDS[16] = {
+    0.0f, 0.7f, 1.0f, 1.4f,
+    2.0f, 2.8f, 4.0f, 5.7f,
+    8.0f, 11.3f, 16.0f, 22.6f,
+    32.0f, 45.3f, 64.0f, 90.5f
 };
 
 std::array<DaliEVGBase *, DaliEVGBase::MAX_SHORT_ADDRESSES> DaliEVGBase::instances = {};
@@ -208,7 +216,23 @@ void DaliEVGBase::setGroups(uint16_t groupBitsValue)
 void DaliEVGBase::startFadeTo(uint8_t targetLevel, uint32_t nowMs)
 {
     fadeTargetLevel = targetLevel;
-    fadeActive = (fadeTargetLevel != currentLevel);
+    if (fadeTargetLevel == currentLevel) {
+        fadeActive = false;
+        return;
+    }
+
+    if (fadeTime == 0) {
+        // fadeTime 0 means instant change
+        currentLevel = fadeTargetLevel;
+        fadeActive = false;
+        onState = currentLevel > 0;
+        if (onState) {
+            lastNonZeroLevel = currentLevel;
+        }
+        return;
+    }
+
+    fadeActive = true;
     // If nowMs == 0 the caller didn't provide a timestamp; mark last time as 0
     fadeLastMs = nowMs;
     fadeAccumulator = 0.0f;
@@ -232,11 +256,14 @@ void DaliEVGBase::update(uint32_t nowMs)
     uint32_t elapsedMs = nowMs - fadeLastMs;
     if (elapsedMs == 0) return;
 
-    float stepsPerSec = 1.0f;
+    float durationSeconds = 1.0f;
     if (fadeTime < 16) {
-        stepsPerSec = FADE_STEPS_PER_SEC[fadeTime];
+        durationSeconds = FADE_DURATION_SECONDS[fadeTime];
     }
 
+    // Convert fadeTime duration to an effective level step rate.
+    // Use full-scale range 0..254 for the fade duration.
+    float stepsPerSec = (durationSeconds > 0.0f) ? (254.0f / durationSeconds) : 254.0f;
     float steps = stepsPerSec * (elapsedMs / 1000.0f);
     fadeAccumulator += steps;
     int32_t stepCount = (int32_t)floor(fadeAccumulator);
