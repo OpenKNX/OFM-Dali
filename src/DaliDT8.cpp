@@ -121,3 +121,15 @@ bool DaliDT8::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
 
     return false;
 }
+
+void DaliDT8::debugOutputParams() const
+{
+    DaliEVGBase::debugOutputParams();
+    printf("DaliDT8 coordX=%u coordY=%u colourTemp=%u rgb=[%u,%u,%u] colourActive=%u lastExtendedCommand=%u\n",
+           coordinateX,
+           coordinateY,
+           colourTemperature,
+           rgbLevel[0], rgbLevel[1], rgbLevel[2],
+           colourActive ? 1u : 0u,
+           lastExtendedCommand);
+}

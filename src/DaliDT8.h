@@ -15,6 +15,7 @@ public:
     uint16_t getColourTemperature() const;
     const std::array<uint8_t, 3> &getRgbLevel() const;
     bool isColourActive() const;
+    void debugOutputParams() const override;
 
 protected:
     bool handleDeviceExtendedCommand(uint8_t command, uint8_t value) override;

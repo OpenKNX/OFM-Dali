@@ -10,6 +10,7 @@ public:
             uint8_t fadeTime = 0, uint8_t fadeRate = 0, bool errorState = false, uint8_t fastFadeTime = 0);
 
     uint8_t getFastFadeTime() const;
+    void debugOutputParams() const override;
 
 protected:
     bool handleDeviceExtendedCommand(uint8_t command, uint8_t value) override;

@@ -1,4 +1,5 @@
 #include "DaliEVGBase.h"
+#include <cstdio>
 
 static constexpr uint8_t DALI_BROADCAST_ADDRESS = 0x3F;
 
@@ -32,8 +33,9 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       maxLevel(maxLevel),
       onLevel(onLevel),
       nightOnLevel(onLevel),
-            fadeTime(fadeTime),
-            fadeRate(fadeRate),
+      fadeTime(fadeTime),
+      fadeRate(fadeRate),
+      updateRate(0),
       errorState(errorState),
       onState(startOn),
       currentLevel(startOn ? onLevel : 0),
@@ -45,8 +47,9 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       fadeTargetLevel(currentLevel),
       fadeActive(false),
       fadeLastMs(0),
-    fadeAccumulator(0.0f),
-    fadeStepsPerSecOverride(0.0f)
+      fadeAccumulator(0.0f),
+      fadeStepsPerSecOverride(0.0f),
+      lastDebugOutputMs(0)
 {
     registerInstance(address, this);
 }
@@ -184,6 +187,54 @@ uint16_t DaliEVGBase::getGroupBits() const
     return groupBits;
 }
 
+void DaliEVGBase::debugOutput() const
+{
+    printf("DaliEVGBase addr=%u currentValue=%u onState=%u\n",
+           address, currentLevel, onState ? 1u : 0u);
+}
+
+void DaliEVGBase::debugOutputIfDue(bool force)
+{
+    if (!force) {
+        if (updateRate == 0) {
+            return;
+        }
+        uint32_t intervalMs = static_cast<uint32_t>(updateRate) * 100u;
+        uint32_t nowMs = static_cast<uint32_t>(millis());
+        if (nowMs - lastDebugOutputMs < intervalMs) {
+            return;
+        }
+        lastDebugOutputMs = nowMs;
+    } else {
+        lastDebugOutputMs = static_cast<uint32_t>(millis());
+    }
+
+    printf("DaliEVGBase addr=%u currentValue=%u onState=%u\n",
+           address, currentLevel, onState ? 1u : 0u);
+}
+
+void DaliEVGBase::debugOutputParams() const
+{
+    printf("DaliEVGBase addr=%u type=%u isGroup=%u min=%u max=%u onLevel=%u nightOnLevel=%u fadeTime=%u fadeRate=%u updateRate=%u errorState=%u onState=%u currentValue=%u lastNonZeroLevel=%u groupBits=0x%04X realDevicePresent=%u dtr=[%u,%u,%u]\n",
+           address,
+           deviceType,
+           isGroupDevice ? 1u : 0u,
+           minLevel,
+           maxLevel,
+           onLevel,
+           nightOnLevel,
+           fadeTime,
+           fadeRate,
+           updateRate,
+           errorState ? 1u : 0u,
+           onState ? 1u : 0u,
+           currentLevel,
+           lastNonZeroLevel,
+           (unsigned)groupBits,
+           realDevicePresent ? 1u : 0u,
+           dtr[0], dtr[1], dtr[2]);
+}
+
 void DaliEVGBase::setErrorState(bool error)
 {
     errorState = error;
@@ -194,6 +245,7 @@ void DaliEVGBase::setOnLevel(uint8_t arcLevel)
     onLevel = arcLevel;
     if (onState && currentLevel > 0) {
         currentLevel = arcLevel;
+        debugOutputIfDue(true);
     }
 }
 
@@ -202,6 +254,7 @@ void DaliEVGBase::setOffLevel(uint8_t arcLevel)
     minLevel = arcLevel;
     if (!onState) {
         currentLevel = arcLevel;
+        debugOutputIfDue(true);
     }
 }
 
@@ -213,6 +266,16 @@ void DaliEVGBase::setNightOnLevel(uint8_t arcLevel)
 void DaliEVGBase::setFadeTime(uint8_t fadeTimeValue)
 {
     fadeTime = fadeTimeValue;
+}
+
+void DaliEVGBase::setFadeRate(uint8_t fadeRateValue)
+{
+    fadeRate = fadeRateValue;
+}
+
+void DaliEVGBase::setUpdateRate(uint8_t updateRateValue)
+{
+    updateRate = updateRateValue;
 }
 
 void DaliEVGBase::setGroups(uint16_t groupBitsValue)
@@ -238,6 +301,7 @@ void DaliEVGBase::startFadeTo(uint8_t targetLevel, uint32_t nowMs)
         if (onState) {
             lastNonZeroLevel = currentLevel;
         }
+        debugOutputIfDue(true);
         return;
     }
 
@@ -291,6 +355,9 @@ void DaliEVGBase::update(uint32_t nowMs)
     fadeAccumulator -= (float)stepCount;
     fadeLastMs = nowMs;
 
+    uint8_t previousLevel = currentLevel;
+    bool previousOnState = onState;
+
     // Determine direction
     if (fadeTargetLevel > currentLevel) {
         uint32_t move = (uint32_t)stepCount;
@@ -320,6 +387,10 @@ void DaliEVGBase::update(uint32_t nowMs)
 
     onState = currentLevel > 0;
     if (onState) lastNonZeroLevel = currentLevel;
+
+    if (currentLevel != previousLevel || onState != previousOnState) {
+        debugOutputIfDue(!fadeActive);
+    }
 }
 
 bool DaliEVGBase::isMemberOfGroup(uint8_t group) const

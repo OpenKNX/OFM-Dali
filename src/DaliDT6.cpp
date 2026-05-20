@@ -13,6 +13,12 @@ uint8_t DaliDT6::getFastFadeTime() const
     return fastFadeTime;
 }
 
+void DaliDT6::debugOutputParams() const
+{
+    DaliEVGBase::debugOutputParams();
+    printf("DaliDT6 fastFadeTime=%u\n", fastFadeTime);
+}
+
 bool DaliDT6::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
 {
     if (pendingDeviceType != getDeviceType()) {

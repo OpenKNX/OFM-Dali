@@ -44,6 +44,7 @@ public:
     void setNightOnLevel(uint8_t arcLevel);
     void setFadeTime(uint8_t fadeTime);
     void setFadeRate(uint8_t fadeRate);
+    void setUpdateRate(uint8_t updateRate);
     void setGroups(uint16_t groupBits);
     bool isMemberOfGroup(uint8_t group) const;
     
@@ -51,6 +52,9 @@ public:
     void update(uint32_t nowMs);
     void startFadeTo(uint8_t targetLevel, uint32_t nowMs);
     bool isFading() const;
+    void debugOutput() const;
+    virtual void debugOutputParams() const;
+    void debugOutputIfDue(bool force = false);
 
 protected:
     enum class FrameType { Unknown, Arc, Command, Special };
@@ -93,6 +97,7 @@ protected:
     uint8_t nightOnLevel;
     uint8_t fadeTime;
     uint8_t fadeRate;
+    uint8_t updateRate;
     bool errorState;
     bool onState;
     uint8_t currentLevel;
@@ -108,5 +113,7 @@ protected:
     float fadeAccumulator;
     // Optional override: when >0, update() uses this steps/sec rate
     float fadeStepsPerSecOverride;
+    // Debug output throttling state
+    mutable uint32_t lastDebugOutputMs;
     // Note: fadeTime (0..15) maps to a steps/sec table implemented in cpp
 };
