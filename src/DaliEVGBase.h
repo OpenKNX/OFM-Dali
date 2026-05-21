@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Arduino.h"
 #include "Dali/Master.h"
+#include "Arduino.h"
 #include "Dali/Frame.h"
 #include "Dali/Commands.h"
 #include <array>
+#include <vector>
 
 // Interval used for UP/DOWN rate steps (milliseconds)
 static constexpr uint32_t UPDOWN_FADE_INTERVAL_MS = 200;
@@ -22,6 +23,8 @@ public:
     static DaliEVGBase *getByAddress(uint8_t address);
 
     void attachToMaster();
+    static void registerMasterMonitor(Dali::Master *master);
+    static void handleFrameStatic(const Dali::Frame &frame, Dali::Master *master);
     bool hasRealDevicePresent() const;
     void setRealDevicePresent(bool present);
     bool handleFrame(const Dali::Frame &frame);
@@ -47,6 +50,11 @@ public:
     void setUpdateRate(uint8_t updateRate);
     void setGroups(uint16_t groupBits);
     bool isMemberOfGroup(uint8_t group) const;
+    bool isSceneActive(uint8_t scene) const;
+    uint8_t getSceneLevel(uint8_t scene) const;
+    void setSceneLevel(uint8_t scene, uint8_t level);
+    void setSceneActive(uint8_t scene, bool active);
+    void setCurrentLevel(uint8_t level);
     
     // Time-based fade/transition support
     void update(uint32_t nowMs);
@@ -56,8 +64,9 @@ public:
     virtual void debugOutputParams() const;
     void debugOutputIfDue(bool force = false);
 
-protected:
     enum class FrameType { Unknown, Arc, Command, Special };
+
+protected:
 
     struct ParsedFrame {
         FrameType type = FrameType::Unknown;
@@ -82,10 +91,14 @@ protected:
     bool handleSpecialCommand(uint8_t specialCommand, uint8_t value);
     bool handleQuery(uint8_t query, const ParsedFrame &parsed);
 
+    static ParsedFrame parseFrameStatic(const Dali::Frame &frame);
+
     static void registerInstance(uint8_t address, DaliEVGBase *instance);
     static void unregisterInstance(uint8_t address, DaliEVGBase *instance);
 
+    static constexpr size_t MAX_SHORT_ADDRESSES = 64;
     static std::array<DaliEVGBase *, MAX_SHORT_ADDRESSES> instances;
+    static std::vector<Dali::Master *> registeredMasters;
 
     Dali::Master &daliMaster;
     uint8_t address;
@@ -106,6 +119,9 @@ protected:
     uint8_t pendingDeviceType;
     std::array<uint8_t, 3> dtr;
     bool realDevicePresent;
+    static constexpr size_t SCENE_COUNT = 16;
+    std::array<uint8_t, SCENE_COUNT> sceneLevels;
+    uint16_t sceneActiveMask;
     // Fade/transition state
     uint8_t fadeTargetLevel;
     bool fadeActive;

@@ -2,7 +2,7 @@
   "name": "OFM-Dali",
   "version": "0.10.1",
   "dependencies": {
-    
+    "dali": "*"
   },
   "description": "A Gateway to Dali",
   "homepage": "https://openknx.de",

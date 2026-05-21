@@ -1,6 +1,6 @@
-#include "DaliDT8.h"
+#include "DaliEVG_DT8.h"
 
-DaliDT8::DaliDT8(Dali::Master &master, uint8_t address, bool isGroup,
+DaliEVG_DT8::DaliEVG_DT8(Dali::Master &master, uint8_t address, bool isGroup,
                                  uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
                                  uint8_t fadeTime, uint8_t fadeRate, bool errorState)
         : DaliEVGBase(master, address, 8, isGroup, minLevel, maxLevel, onLevel, fadeTime, fadeRate, errorState, false),
@@ -13,32 +13,32 @@ DaliDT8::DaliDT8(Dali::Master &master, uint8_t address, bool isGroup,
 {
 }
 
-uint16_t DaliDT8::getCoordinateX() const
+uint16_t DaliEVG_DT8::getCoordinateX() const
 {
     return coordinateX;
 }
 
-uint16_t DaliDT8::getCoordinateY() const
+uint16_t DaliEVG_DT8::getCoordinateY() const
 {
     return coordinateY;
 }
 
-uint16_t DaliDT8::getColourTemperature() const
+uint16_t DaliEVG_DT8::getColourTemperature() const
 {
     return colourTemperature;
 }
 
-const std::array<uint8_t, 3> &DaliDT8::getRgbLevel() const
+const std::array<uint8_t, 3> &DaliEVG_DT8::getRgbLevel() const
 {
     return rgbLevel;
 }
 
-bool DaliDT8::isColourActive() const
+bool DaliEVG_DT8::isColourActive() const
 {
     return colourActive;
 }
 
-bool DaliDT8::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
+bool DaliEVG_DT8::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
 {
     if (pendingDeviceType != getDeviceType()) {
         return false;
@@ -90,7 +90,7 @@ bool DaliDT8::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
     return false;
 }
 
-bool DaliDT8::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
+bool DaliEVG_DT8::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
 {
     if (pendingDeviceType != getDeviceType()) {
         return false;
@@ -122,10 +122,10 @@ bool DaliDT8::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
     return false;
 }
 
-void DaliDT8::debugOutputParams() const
+void DaliEVG_DT8::debugOutputParams() const
 {
     DaliEVGBase::debugOutputParams();
-    printf("DaliDT8 coordX=%u coordY=%u colourTemp=%u rgb=[%u,%u,%u] colourActive=%u lastExtendedCommand=%u\n",
+    printf("DaliEVG_DT8 coordX=%u coordY=%u colourTemp=%u rgb=[%u,%u,%u] colourActive=%u lastExtendedCommand=%u\n",
            coordinateX,
            coordinateY,
            colourTemperature,

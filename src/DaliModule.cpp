@@ -1,5 +1,6 @@
 #include "DaliModule.h"
 #include "OpenKNX/DateTime.h"
+#include "DaliEVGBase.h"
 
 #ifdef ARDUINO_ARCH_ESP32
 #include "NetworkModule.h"
@@ -169,6 +170,7 @@ void DaliModule::loop(bool configured)
         groups[i].loop();
         groups[i].loop1();
     }
+    DaliEVGBase::loop(millis());
 }
 
 void DaliModule::loop1(bool configured)
@@ -226,6 +228,7 @@ void DaliModule::loopInitData()
         {
             channel.setGroupState(0xFFFF, (uint8_t)resp);
         }
+        channel.loopInitData();
     }
 
     if (_adrFound > 63)

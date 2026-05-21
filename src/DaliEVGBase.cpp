@@ -1,5 +1,18 @@
 #include "DaliEVGBase.h"
 #include <cstdio>
+#include <vector>
+#include <algorithm>
+
+static const char *frameTypeName(DaliEVGBase::FrameType type)
+{
+    switch (type) {
+        case DaliEVGBase::FrameType::Unknown: return "Unknown";
+        case DaliEVGBase::FrameType::Arc: return "Arc";
+        case DaliEVGBase::FrameType::Command: return "Command";
+        case DaliEVGBase::FrameType::Special: return "Special";
+    }
+    return "Invalid";
+}
 
 static constexpr uint8_t DALI_BROADCAST_ADDRESS = 0x3F;
 
@@ -44,6 +57,8 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       pendingDeviceType(0),
       dtr{0, 0, 0},
       realDevicePresent(realDevicePresent),
+      sceneLevels{},
+      sceneActiveMask(0),
       fadeTargetLevel(currentLevel),
       fadeActive(false),
       fadeLastMs(0),
@@ -61,7 +76,151 @@ DaliEVGBase::~DaliEVGBase()
 
 void DaliEVGBase::attachToMaster()
 {
-    daliMaster.registerMonitor([this](Dali::Frame frame) { this->handleFrame(frame); });
+    // register a single monitor per DALI master that dispatches to registered EVG instances
+    registerMasterMonitor(&daliMaster);
+}
+
+std::vector<Dali::Master *> DaliEVGBase::registeredMasters = {};
+
+void DaliEVGBase::registerMasterMonitor(Dali::Master *master)
+{
+    if (master == nullptr) return;
+    // already registered?
+    if (std::find(registeredMasters.begin(), registeredMasters.end(), master) != registeredMasters.end()) {
+        return;
+    }
+
+    Dali::Master *masterPtr = master;
+    master->registerMonitor([masterPtr](Dali::Frame frame) {
+        DaliEVGBase::handleFrameStatic(frame, masterPtr);
+    });
+
+    registeredMasters.push_back(masterPtr);
+}
+
+DaliEVGBase::ParsedFrame DaliEVGBase::parseFrameStatic(const Dali::Frame &frame)
+{
+    ParsedFrame parsed;
+    if (frame.size != 16) {
+        return parsed;
+    }
+
+    uint16_t data = (uint16_t)(frame.data & 0xFFFF);
+    parsed.isGroup = ((data >> 15) & 0x01) != 0;
+    parsed.address = (uint8_t)((data >> 9) & 0x3F);
+    parsed.selector = ((data >> 8) & 0x01) != 0;
+    parsed.value = (uint8_t)(data & 0xFF);
+
+    if (!parsed.selector) {
+        parsed.type = FrameType::Arc;
+        parsed.command = parsed.value;
+        return parsed;
+    }
+
+    if (parsed.address >= 32) {
+        parsed.type = FrameType::Special;
+        parsed.command = parsed.address;
+        parsed.value = (uint8_t)(data & 0xFF);
+        return parsed;
+    }
+
+    parsed.type = FrameType::Command;
+    parsed.command = parsed.value;
+    return parsed;
+}
+
+void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *master)
+{
+    (void)master; // currently unused but kept for future per-master logic
+
+    if (frame.size == 0) return;
+    if (frame.flags & (DALI_FRAME_BACKWARD | DALI_FRAME_ERROR)) return;
+
+    ParsedFrame parsed = parseFrameStatic(frame);
+    if (parsed.type == FrameType::Unknown) return;
+
+    if (parsed.type == FrameType::Special) {
+        // deliver to all instances
+        for (auto *inst : instances) {
+            if (inst != nullptr) inst->handleSpecialCommand(parsed.command, parsed.value);
+        }
+        return;
+    }
+
+    // For non-special frames: route based on address/group
+    if (parsed.isGroup) {
+        if (parsed.address == DALI_BROADCAST_ADDRESS) {
+            // broadcast to all
+            for (auto *inst : instances) {
+                if (inst == nullptr) continue;
+                if (parsed.type == FrameType::Arc) {
+                    inst->startFadeTo(parsed.value, 0);
+                    continue;
+                }
+                if (inst->pendingDeviceType != 0) {
+                    bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
+                    inst->clearPendingDeviceType();
+                    if (handled) continue;
+                }
+                inst->handleCommand(parsed.command, parsed.value, parsed);
+            }
+            return;
+        }
+
+        // group address (0..15)
+        if (parsed.address < 16) {
+            for (auto *inst : instances) {
+                if (inst == nullptr) continue;
+                if (!inst->isMemberOfGroup(parsed.address)) continue;
+                if (parsed.type == FrameType::Arc) {
+                    inst->startFadeTo(parsed.value, 0);
+                    continue;
+                }
+                if (inst->pendingDeviceType != 0) {
+                    bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
+                    inst->clearPendingDeviceType();
+                    if (handled) continue;
+                }
+                inst->handleCommand(parsed.command, parsed.value, parsed);
+            }
+            return;
+        }
+    }
+
+    // individual short address or broadcast
+    if (parsed.address < instances.size()) {
+        DaliEVGBase *inst = instances[parsed.address];
+        if (inst != nullptr) {
+            if (parsed.type == FrameType::Arc) {
+                inst->startFadeTo(parsed.value, 0);
+                return;
+            }
+            if (inst->pendingDeviceType != 0) {
+                bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
+                inst->clearPendingDeviceType();
+                if (handled) return;
+            }
+            inst->handleCommand(parsed.command, parsed.value, parsed);
+            return;
+        }
+    }
+
+    // If we reach here and address was broadcast, deliver to all as fallback
+    if (parsed.address == DALI_BROADCAST_ADDRESS) {
+        for (auto *inst : instances) {
+            if (inst == nullptr) continue;
+            if (parsed.type == FrameType::Arc) {
+                inst->startFadeTo(parsed.value, 0);
+                continue;
+            }
+            if (inst->pendingDeviceType != 0) {
+                bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
+                inst->clearPendingDeviceType();
+                if (handled) continue;
+            }
+            inst->handleCommand(parsed.command, parsed.value, parsed);
+        }
+    }
 }
 
 void DaliEVGBase::loop(uint32_t nowMs)
@@ -94,15 +253,25 @@ void DaliEVGBase::unregisterInstance(uint8_t address, DaliEVGBase *instance)
 
 bool DaliEVGBase::handleFrame(const Dali::Frame &frame)
 {
+    printf("DaliEVGBase[%u] handleFrame size=%u flags=0x%02X\n", address, frame.size, frame.flags);
+
     if (frame.size == 0) {
         return false;
     }
 
-    if (frame.flags & (DALI_FRAME_ECHO | DALI_FRAME_BACKWARD | DALI_FRAME_COLLISION | DALI_FRAME_ERROR)) {
+    if (frame.flags & (DALI_FRAME_BACKWARD | DALI_FRAME_ERROR)) {
         return false;
     }
 
     ParsedFrame parsed = parseFrame(frame);
+    printf("DaliEVGBase[%u] parsed frame type=%s addr=%u group=%u sel=%u cmd=0x%02X val=0x%02X\n",
+           address,
+           frameTypeName(parsed.type),
+           parsed.address,
+           parsed.isGroup ? 1u : 0u,
+           parsed.selector ? 1u : 0u,
+           parsed.command,
+           parsed.value);
     if (parsed.type == FrameType::Unknown) {
         return false;
     }
@@ -215,7 +384,7 @@ void DaliEVGBase::debugOutputIfDue(bool force)
 
 void DaliEVGBase::debugOutputParams() const
 {
-    printf("DaliEVGBase addr=%u type=%u isGroup=%u min=%u max=%u onLevel=%u nightOnLevel=%u fadeTime=%u fadeRate=%u updateRate=%u errorState=%u onState=%u currentValue=%u lastNonZeroLevel=%u groupBits=0x%04X realDevicePresent=%u dtr=[%u,%u,%u]\n",
+    printf("DaliEVGBase addr=%u type=%u isGroup=%u min=%u max=%u onLevel=%u nightOnLevel=%u fadeTime=%u fadeRate=%u updateRate=%u errorState=%u onState=%u currentValue=%u lastNonZeroLevel=%u groupBits=0x%04X sceneMask=0x%04X realDevicePresent=%u dtr=[%u,%u,%u]\n",
            address,
            deviceType,
            isGroupDevice ? 1u : 0u,
@@ -231,6 +400,7 @@ void DaliEVGBase::debugOutputParams() const
            currentLevel,
            lastNonZeroLevel,
            (unsigned)groupBits,
+           (unsigned)sceneActiveMask,
            realDevicePresent ? 1u : 0u,
            dtr[0], dtr[1], dtr[2]);
 }
@@ -281,6 +451,44 @@ void DaliEVGBase::setUpdateRate(uint8_t updateRateValue)
 void DaliEVGBase::setGroups(uint16_t groupBitsValue)
 {
     groupBits = groupBitsValue;
+}
+
+bool DaliEVGBase::isSceneActive(uint8_t scene) const
+{
+    return scene < SCENE_COUNT && ((sceneActiveMask >> scene) & 1u) != 0;
+}
+
+uint8_t DaliEVGBase::getSceneLevel(uint8_t scene) const
+{
+    return scene < SCENE_COUNT ? sceneLevels[scene] : 0;
+}
+
+void DaliEVGBase::setSceneLevel(uint8_t scene, uint8_t level)
+{
+    if (scene < SCENE_COUNT) {
+        sceneLevels[scene] = level;
+    }
+}
+
+void DaliEVGBase::setSceneActive(uint8_t scene, bool active)
+{
+    if (scene >= SCENE_COUNT) {
+        return;
+    }
+    if (active) {
+        sceneActiveMask |= (1u << scene);
+    } else {
+        sceneActiveMask &= ~(1u << scene);
+    }
+}
+
+void DaliEVGBase::setCurrentLevel(uint8_t level)
+{
+    currentLevel = level;
+    onState = currentLevel > 0;
+    if (onState) {
+        lastNonZeroLevel = currentLevel;
+    }
 }
 
 void DaliEVGBase::startFadeTo(uint8_t targetLevel, uint32_t nowMs)
@@ -469,6 +677,7 @@ DaliEVGBase::ParsedFrame DaliEVGBase::parseFrame(const Dali::Frame &frame) const
 
 bool DaliEVGBase::handleArcCommand(uint8_t arcLevel)
 {
+    printf("DaliEVGBase[%u] handleArcCommand arcLevel=0x%02X\n", address, arcLevel);
     // keep backward compatibility: start fade with now=0 (caller should call update with real time)
     startFadeTo(arcLevel, 0);
     return true;
@@ -476,6 +685,11 @@ bool DaliEVGBase::handleArcCommand(uint8_t arcLevel)
 
 bool DaliEVGBase::handleCommand(uint8_t command, uint8_t parameter, const ParsedFrame &parsed)
 {
+    printf("DaliEVGBase[%u] handleCommand command=0x%02X parameter=0x%02X frameType=%s\n",
+           address,
+           command,
+           parameter,
+           frameTypeName(parsed.type));
     if (command == static_cast<uint8_t>(Dali::Command::OFF)) {
         // start fade to 0
         startFadeTo(0, 0);
@@ -545,10 +759,34 @@ bool DaliEVGBase::handleCommand(uint8_t command, uint8_t parameter, const Parsed
         if (target == 0) onState = false;
         return true;
     }
+    if (command >= static_cast<uint8_t>(Dali::Command::DTR_AS_SCENE)
+        && command <= static_cast<uint8_t>(Dali::Command::DTR_AS_SCENE) + 15) {
+        uint8_t scene = command - static_cast<uint8_t>(Dali::Command::DTR_AS_SCENE);
+        setSceneLevel(scene, dtr[0]);
+        setSceneActive(scene, true);
+        printf("DaliEVGBase[%u] setScene %u level=0x%02X\n", address, scene, getSceneLevel(scene));
+        return true;
+    }
+
+    if (command >= static_cast<uint8_t>(Dali::Command::REMOVE_FROM_SCENE)
+        && command <= static_cast<uint8_t>(Dali::Command::REMOVE_FROM_SCENE) + 15) {
+        uint8_t scene = command - static_cast<uint8_t>(Dali::Command::REMOVE_FROM_SCENE);
+        setSceneActive(scene, false);
+        printf("DaliEVGBase[%u] removeScene %u\n", address, scene);
+        return true;
+    }
+
     if (command >= static_cast<uint8_t>(Dali::Command::GO_TO_SCENE)
         && command <= static_cast<uint8_t>(Dali::Command::GO_TO_SCENE) + 15) {
-        startFadeTo(onLevel, 0);
-        lastNonZeroLevel = onLevel;
+        uint8_t scene = command - static_cast<uint8_t>(Dali::Command::GO_TO_SCENE);
+        if (!isSceneActive(scene)) {
+            return false;
+        }
+        uint8_t sceneLevel = getSceneLevel(scene);
+        startFadeTo(sceneLevel, 0);
+        if (sceneLevel > 0) {
+            lastNonZeroLevel = sceneLevel;
+        }
         return true;
     }
 
@@ -570,12 +808,14 @@ bool DaliEVGBase::handleCommand(uint8_t command, uint8_t parameter, const Parsed
 
 bool DaliEVGBase::handleDeviceCommand(uint8_t command, uint8_t value, const ParsedFrame &parsed)
 {
+    printf("DaliEVGBase[%u] handleDeviceCommand command=0x%02X value=0x%02X\n", address, command, value);
     // Default device-specific commands are not supported in the base class.
     return false;
 }
 
 bool DaliEVGBase::handleSpecialCommand(uint8_t specialCommand, uint8_t value)
 {
+    printf("DaliEVGBase[%u] handleSpecialCommand special=0x%02X value=0x%02X\n", address, specialCommand, value);
     if (specialCommand == static_cast<uint8_t>(Dali::SpecialCommand::ENABLE_DT)) {
         pendingDeviceType = value;
         return true;
@@ -601,6 +841,7 @@ bool DaliEVGBase::handleSpecialCommand(uint8_t specialCommand, uint8_t value)
 
 bool DaliEVGBase::handleQuery(uint8_t query, const ParsedFrame &parsed)
 {
+    printf("DaliEVGBase[%u] handleQuery query=0x%02X\n", address, query);
     switch (query) {
         case static_cast<uint8_t>(Dali::Command::QUERY_STATUS): {
             uint8_t status = 0;
@@ -644,6 +885,13 @@ bool DaliEVGBase::handleQuery(uint8_t query, const ParsedFrame &parsed)
             break;
     }
 
+    if (query >= static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL)
+        && query <= static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL) + 15) {
+        uint8_t scene = query - static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL);
+        respond(getSceneLevel(scene));
+        return true;
+    }
+
     if (handleDeviceQuery(query, parsed)) {
         return true;
     }
@@ -653,12 +901,14 @@ bool DaliEVGBase::handleQuery(uint8_t query, const ParsedFrame &parsed)
 
 bool DaliEVGBase::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
 {
+    printf("DaliEVGBase[%u] handleDeviceExtendedCommand command=0x%02X value=0x%02X\n", address, command, value);
     // Extended device commands are not handled by the generic base implementation.
     return false;
 }
 
 bool DaliEVGBase::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
 {
+    printf("DaliEVGBase[%u] handleDeviceQuery query=0x%02X\n", address, query);
     return false;
 }
 

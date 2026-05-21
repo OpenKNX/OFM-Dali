@@ -1,6 +1,6 @@
-#include "DaliDT6.h"
+#include "DaliEVG_DT6.h"
 
-DaliDT6::DaliDT6(Dali::Master &master, uint8_t address, bool isGroup,
+DaliEVG_DT6::DaliEVG_DT6(Dali::Master &master, uint8_t address, bool isGroup,
                                  uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
                                  uint8_t fadeTime, uint8_t fadeRate, bool errorState, uint8_t fastFadeTime)
         : DaliEVGBase(master, address, 6, isGroup, minLevel, maxLevel, onLevel, fadeTime, fadeRate, errorState, false),
@@ -8,18 +8,18 @@ DaliDT6::DaliDT6(Dali::Master &master, uint8_t address, bool isGroup,
 {
 }
 
-uint8_t DaliDT6::getFastFadeTime() const
+uint8_t DaliEVG_DT6::getFastFadeTime() const
 {
     return fastFadeTime;
 }
 
-void DaliDT6::debugOutputParams() const
+void DaliEVG_DT6::debugOutputParams() const
 {
     DaliEVGBase::debugOutputParams();
-    printf("DaliDT6 fastFadeTime=%u\n", fastFadeTime);
+    printf("DaliEVG_DT6 fastFadeTime=%u\n", fastFadeTime);
 }
 
-bool DaliDT6::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
+bool DaliEVG_DT6::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
 {
     if (pendingDeviceType != getDeviceType()) {
         return false;
@@ -36,7 +36,7 @@ bool DaliDT6::handleDeviceExtendedCommand(uint8_t command, uint8_t value)
     return false;
 }
 
-bool DaliDT6::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
+bool DaliEVG_DT6::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
 {
     if (pendingDeviceType != getDeviceType()) {
         return false;

@@ -18,6 +18,7 @@ class DaliChannel : public OpenKNX::Channel
 		void loop() override;
 		void loop1();
 		void setup() override;
+		void loopInitData();
 		void processInputKo(GroupObject &ko) override;
 		const bool isConfigured();
 		const bool isGroup();

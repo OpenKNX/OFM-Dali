@@ -1,5 +1,8 @@
 #include "DaliChannel.h"
 #include "OpenKNX.h"
+#include "DaliEVGBase.h"
+#include "DaliEVG_DT6.h"
+#include "DaliEVG_DT8.h"
 
 DaliChannel::DaliChannel(Dali::Master &_daliMaster) : daliMaster(_daliMaster) {}
 
@@ -109,6 +112,33 @@ void DaliChannel::loop1()
     loopDimming();
     loopError();
     loopQueryLevel();
+}
+
+void DaliChannel::loopInitData()
+{
+    if (_isGroup)
+        return;
+    // create emulated EVG for this device
+    DaliEVGBase *evg = nullptr;
+    switch (ParamDGW_deviceType)
+    {
+    case PT_deviceType_DT6:
+        // create emulated EVG for DT6
+        evg = new DaliEVG_DT6(daliMaster, channelIndex(), false, _min, _max, 254, 1, 7, false);
+        break;
+    case PT_deviceType_DT8:
+        // create emulated EVG for DT8
+        evg = new DaliEVG_DT8(daliMaster, channelIndex(), false, _min, _max, 254, 1, 7, false);
+        break;
+    
+    default:
+        evg = new DaliEVGBase(daliMaster, channelIndex(), false, _min, _max, 254, 1, 7, false);
+        break;
+    }
+    evg->attachToMaster();
+    evg->setGroups(_groups);
+    evg->setCurrentLevel(currentStep);
+    evg->setRealDevicePresent(true);
 }
 
 void DaliChannel::loopStaircase()
