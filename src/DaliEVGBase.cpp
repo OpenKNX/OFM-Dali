@@ -117,7 +117,7 @@ DaliEVGBase::ParsedFrame DaliEVGBase::parseFrameStatic(const Dali::Frame &frame)
         return parsed;
     }
 
-    if (parsed.address >= 32) {
+    if (parsed.address >= 64) {
         parsed.type = FrameType::Special;
         parsed.command = parsed.address;
         parsed.value = (uint8_t)(data & 0xFF);
@@ -133,10 +133,21 @@ void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *mast
 {
     (void)master; // currently unused but kept for future per-master logic
 
+    printf("DaliEVGBase::handleFrame size=%u flags=0x%02X\n", frame.size, frame.flags);
+
     if (frame.size == 0) return;
     if (frame.flags & (DALI_FRAME_BACKWARD | DALI_FRAME_ERROR)) return;
 
     ParsedFrame parsed = parseFrameStatic(frame);
+    printf("DaliEVGBase::handleFrame parsed frame type=%s addr=%u group=%u sel=%u cmd=0x%02X val=0x%02X\n",
+           frameTypeName(parsed.type),
+           parsed.address,
+           parsed.isGroup ? 1u : 0u,
+           parsed.selector ? 1u : 0u,
+           parsed.command,
+           parsed.value);
+
+
     if (parsed.type == FrameType::Unknown) return;
 
     if (parsed.type == FrameType::Special) {
@@ -493,6 +504,7 @@ void DaliEVGBase::setCurrentLevel(uint8_t level)
 
 void DaliEVGBase::startFadeTo(uint8_t targetLevel, uint32_t nowMs)
 {
+    printf("DaliEVGBase[%u].startFadeTo: called with targetLevel=%u nowMs=%u\n", address, targetLevel, nowMs);
     // Clear any rate-based override when starting a normal fade
     fadeStepsPerSecOverride = 0.0f;
     fadeTargetLevel = targetLevel;
@@ -517,6 +529,7 @@ void DaliEVGBase::startFadeTo(uint8_t targetLevel, uint32_t nowMs)
     // If nowMs == 0 the caller didn't provide a timestamp; mark last time as 0
     fadeLastMs = nowMs;
     fadeAccumulator = 0.0f;
+    printf("DaliEVGBase[%u].startFadeTo: started fade to %u for %02.1f\n", address, targetLevel, FADE_DURATION_SECONDS[fadeTime]);
 }
 
 bool DaliEVGBase::isFading() const
