@@ -24,7 +24,7 @@ const std::string DaliModule::version()
 void DaliModule::setup(bool conf)
 {
     #ifdef ARDUINO_ARCH_ESP32
-        openknxNetwork.webserver.addLink("Dali Wiki", "https://github.com/OpenKNX/GW-REG1-Dali/wiki");
+        openknxNetwork.webserver.addMenuItem("Dali Wiki", "https://github.com/OpenKNX/GW-REG1-Dali/wiki");
     #endif
 
     if (!conf)

@@ -5,332 +5,332 @@
         <ApplicationProgram>
           <Static>
             <Parameters>
-              <Parameter Id="%AID%_P-%T%2%CC%001" Name="d%C%deviceType" ParameterType="%AID%_PT-deviceType" Text="Gerätetyp" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%001" Name="%C%deviceType" ParameterType="%AID%_PT-deviceType" Text="Gerätetyp" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%002" Name="d%C%name" ParameterType="%AID%_PT-name30" Text="Name" Value="" />
-              <Parameter Id="%AID%_P-%T%2%CC%003" Name="d%C%lock" ParameterType="%AID%_PT-noyes" Text="Sperrobjekt anzeigen" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%004" Name="d%C%type" ParameterType="%AID%_PT-runType" Text="Betriebsart" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%002" Name="%C%name" ParameterType="%AID%_PT-name30" Text="Name" Value="" />
+              <Parameter Id="%AID%_P-%T%2%CC%003" Name="%C%lock" ParameterType="%AID%_PT-noyes" Text="Sperrobjekt anzeigen" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%004" Name="%C%type" ParameterType="%AID%_PT-runType" Text="Betriebsart" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%005" Name="d%C%error" ParameterType="%AID%_PT-noyes" Text="Fehlerstatus auslesen" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%005" Name="%C%error" ParameterType="%AID%_PT-noyes" Text="Fehlerstatus auslesen" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="5" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%006" Name="d%C%min" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000">
+              <Parameter Id="%AID%_P-%T%2%CC%006" Name="%C%min" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="1" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%007" Name="d%C%max" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+002">
+              <Parameter Id="%AID%_P-%T%2%CC%007" Name="%C%max" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+002">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%008" Name="d%C%nachtriggern" ParameterType="%AID%_PT-noyes" Text="Nachtriggern erlauben" Value="1">
+              <Parameter Id="%AID%_P-%T%2%CC%008" Name="%C%nachtriggern" ParameterType="%AID%_PT-noyes" Text="Nachtriggern erlauben" Value="1">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="6" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%009" Name="d%C%g0" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%010" Name="d%C%g1" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%011" Name="d%C%g2" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%012" Name="d%C%g3" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%013" Name="d%C%g4" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%014" Name="d%C%g5" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%015" Name="d%C%g6" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%016" Name="d%C%g7" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%017" Name="d%C%g8" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%018" Name="d%C%g9" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%019" Name="d%C%g10" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%020" Name="d%C%g11" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%021" Name="d%C%g12" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%022" Name="d%C%g13" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%023" Name="d%C%g14" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%024" Name="d%C%g15" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%025" Name="d%C%s0t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%026" Name="d%C%s0v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%027" Name="d%C%s1t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%028" Name="d%C%s1v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%029" Name="d%C%s2t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%030" Name="d%C%s2v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%031" Name="d%C%s3t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%032" Name="d%C%s3v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%033" Name="d%C%s4t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%034" Name="d%C%s4v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%035" Name="d%C%s5t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%036" Name="d%C%s5v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%037" Name="d%C%s6t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%038" Name="d%C%s6v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%039" Name="d%C%s7t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%040" Name="d%C%s7v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%041" Name="d%C%s8t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%042" Name="d%C%s8v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%043" Name="d%C%s9t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%044" Name="d%C%s9v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%045" Name="d%C%s10t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%046" Name="d%C%s10v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%047" Name="d%C%s11t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%048" Name="d%C%s11v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%049" Name="d%C%s12t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%050" Name="d%C%s12v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%051" Name="d%C%s13t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%052" Name="d%C%s13v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%053" Name="d%C%s14t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%054" Name="d%C%s14v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%055" Name="d%C%s15t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%056" Name="d%C%s15v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
-              <Parameter Id="%AID%_P-%T%2%CC%057" Name="d%C%stairtime" ParameterType="%AID%_PT-time" Text="Nachlaufzeit" Value="60">
+              <Parameter Id="%AID%_P-%T%2%CC%009" Name="%C%g0" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%010" Name="%C%g1" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%011" Name="%C%g2" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%012" Name="%C%g3" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%013" Name="%C%g4" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%014" Name="%C%g5" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%015" Name="%C%g6" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%016" Name="%C%g7" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%017" Name="%C%g8" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%018" Name="%C%g9" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%019" Name="%C%g10" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%020" Name="%C%g11" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%021" Name="%C%g12" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%022" Name="%C%g13" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%023" Name="%C%g14" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%024" Name="%C%g15" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%025" Name="%C%s0t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%026" Name="%C%s0v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%027" Name="%C%s1t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%028" Name="%C%s1v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%029" Name="%C%s2t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%030" Name="%C%s2v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%031" Name="%C%s3t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%032" Name="%C%s3v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%033" Name="%C%s4t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%034" Name="%C%s4v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%035" Name="%C%s5t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%036" Name="%C%s5v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%037" Name="%C%s6t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%038" Name="%C%s6v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%039" Name="%C%s7t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%040" Name="%C%s7v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%041" Name="%C%s8t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%042" Name="%C%s8v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%043" Name="%C%s9t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%044" Name="%C%s9v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%045" Name="%C%s10t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%046" Name="%C%s10v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%047" Name="%C%s11t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%048" Name="%C%s11v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%049" Name="%C%s12t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%050" Name="%C%s12v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%051" Name="%C%s13t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%052" Name="%C%s13v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%053" Name="%C%s14t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%054" Name="%C%s14v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%055" Name="%C%s15t" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%056" Name="%C%s15v" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+000" />
+              <Parameter Id="%AID%_P-%T%2%CC%057" Name="%C%stairtime" ParameterType="%AID%_PT-time" Text="Nachlaufzeit" Value="60">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="5" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%058" Name="d%C%manuoff" ParameterType="%AID%_PT-noyes" Text="Manuelles ausschalten" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%058" Name="%C%manuoff" ParameterType="%AID%_PT-noyes" Text="Manuelles ausschalten" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%059" Name="d%C%lockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Sperren" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%059" Name="%C%lockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Sperren" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%066" Name="d%C%lockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
+              <Parameter Id="%AID%_P-%T%2%CC%066" Name="%C%lockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="8" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%060" Name="d%C%unlockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Entsperren" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%060" Name="%C%unlockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Entsperren" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="2" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%067" Name="d%C%unlockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
+              <Parameter Id="%AID%_P-%T%2%CC%067" Name="%C%unlockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="9" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%061" Name="d%C%poweron" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%062" Name="d%C%poweronlevel" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+002" />
-              <Parameter Id="%AID%_P-%T%2%CC%063" Name="d%C%failureon" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%064" Name="d%C%failureonlevel" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+002" />
-              <Parameter Id="%AID%_P-%T%2%CC%068" Name="d%C%onDay" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Tag" SuffixText="%" Value="1.000000000000000E+002">
+              <Parameter Id="%AID%_P-%T%2%CC%061" Name="%C%poweron" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%062" Name="%C%poweronlevel" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+002" />
+              <Parameter Id="%AID%_P-%T%2%CC%063" Name="%C%failureon" ParameterType="%AID%_PT-checkbox" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%064" Name="%C%failureonlevel" ParameterType="%AID%_PT-floatPercent" Text="" Value="1.000000000000000E+002" />
+              <Parameter Id="%AID%_P-%T%2%CC%068" Name="%C%onDay" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Tag" SuffixText="%" Value="1.000000000000000E+002">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="10" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%069" Name="d%C%onNight" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Nacht" SuffixText="%" Value="1.000000000000000E+001">
+              <Parameter Id="%AID%_P-%T%2%CC%069" Name="%C%onNight" ParameterType="%AID%_PT-floatPercent" Text="Einschaltwert Nacht" SuffixText="%" Value="1.000000000000000E+001">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="12" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%070" Name="d%C%locknegate" ParameterType="%AID%_PT-lockNegate" Text="Sperren bei" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%070" Name="%C%locknegate" ParameterType="%AID%_PT-lockNegate" Text="Sperren bei" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%073" Name="d%C%colorType" ParameterType="%AID%_PT-colorType" Text="Farbe ansteuern per" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%073" Name="%C%colorType" ParameterType="%AID%_PT-colorType" Text="Farbe ansteuern per" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="5" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%074" Name="d%C%colorSpace" ParameterType="%AID%_PT-colorSpace" Text="Farbe übertragen per" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%074" Name="%C%colorSpace" ParameterType="%AID%_PT-colorSpace" Text="Farbe übertragen per" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%081" Name="d%C%fadeTime" ParameterType="%AID%_PT-fadeTimes" Text="Übergangszeit" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%082" Name="d%C%fadeTimeExtendedBase" ParameterType="%AID%_PT-fadeTimeExtendedBase" Text="Base" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%083" Name="d%C%fadeTimeExtendedMultiplier" ParameterType="%AID%_PT-fadeTimeExtenedMultiplier" Text="Multiplier" Value="0" />
-              <Parameter Id="%AID%_P-%T%2%CC%084" Name="d%C%tempMin" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Min" SuffixText="K" Value="1500">
+              <Parameter Id="%AID%_P-%T%2%CC%081" Name="%C%fadeTime" ParameterType="%AID%_PT-fadeTimes" Text="Übergangszeit" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%082" Name="%C%fadeTimeExtendedBase" ParameterType="%AID%_PT-fadeTimeExtendedBase" Text="Base" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%083" Name="%C%fadeTimeExtendedMultiplier" ParameterType="%AID%_PT-fadeTimeExtenedMultiplier" Text="Multiplier" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%084" Name="%C%tempMin" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Min" SuffixText="K" Value="1500">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="14" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%085" Name="d%C%tempMax" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Max" SuffixText="K" Value="10000">
+              <Parameter Id="%AID%_P-%T%2%CC%085" Name="%C%tempMax" ParameterType="%AID%_PT-number16b" Text="Farbtemperatur Max" SuffixText="K" Value="10000">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="16" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%086" Name="d%C%hcl" ParameterType="%AID%_PT-noyes" Text="HCL aktivieren" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%086" Name="%C%hcl" ParameterType="%AID%_PT-noyes" Text="HCL aktivieren" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="8" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%087" Name="d%C%fadeRate" ParameterType="%AID%_PT-fadeRate" Text="" Value="7" />
-              <Parameter Id="%AID%_P-%T%2%CC%088" Name="d%C%queryTime" ParameterType="%AID%_PT-timeSpan" Text="Dimmwert abfragen (0 = deaktiviert)" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%087" Name="%C%fadeRate" ParameterType="%AID%_PT-fadeRate" Text="" Value="7" />
+              <Parameter Id="%AID%_P-%T%2%CC%088" Name="%C%queryTime" ParameterType="%AID%_PT-timeSpan" Text="Dimmwert abfragen (0 = deaktiviert)" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="18" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%089" Name="d%C%xyIgnore" ParameterType="%AID%_PT-noyes" Text="Helligkeit ignorieren? (nur xy verwenden)" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%089" Name="%C%xyIgnore" ParameterType="%AID%_PT-noyes" Text="Helligkeit ignorieren? (nur xy verwenden)" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="9" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%090" Name="d%C%s0cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%091" Name="d%C%s0ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%092" Name="d%C%s1cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%093" Name="d%C%s1ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%094" Name="d%C%s2cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%095" Name="d%C%s2ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%096" Name="d%C%s3cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%097" Name="d%C%s3ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%098" Name="d%C%s4cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%099" Name="d%C%s4ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%100" Name="d%C%s5cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%101" Name="d%C%s5ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%102" Name="d%C%s6cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%103" Name="d%C%s6ct" ParameterType="%AID%_PT-temperature" Text="RGB" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%104" Name="d%C%s7cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%105" Name="d%C%s7ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%106" Name="d%C%s8cc" ParameterType="%AID%_PT-colorRGB" Text="Temp" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%107" Name="d%C%s8ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%108" Name="d%C%s9cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%109" Name="d%C%s9ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%110" Name="d%C%s10cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%111" Name="d%C%s10ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%112" Name="d%C%s11cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%113" Name="d%C%s11ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%114" Name="d%C%s12cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%115" Name="d%C%s12ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%116" Name="d%C%s13cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%117" Name="d%C%s13ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%118" Name="d%C%s14cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%119" Name="d%C%s14ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%120" Name="d%C%s15cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
-              <Parameter Id="%AID%_P-%T%2%CC%121" Name="d%C%s15ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
-              <Parameter Id="%AID%_P-%T%2%CC%122" Name="d%C%dimmStateInterval" ParameterType="%AID%_PT-interval" Text="Dimmstatus Interval bei relativ" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%090" Name="%C%s0cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%091" Name="%C%s0ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%092" Name="%C%s1cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%093" Name="%C%s1ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%094" Name="%C%s2cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%095" Name="%C%s2ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%096" Name="%C%s3cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%097" Name="%C%s3ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%098" Name="%C%s4cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%099" Name="%C%s4ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%100" Name="%C%s5cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%101" Name="%C%s5ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%102" Name="%C%s6cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%103" Name="%C%s6ct" ParameterType="%AID%_PT-temperature" Text="RGB" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%104" Name="%C%s7cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%105" Name="%C%s7ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%106" Name="%C%s8cc" ParameterType="%AID%_PT-colorRGB" Text="Temp" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%107" Name="%C%s8ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%108" Name="%C%s9cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%109" Name="%C%s9ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%110" Name="%C%s10cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%111" Name="%C%s10ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%112" Name="%C%s11cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%113" Name="%C%s11ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%114" Name="%C%s12cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%115" Name="%C%s12ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%116" Name="%C%s13cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%117" Name="%C%s13ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%118" Name="%C%s14cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%119" Name="%C%s14ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%120" Name="%C%s15cc" ParameterType="%AID%_PT-colorRGB" Text="RGB" Value="#FFFFFF" />
+              <Parameter Id="%AID%_P-%T%2%CC%121" Name="%C%s15ct" ParameterType="%AID%_PT-temperature" Text="Temp" Value="2700" />
+              <Parameter Id="%AID%_P-%T%2%CC%122" Name="%C%dimmStateInterval" ParameterType="%AID%_PT-interval" Text="Dimmstatus Interval bei relativ" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="20" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%124" Name="d%C%hclCurve" ParameterType="%AID%_PT-hclCurves" Text="Verwende" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%124" Name="%C%hclCurve" ParameterType="%AID%_PT-hclCurves" Text="Verwende" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="20" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%125" Name="d%C%hclStart" ParameterType="%AID%_PT-hclStart" Text="HCL anwenden" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%125" Name="%C%hclStart" ParameterType="%AID%_PT-hclStart" Text="HCL anwenden" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="20" BitOffset="6" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%126" Name="d%C%dimmLock" ParameterType="%AID%_PT-dimmLock" Text="Einschalten bei relativ" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%126" Name="%C%dimmLock" ParameterType="%AID%_PT-dimmLock" Text="Einschalten bei relativ" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="0" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%127" Name="d%C%hcl_manu_bri" ParameterType="%AID%_PT-checkbox" Text="Helligkeit geändert wird" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%127" Name="%C%hcl_manu_bri" ParameterType="%AID%_PT-checkbox" Text="Helligkeit geändert wird" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="20" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%128" Name="d%C%hcl_manu_col" ParameterType="%AID%_PT-checkbox" Text="Farbe/Temperatur geändert wird" Value="1">
+              <Parameter Id="%AID%_P-%T%2%CC%128" Name="%C%hcl_manu_col" ParameterType="%AID%_PT-checkbox" Text="Farbe/Temperatur geändert wird" Value="1">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="2" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%129" Name="d%C%hcl_auto_off" ParameterType="%AID%_PT-checkbox" Text="das EVG ausgeschaltet wird" Value="1">
+              <Parameter Id="%AID%_P-%T%2%CC%129" Name="%C%hcl_auto_off" ParameterType="%AID%_PT-checkbox" Text="das EVG ausgeschaltet wird" Value="1">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="3" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%130" Name="d%C%hcl_auto_day" ParameterType="%AID%_PT-checkbox" Text="der Tag vorbei ist" Value="1">
+              <Parameter Id="%AID%_P-%T%2%CC%130" Name="%C%hcl_auto_day" ParameterType="%AID%_PT-checkbox" Text="der Tag vorbei ist" Value="1">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="4" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%131" Name="d%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%131" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
             </Parameters>
             <ParameterRefs>
-              <ParameterRef RefId="%AID%_P-%T%2%CC%001" Id="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101" Name="d%C%deviceType" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%002" Id="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" Name="d%C%name" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%004" Id="%AID%_P-%T%2%CC%004_R-%T%2%CC%00401" Name="d%C%type" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%003" Id="%AID%_P-%T%2%CC%003_R-%T%2%CC%00301" Name="d%C%lock" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%005" Id="%AID%_P-%T%2%CC%005_R-%T%2%CC%00501" Name="d%C%error" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%006" Id="%AID%_P-%T%2%CC%006_R-%T%2%CC%00601" Name="d%C%min" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%007" Id="%AID%_P-%T%2%CC%007_R-%T%2%CC%00701" Name="d%C%max" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%008" Id="%AID%_P-%T%2%CC%008_R-%T%2%CC%00801" Name="d%C%nachtriggern" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%009" Id="%AID%_P-%T%2%CC%009_R-%T%2%CC%00901" Name="d%C%g0" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%010" Id="%AID%_P-%T%2%CC%010_R-%T%2%CC%01001" Name="d%C%g1" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%011" Id="%AID%_P-%T%2%CC%011_R-%T%2%CC%01101" Name="d%C%g2" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%012" Id="%AID%_P-%T%2%CC%012_R-%T%2%CC%01201" Name="d%C%g3" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%013" Id="%AID%_P-%T%2%CC%013_R-%T%2%CC%01301" Name="d%C%g4" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%014" Id="%AID%_P-%T%2%CC%014_R-%T%2%CC%01401" Name="d%C%g5" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%015" Id="%AID%_P-%T%2%CC%015_R-%T%2%CC%01501" Name="d%C%g6" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%016" Id="%AID%_P-%T%2%CC%016_R-%T%2%CC%01601" Name="d%C%g7" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%017" Id="%AID%_P-%T%2%CC%017_R-%T%2%CC%01701" Name="d%C%g8" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%018" Id="%AID%_P-%T%2%CC%018_R-%T%2%CC%01801" Name="d%C%g9" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%019" Id="%AID%_P-%T%2%CC%019_R-%T%2%CC%01901" Name="d%C%g10" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%020" Id="%AID%_P-%T%2%CC%020_R-%T%2%CC%02001" Name="d%C%g11" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%021" Id="%AID%_P-%T%2%CC%021_R-%T%2%CC%02101" Name="d%C%g12" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%022" Id="%AID%_P-%T%2%CC%022_R-%T%2%CC%02201" Name="d%C%g13" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%023" Id="%AID%_P-%T%2%CC%023_R-%T%2%CC%02301" Name="d%C%g14" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%024" Id="%AID%_P-%T%2%CC%024_R-%T%2%CC%02401" Name="d%C%g15" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%025" Id="%AID%_P-%T%2%CC%025_R-%T%2%CC%02501" Name="d%C%s0t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%026" Id="%AID%_P-%T%2%CC%026_R-%T%2%CC%02601" Name="d%C%s0v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%027" Id="%AID%_P-%T%2%CC%027_R-%T%2%CC%02701" Name="d%C%s1t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%028" Id="%AID%_P-%T%2%CC%028_R-%T%2%CC%02801" Name="d%C%s1v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%029" Id="%AID%_P-%T%2%CC%029_R-%T%2%CC%02901" Name="d%C%s2t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%030" Id="%AID%_P-%T%2%CC%030_R-%T%2%CC%03001" Name="d%C%s2v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%031" Id="%AID%_P-%T%2%CC%031_R-%T%2%CC%03101" Name="d%C%s3t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%032" Id="%AID%_P-%T%2%CC%032_R-%T%2%CC%03201" Name="d%C%s3v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%033" Id="%AID%_P-%T%2%CC%033_R-%T%2%CC%03301" Name="d%C%s4t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%034" Id="%AID%_P-%T%2%CC%034_R-%T%2%CC%03401" Name="d%C%s4v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%035" Id="%AID%_P-%T%2%CC%035_R-%T%2%CC%03501" Name="d%C%s5t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%036" Id="%AID%_P-%T%2%CC%036_R-%T%2%CC%03601" Name="d%C%s5v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%037" Id="%AID%_P-%T%2%CC%037_R-%T%2%CC%03701" Name="d%C%s6t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%038" Id="%AID%_P-%T%2%CC%038_R-%T%2%CC%03801" Name="d%C%s6v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%039" Id="%AID%_P-%T%2%CC%039_R-%T%2%CC%03901" Name="d%C%s7t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%040" Id="%AID%_P-%T%2%CC%040_R-%T%2%CC%04001" Name="d%C%s7v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%041" Id="%AID%_P-%T%2%CC%041_R-%T%2%CC%04101" Name="d%C%s8t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%042" Id="%AID%_P-%T%2%CC%042_R-%T%2%CC%04201" Name="d%C%s8v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%043" Id="%AID%_P-%T%2%CC%043_R-%T%2%CC%04301" Name="d%C%s9t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%044" Id="%AID%_P-%T%2%CC%044_R-%T%2%CC%04401" Name="d%C%s9v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%045" Id="%AID%_P-%T%2%CC%045_R-%T%2%CC%04501" Name="d%C%s10t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%046" Id="%AID%_P-%T%2%CC%046_R-%T%2%CC%04601" Name="d%C%s10v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%047" Id="%AID%_P-%T%2%CC%047_R-%T%2%CC%04701" Name="d%C%s11t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%048" Id="%AID%_P-%T%2%CC%048_R-%T%2%CC%04801" Name="d%C%s11v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%049" Id="%AID%_P-%T%2%CC%049_R-%T%2%CC%04901" Name="d%C%s12t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%050" Id="%AID%_P-%T%2%CC%050_R-%T%2%CC%05001" Name="d%C%s12v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%051" Id="%AID%_P-%T%2%CC%051_R-%T%2%CC%05101" Name="d%C%s13t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%052" Id="%AID%_P-%T%2%CC%052_R-%T%2%CC%05201" Name="d%C%s13v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%053" Id="%AID%_P-%T%2%CC%053_R-%T%2%CC%05301" Name="d%C%s14t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%054" Id="%AID%_P-%T%2%CC%054_R-%T%2%CC%05401" Name="d%C%s14v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%055" Id="%AID%_P-%T%2%CC%055_R-%T%2%CC%05501" Name="d%C%s15t" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%056" Id="%AID%_P-%T%2%CC%056_R-%T%2%CC%05601" Name="d%C%s15v" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%057" Id="%AID%_P-%T%2%CC%057_R-%T%2%CC%05701" Name="d%C%stairtime" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%058" Id="%AID%_P-%T%2%CC%058_R-%T%2%CC%05801" Name="d%C%manuoff" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%059" Id="%AID%_P-%T%2%CC%059_R-%T%2%CC%05901" Name="d%C%lockbehave" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%060" Id="%AID%_P-%T%2%CC%060_R-%T%2%CC%06001" Name="d%C%unlockbehave" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%061" Id="%AID%_P-%T%2%CC%061_R-%T%2%CC%06101" Name="d%C%poweron" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%062" Id="%AID%_P-%T%2%CC%062_R-%T%2%CC%06201" Name="d%C%poweronlevel" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%063" Id="%AID%_P-%T%2%CC%063_R-%T%2%CC%06301" Name="d%C%failureon" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%064" Id="%AID%_P-%T%2%CC%064_R-%T%2%CC%06401" Name="d%C%failureonlevel" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%066" Id="%AID%_P-%T%2%CC%066_R-%T%2%CC%06601" Name="d%C%lockvalue" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%067" Id="%AID%_P-%T%2%CC%067_R-%T%2%CC%06701" Name="d%C%unlockvalue" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%068" Id="%AID%_P-%T%2%CC%068_R-%T%2%CC%06801" Name="d%C%onDay" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%069" Id="%AID%_P-%T%2%CC%069_R-%T%2%CC%06901" Name="d%C%onNight" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%070" Id="%AID%_P-%T%2%CC%070_R-%T%2%CC%07001" Name="d%C%locknegate" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%073" Id="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301" Name="d%C%colorType" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%074" Id="%AID%_P-%T%2%CC%074_R-%T%2%CC%07401" Name="d%C%colorSpace" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%081" Id="%AID%_P-%T%2%CC%081_R-%T%2%CC%08101" Name="d%C%fadeTime" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%082" Id="%AID%_P-%T%2%CC%082_R-%T%2%CC%08201" Name="d%C%fadeTimeExtendedBase" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%083" Id="%AID%_P-%T%2%CC%083_R-%T%2%CC%08301" Name="d%C%fadeTimeExtendedMultiplier" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%084" Id="%AID%_P-%T%2%CC%084_R-%T%2%CC%08401" Name="d%C%tempMin" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%085" Id="%AID%_P-%T%2%CC%085_R-%T%2%CC%08501" Name="d%C%tempMax" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%086" Id="%AID%_P-%T%2%CC%086_R-%T%2%CC%08601" Name="d%C%hcl" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%087" Id="%AID%_P-%T%2%CC%087_R-%T%2%CC%08701" Name="d%C%fadeRate" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%088" Id="%AID%_P-%T%2%CC%088_R-%T%2%CC%08801" Name="d%C%queryTime" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%089" Id="%AID%_P-%T%2%CC%089_R-%T%2%CC%08901" Name="d%C%xyIgnore" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%090" Id="%AID%_P-%T%2%CC%090_R-%T%2%CC%09001" Name="d%C%s0cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%091" Id="%AID%_P-%T%2%CC%091_R-%T%2%CC%09101" Name="d%C%s0ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%092" Id="%AID%_P-%T%2%CC%092_R-%T%2%CC%09201" Name="d%C%s1cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%093" Id="%AID%_P-%T%2%CC%093_R-%T%2%CC%09301" Name="d%C%s1ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%094" Id="%AID%_P-%T%2%CC%094_R-%T%2%CC%09401" Name="d%C%s2cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%095" Id="%AID%_P-%T%2%CC%095_R-%T%2%CC%09501" Name="d%C%s2ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%096" Id="%AID%_P-%T%2%CC%096_R-%T%2%CC%09601" Name="d%C%s3cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%097" Id="%AID%_P-%T%2%CC%097_R-%T%2%CC%09701" Name="d%C%s3ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%098" Id="%AID%_P-%T%2%CC%098_R-%T%2%CC%09801" Name="d%C%s4cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%099" Id="%AID%_P-%T%2%CC%099_R-%T%2%CC%09901" Name="d%C%s4ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%100" Id="%AID%_P-%T%2%CC%100_R-%T%2%CC%10001" Name="d%C%s5cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%101" Id="%AID%_P-%T%2%CC%101_R-%T%2%CC%10101" Name="d%C%s5ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%102" Id="%AID%_P-%T%2%CC%102_R-%T%2%CC%10201" Name="d%C%s6cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%103" Id="%AID%_P-%T%2%CC%103_R-%T%2%CC%10301" Name="d%C%s6ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%104" Id="%AID%_P-%T%2%CC%104_R-%T%2%CC%10401" Name="d%C%s7cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%105" Id="%AID%_P-%T%2%CC%105_R-%T%2%CC%10501" Name="d%C%s7ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%106" Id="%AID%_P-%T%2%CC%106_R-%T%2%CC%10601" Name="d%C%s8cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%107" Id="%AID%_P-%T%2%CC%107_R-%T%2%CC%10701" Name="d%C%s8ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%108" Id="%AID%_P-%T%2%CC%108_R-%T%2%CC%10801" Name="d%C%s9cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%109" Id="%AID%_P-%T%2%CC%109_R-%T%2%CC%10901" Name="d%C%s9ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%110" Id="%AID%_P-%T%2%CC%110_R-%T%2%CC%11001" Name="d%C%s10cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%111" Id="%AID%_P-%T%2%CC%111_R-%T%2%CC%11101" Name="d%C%s10ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%112" Id="%AID%_P-%T%2%CC%112_R-%T%2%CC%11201" Name="d%C%s11cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%113" Id="%AID%_P-%T%2%CC%113_R-%T%2%CC%11301" Name="d%C%s11ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%114" Id="%AID%_P-%T%2%CC%114_R-%T%2%CC%11401" Name="d%C%s12cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%115" Id="%AID%_P-%T%2%CC%115_R-%T%2%CC%11501" Name="d%C%s12ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%116" Id="%AID%_P-%T%2%CC%116_R-%T%2%CC%11601" Name="d%C%s13cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%117" Id="%AID%_P-%T%2%CC%117_R-%T%2%CC%11701" Name="d%C%s13ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%118" Id="%AID%_P-%T%2%CC%118_R-%T%2%CC%11801" Name="d%C%s14cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%119" Id="%AID%_P-%T%2%CC%119_R-%T%2%CC%11901" Name="d%C%s14ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%120" Id="%AID%_P-%T%2%CC%120_R-%T%2%CC%12001" Name="d%C%s15cc" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%121" Id="%AID%_P-%T%2%CC%121_R-%T%2%CC%12101" Name="d%C%s15ct" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%122" Id="%AID%_P-%T%2%CC%122_R-%T%2%CC%12201" Name="d%C%dimmStateInterval" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%124" Id="%AID%_P-%T%2%CC%124_R-%T%2%CC%12401" Name="d%C%hclCurve" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%125" Id="%AID%_P-%T%2%CC%125_R-%T%2%CC%12501" Name="d%C%hclStart" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%126" Id="%AID%_P-%T%2%CC%126_R-%T%2%CC%12601" Name="d%C%dimmLock" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%127" Id="%AID%_P-%T%2%CC%127_R-%T%2%CC%12701" Name="d%C%hcl_manu_bri" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%128" Id="%AID%_P-%T%2%CC%128_R-%T%2%CC%12801" Name="d%C%hcl_manu_col" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%129" Id="%AID%_P-%T%2%CC%129_R-%T%2%CC%12901" Name="d%C%hcl_auto_off" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%130" Id="%AID%_P-%T%2%CC%130_R-%T%2%CC%13001" Name="d%C%hcl_auto_day" />
-              <ParameterRef RefId="%AID%_P-%T%2%CC%131" Id="%AID%_P-%T%2%CC%131_R-%T%2%CC%13101" Name="d%C%scene" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%001" Id="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101" Name="%C%deviceType" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%002" Id="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" Name="%C%name" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%004" Id="%AID%_P-%T%2%CC%004_R-%T%2%CC%00401" Name="%C%type" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%003" Id="%AID%_P-%T%2%CC%003_R-%T%2%CC%00301" Name="%C%lock" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%005" Id="%AID%_P-%T%2%CC%005_R-%T%2%CC%00501" Name="%C%error" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%006" Id="%AID%_P-%T%2%CC%006_R-%T%2%CC%00601" Name="%C%min" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%007" Id="%AID%_P-%T%2%CC%007_R-%T%2%CC%00701" Name="%C%max" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%008" Id="%AID%_P-%T%2%CC%008_R-%T%2%CC%00801" Name="%C%nachtriggern" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%009" Id="%AID%_P-%T%2%CC%009_R-%T%2%CC%00901" Name="%C%g0" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%010" Id="%AID%_P-%T%2%CC%010_R-%T%2%CC%01001" Name="%C%g1" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%011" Id="%AID%_P-%T%2%CC%011_R-%T%2%CC%01101" Name="%C%g2" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%012" Id="%AID%_P-%T%2%CC%012_R-%T%2%CC%01201" Name="%C%g3" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%013" Id="%AID%_P-%T%2%CC%013_R-%T%2%CC%01301" Name="%C%g4" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%014" Id="%AID%_P-%T%2%CC%014_R-%T%2%CC%01401" Name="%C%g5" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%015" Id="%AID%_P-%T%2%CC%015_R-%T%2%CC%01501" Name="%C%g6" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%016" Id="%AID%_P-%T%2%CC%016_R-%T%2%CC%01601" Name="%C%g7" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%017" Id="%AID%_P-%T%2%CC%017_R-%T%2%CC%01701" Name="%C%g8" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%018" Id="%AID%_P-%T%2%CC%018_R-%T%2%CC%01801" Name="%C%g9" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%019" Id="%AID%_P-%T%2%CC%019_R-%T%2%CC%01901" Name="%C%g10" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%020" Id="%AID%_P-%T%2%CC%020_R-%T%2%CC%02001" Name="%C%g11" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%021" Id="%AID%_P-%T%2%CC%021_R-%T%2%CC%02101" Name="%C%g12" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%022" Id="%AID%_P-%T%2%CC%022_R-%T%2%CC%02201" Name="%C%g13" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%023" Id="%AID%_P-%T%2%CC%023_R-%T%2%CC%02301" Name="%C%g14" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%024" Id="%AID%_P-%T%2%CC%024_R-%T%2%CC%02401" Name="%C%g15" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%025" Id="%AID%_P-%T%2%CC%025_R-%T%2%CC%02501" Name="%C%s0t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%026" Id="%AID%_P-%T%2%CC%026_R-%T%2%CC%02601" Name="%C%s0v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%027" Id="%AID%_P-%T%2%CC%027_R-%T%2%CC%02701" Name="%C%s1t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%028" Id="%AID%_P-%T%2%CC%028_R-%T%2%CC%02801" Name="%C%s1v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%029" Id="%AID%_P-%T%2%CC%029_R-%T%2%CC%02901" Name="%C%s2t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%030" Id="%AID%_P-%T%2%CC%030_R-%T%2%CC%03001" Name="%C%s2v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%031" Id="%AID%_P-%T%2%CC%031_R-%T%2%CC%03101" Name="%C%s3t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%032" Id="%AID%_P-%T%2%CC%032_R-%T%2%CC%03201" Name="%C%s3v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%033" Id="%AID%_P-%T%2%CC%033_R-%T%2%CC%03301" Name="%C%s4t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%034" Id="%AID%_P-%T%2%CC%034_R-%T%2%CC%03401" Name="%C%s4v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%035" Id="%AID%_P-%T%2%CC%035_R-%T%2%CC%03501" Name="%C%s5t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%036" Id="%AID%_P-%T%2%CC%036_R-%T%2%CC%03601" Name="%C%s5v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%037" Id="%AID%_P-%T%2%CC%037_R-%T%2%CC%03701" Name="%C%s6t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%038" Id="%AID%_P-%T%2%CC%038_R-%T%2%CC%03801" Name="%C%s6v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%039" Id="%AID%_P-%T%2%CC%039_R-%T%2%CC%03901" Name="%C%s7t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%040" Id="%AID%_P-%T%2%CC%040_R-%T%2%CC%04001" Name="%C%s7v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%041" Id="%AID%_P-%T%2%CC%041_R-%T%2%CC%04101" Name="%C%s8t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%042" Id="%AID%_P-%T%2%CC%042_R-%T%2%CC%04201" Name="%C%s8v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%043" Id="%AID%_P-%T%2%CC%043_R-%T%2%CC%04301" Name="%C%s9t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%044" Id="%AID%_P-%T%2%CC%044_R-%T%2%CC%04401" Name="%C%s9v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%045" Id="%AID%_P-%T%2%CC%045_R-%T%2%CC%04501" Name="%C%s10t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%046" Id="%AID%_P-%T%2%CC%046_R-%T%2%CC%04601" Name="%C%s10v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%047" Id="%AID%_P-%T%2%CC%047_R-%T%2%CC%04701" Name="%C%s11t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%048" Id="%AID%_P-%T%2%CC%048_R-%T%2%CC%04801" Name="%C%s11v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%049" Id="%AID%_P-%T%2%CC%049_R-%T%2%CC%04901" Name="%C%s12t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%050" Id="%AID%_P-%T%2%CC%050_R-%T%2%CC%05001" Name="%C%s12v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%051" Id="%AID%_P-%T%2%CC%051_R-%T%2%CC%05101" Name="%C%s13t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%052" Id="%AID%_P-%T%2%CC%052_R-%T%2%CC%05201" Name="%C%s13v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%053" Id="%AID%_P-%T%2%CC%053_R-%T%2%CC%05301" Name="%C%s14t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%054" Id="%AID%_P-%T%2%CC%054_R-%T%2%CC%05401" Name="%C%s14v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%055" Id="%AID%_P-%T%2%CC%055_R-%T%2%CC%05501" Name="%C%s15t" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%056" Id="%AID%_P-%T%2%CC%056_R-%T%2%CC%05601" Name="%C%s15v" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%057" Id="%AID%_P-%T%2%CC%057_R-%T%2%CC%05701" Name="%C%stairtime" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%058" Id="%AID%_P-%T%2%CC%058_R-%T%2%CC%05801" Name="%C%manuoff" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%059" Id="%AID%_P-%T%2%CC%059_R-%T%2%CC%05901" Name="%C%lockbehave" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%060" Id="%AID%_P-%T%2%CC%060_R-%T%2%CC%06001" Name="%C%unlockbehave" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%061" Id="%AID%_P-%T%2%CC%061_R-%T%2%CC%06101" Name="%C%poweron" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%062" Id="%AID%_P-%T%2%CC%062_R-%T%2%CC%06201" Name="%C%poweronlevel" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%063" Id="%AID%_P-%T%2%CC%063_R-%T%2%CC%06301" Name="%C%failureon" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%064" Id="%AID%_P-%T%2%CC%064_R-%T%2%CC%06401" Name="%C%failureonlevel" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%066" Id="%AID%_P-%T%2%CC%066_R-%T%2%CC%06601" Name="%C%lockvalue" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%067" Id="%AID%_P-%T%2%CC%067_R-%T%2%CC%06701" Name="%C%unlockvalue" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%068" Id="%AID%_P-%T%2%CC%068_R-%T%2%CC%06801" Name="%C%onDay" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%069" Id="%AID%_P-%T%2%CC%069_R-%T%2%CC%06901" Name="%C%onNight" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%070" Id="%AID%_P-%T%2%CC%070_R-%T%2%CC%07001" Name="%C%locknegate" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%073" Id="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301" Name="%C%colorType" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%074" Id="%AID%_P-%T%2%CC%074_R-%T%2%CC%07401" Name="%C%colorSpace" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%081" Id="%AID%_P-%T%2%CC%081_R-%T%2%CC%08101" Name="%C%fadeTime" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%082" Id="%AID%_P-%T%2%CC%082_R-%T%2%CC%08201" Name="%C%fadeTimeExtendedBase" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%083" Id="%AID%_P-%T%2%CC%083_R-%T%2%CC%08301" Name="%C%fadeTimeExtendedMultiplier" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%084" Id="%AID%_P-%T%2%CC%084_R-%T%2%CC%08401" Name="%C%tempMin" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%085" Id="%AID%_P-%T%2%CC%085_R-%T%2%CC%08501" Name="%C%tempMax" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%086" Id="%AID%_P-%T%2%CC%086_R-%T%2%CC%08601" Name="%C%hcl" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%087" Id="%AID%_P-%T%2%CC%087_R-%T%2%CC%08701" Name="%C%fadeRate" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%088" Id="%AID%_P-%T%2%CC%088_R-%T%2%CC%08801" Name="%C%queryTime" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%089" Id="%AID%_P-%T%2%CC%089_R-%T%2%CC%08901" Name="%C%xyIgnore" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%090" Id="%AID%_P-%T%2%CC%090_R-%T%2%CC%09001" Name="%C%s0cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%091" Id="%AID%_P-%T%2%CC%091_R-%T%2%CC%09101" Name="%C%s0ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%092" Id="%AID%_P-%T%2%CC%092_R-%T%2%CC%09201" Name="%C%s1cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%093" Id="%AID%_P-%T%2%CC%093_R-%T%2%CC%09301" Name="%C%s1ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%094" Id="%AID%_P-%T%2%CC%094_R-%T%2%CC%09401" Name="%C%s2cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%095" Id="%AID%_P-%T%2%CC%095_R-%T%2%CC%09501" Name="%C%s2ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%096" Id="%AID%_P-%T%2%CC%096_R-%T%2%CC%09601" Name="%C%s3cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%097" Id="%AID%_P-%T%2%CC%097_R-%T%2%CC%09701" Name="%C%s3ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%098" Id="%AID%_P-%T%2%CC%098_R-%T%2%CC%09801" Name="%C%s4cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%099" Id="%AID%_P-%T%2%CC%099_R-%T%2%CC%09901" Name="%C%s4ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%100" Id="%AID%_P-%T%2%CC%100_R-%T%2%CC%10001" Name="%C%s5cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%101" Id="%AID%_P-%T%2%CC%101_R-%T%2%CC%10101" Name="%C%s5ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%102" Id="%AID%_P-%T%2%CC%102_R-%T%2%CC%10201" Name="%C%s6cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%103" Id="%AID%_P-%T%2%CC%103_R-%T%2%CC%10301" Name="%C%s6ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%104" Id="%AID%_P-%T%2%CC%104_R-%T%2%CC%10401" Name="%C%s7cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%105" Id="%AID%_P-%T%2%CC%105_R-%T%2%CC%10501" Name="%C%s7ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%106" Id="%AID%_P-%T%2%CC%106_R-%T%2%CC%10601" Name="%C%s8cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%107" Id="%AID%_P-%T%2%CC%107_R-%T%2%CC%10701" Name="%C%s8ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%108" Id="%AID%_P-%T%2%CC%108_R-%T%2%CC%10801" Name="%C%s9cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%109" Id="%AID%_P-%T%2%CC%109_R-%T%2%CC%10901" Name="%C%s9ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%110" Id="%AID%_P-%T%2%CC%110_R-%T%2%CC%11001" Name="%C%s10cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%111" Id="%AID%_P-%T%2%CC%111_R-%T%2%CC%11101" Name="%C%s10ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%112" Id="%AID%_P-%T%2%CC%112_R-%T%2%CC%11201" Name="%C%s11cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%113" Id="%AID%_P-%T%2%CC%113_R-%T%2%CC%11301" Name="%C%s11ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%114" Id="%AID%_P-%T%2%CC%114_R-%T%2%CC%11401" Name="%C%s12cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%115" Id="%AID%_P-%T%2%CC%115_R-%T%2%CC%11501" Name="%C%s12ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%116" Id="%AID%_P-%T%2%CC%116_R-%T%2%CC%11601" Name="%C%s13cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%117" Id="%AID%_P-%T%2%CC%117_R-%T%2%CC%11701" Name="%C%s13ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%118" Id="%AID%_P-%T%2%CC%118_R-%T%2%CC%11801" Name="%C%s14cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%119" Id="%AID%_P-%T%2%CC%119_R-%T%2%CC%11901" Name="%C%s14ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%120" Id="%AID%_P-%T%2%CC%120_R-%T%2%CC%12001" Name="%C%s15cc" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%121" Id="%AID%_P-%T%2%CC%121_R-%T%2%CC%12101" Name="%C%s15ct" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%122" Id="%AID%_P-%T%2%CC%122_R-%T%2%CC%12201" Name="%C%dimmStateInterval" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%124" Id="%AID%_P-%T%2%CC%124_R-%T%2%CC%12401" Name="%C%hclCurve" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%125" Id="%AID%_P-%T%2%CC%125_R-%T%2%CC%12501" Name="%C%hclStart" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%126" Id="%AID%_P-%T%2%CC%126_R-%T%2%CC%12601" Name="%C%dimmLock" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%127" Id="%AID%_P-%T%2%CC%127_R-%T%2%CC%12701" Name="%C%hcl_manu_bri" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%128" Id="%AID%_P-%T%2%CC%128_R-%T%2%CC%12801" Name="%C%hcl_manu_col" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%129" Id="%AID%_P-%T%2%CC%129_R-%T%2%CC%12901" Name="%C%hcl_auto_off" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%130" Id="%AID%_P-%T%2%CC%130_R-%T%2%CC%13001" Name="%C%hcl_auto_day" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%131" Id="%AID%_P-%T%2%CC%131_R-%T%2%CC%13101" Name="%C%scene" />
             </ParameterRefs>
             <ComObjectTable>
-              <ComObject Id="%AID%_O-%T%2%CC%000" Name="d%C%switch" Text="A%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%001" Name="d%C%switch_state" Text="A%C-1% {{0}}" Number="%K1%" FunctionText="Schalten Status" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%002" Name="d%C%dimm_relative" Text="A%C-1% {{0}}" Number="%K2%" FunctionText="Dimmen Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%T%2%CC%003" Name="d%C%dimm_absolute" Text="A%C-1% {{0}}" Number="%K3%" FunctionText="Dimmen Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%004" Name="d%C%dimm_state" Text="A%C-1% {{0}}" Number="%K4%" FunctionText="Dimmen Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%005" Name="d%C%lock" Text="A%C-1% {{0}}" Number="%K5%" FunctionText="Sperren" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%019" Name="d%C%error" Text="A%C-1% {{0}}" Number="%K19%" FunctionText="Fehler" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-5" />
-              <ComObject Id="%AID%_O-%T%2%CC%006" Name="d%C%color" Text="A%C-1% {{0}}" Number="%K6%" FunctionText="RGB Farbe" ObjectSize="6 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
-              <ComObject Id="%AID%_O-%T%2%CC%007" Name="d%C%color_rgb_state" Text="A%C-1% {{0}}" Number="%K7%" FunctionText="RGB Farbe Status" ObjectSize="6 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
-              <ComObject Id="%AID%_O-%T%2%CC%008" Name="d%C%color_red_relative" Text="A%C-1% {{0}}" Number="%K8%" FunctionText="Rot Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%T%2%CC%009" Name="d%C%color_red_absolute" Text="A%C-1% {{0}}" Number="%K9%" FunctionText="Rot Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%010" Name="d%C%color_red_state" Text="A%C-1% {{0}}" Number="%K10%" FunctionText="Rot Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%011" Name="d%C%color_green_relative" Text="A%C-1% {{0}}" Number="%K11%" FunctionText="Grün Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%T%2%CC%012" Name="d%C%color_green_absolute" Text="A%C-1% {{0}}" Number="%K12%" FunctionText="Grün Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%013" Name="d%C%color_green_state" Text="A%C-1% {{0}}" Number="%K13%" FunctionText="Grün Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%014" Name="d%C%color_blue_relative" Text="A%C-1% {{0}}" Number="%K14%" FunctionText="Blau Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
-              <ComObject Id="%AID%_O-%T%2%CC%015" Name="d%C%color_blue_absolute" Text="A%C-1% {{0}}" Number="%K15%" FunctionText="Blau Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%016" Name="d%C%color_blue_state" Text="A%C-1% {{0}}" Number="%K16%" FunctionText="Blau Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
-              <ComObject Id="%AID%_O-%T%2%CC%017" Name="d%C%hcl_curve" Text="A%C-1% {{0}}" Number="%K17%" FunctionText="HCL Kurve" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPT-5" />
-              <ComObject Id="%AID%_O-%T%2%CC%018" Name="d%C%scene" Text="A%C-1% {{0}}" Number="%K18%" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-17-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%000" Name="%C%switch" Text="A%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%001" Name="%C%switch_state" Text="A%C-1% {{0}}" Number="%K1%" FunctionText="Schalten Status" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%002" Name="%C%dimm_relative" Text="A%C-1% {{0}}" Number="%K2%" FunctionText="Dimmen Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%2%CC%003" Name="%C%dimm_absolute" Text="A%C-1% {{0}}" Number="%K3%" FunctionText="Dimmen Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%004" Name="%C%dimm_state" Text="A%C-1% {{0}}" Number="%K4%" FunctionText="Dimmen Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%005" Name="%C%lock" Text="A%C-1% {{0}}" Number="%K5%" FunctionText="Sperren" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%019" Name="%C%error" Text="A%C-1% {{0}}" Number="%K19%" FunctionText="Fehler" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-5" />
+              <ComObject Id="%AID%_O-%T%2%CC%006" Name="%C%color" Text="A%C-1% {{0}}" Number="%K6%" FunctionText="RGB Farbe" ObjectSize="6 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
+              <ComObject Id="%AID%_O-%T%2%CC%007" Name="%C%color_rgb_state" Text="A%C-1% {{0}}" Number="%K7%" FunctionText="RGB Farbe Status" ObjectSize="6 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-242-600" />
+              <ComObject Id="%AID%_O-%T%2%CC%008" Name="%C%color_red_relative" Text="A%C-1% {{0}}" Number="%K8%" FunctionText="Rot Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%2%CC%009" Name="%C%color_red_absolute" Text="A%C-1% {{0}}" Number="%K9%" FunctionText="Rot Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%010" Name="%C%color_red_state" Text="A%C-1% {{0}}" Number="%K10%" FunctionText="Rot Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%011" Name="%C%color_green_relative" Text="A%C-1% {{0}}" Number="%K11%" FunctionText="Grün Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%2%CC%012" Name="%C%color_green_absolute" Text="A%C-1% {{0}}" Number="%K12%" FunctionText="Grün Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%013" Name="%C%color_green_state" Text="A%C-1% {{0}}" Number="%K13%" FunctionText="Grün Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%014" Name="%C%color_blue_relative" Text="A%C-1% {{0}}" Number="%K14%" FunctionText="Blau Relativ" ObjectSize="4 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-3-7" />
+              <ComObject Id="%AID%_O-%T%2%CC%015" Name="%C%color_blue_absolute" Text="A%C-1% {{0}}" Number="%K15%" FunctionText="Blau Absolut" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%016" Name="%C%color_blue_state" Text="A%C-1% {{0}}" Number="%K16%" FunctionText="Blau Status" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
+              <ComObject Id="%AID%_O-%T%2%CC%017" Name="%C%hcl_curve" Text="A%C-1% {{0}}" Number="%K17%" FunctionText="HCL Kurve" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPT-5" />
+              <ComObject Id="%AID%_O-%T%2%CC%018" Name="%C%scene" Text="A%C-1% {{0}}" Number="%K18%" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" DatapointType="DPST-17-1" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef RefId="%AID%_O-%T%2%CC%000" Id="%AID%_O-%T%2%CC%000_R-%T%2%CC%00001" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
