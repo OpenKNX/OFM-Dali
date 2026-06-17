@@ -1005,7 +1005,7 @@ void DaliModule::processInputKo(GroupObject &ko)
     if (koNum >= DGWH_KoOffset && koNum < DGWH_KoOffset + DGWH_KoBlockSize * 3)
     {
         int index = floor((koNum - DGWH_KoOffset) / DGWH_KoBlockSize);
-        int chanIndex = (ko.asap() - DGWG_KoOffset) % DGWG_KoBlockSize;
+        int chanIndex = (koNum - DGWH_KoOffset) % DGWH_KoBlockSize;
         // logDebugP("For HCL %i - Ko %i", index, chanIndex);
 
         switch (chanIndex)
