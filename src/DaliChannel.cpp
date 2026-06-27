@@ -112,9 +112,10 @@ void DaliChannel::loop1()
     loopDimming();
     loopError();
     loopQueryLevel();
+
 }
 
-void DaliChannel::loopInitData()
+void DaliChannel::loopInitData(uint8_t *sceneLevels)
 {
     if (_isGroup)
         return;
@@ -124,21 +125,28 @@ void DaliChannel::loopInitData()
     {
     case PT_deviceType_DT6:
         // create emulated EVG for DT6
-        evg = new DaliEVG_DT6(daliMaster, channelIndex(), false, _min, _max, 254, 1, 7, false);
+        evg = new DaliEVG_DT6(daliMaster, channelIndex(), false, _min, _max, 254, 0, 7, false);
         break;
     case PT_deviceType_DT8:
         // create emulated EVG for DT8
-        evg = new DaliEVG_DT8(daliMaster, channelIndex(), false, _min, _max, 254, 1, 7, false);
+        evg = new DaliEVG_DT8(daliMaster, channelIndex(), false, _min, _max, 254, 0, 7, false);
         break;
     
     default:
-        evg = new DaliEVGBase(daliMaster, channelIndex(), false, _min, _max, 254, 1, 7, false);
+        evg = new DaliEVGBase(daliMaster, channelIndex(), false, _min, _max, 254, 0, 7, false);
         break;
     }
     evg->attachToMaster();
+    evg->setRealDevicePtr(this);
     evg->setGroups(_groups);
     evg->setCurrentLevel(currentStep);
-    evg->setRealDevicePresent(true);
+    evg->setUpdateRate(5);
+    for (int i = 0; i < 16; i++)
+    {
+        evg->setSceneLevel(i, sceneLevels[i]);
+        evg->setSceneActive(i, sceneLevels[i] < 0xFF);
+    }
+    // evg->startSyncWithRealDevice();
 }
 
 void DaliChannel::loopStaircase()
@@ -451,7 +459,7 @@ void DaliChannel::koHandleScene(GroupObject &ko)
     }
 
     daliMaster.sendCommand(_channelIndex, Dali::Command::GO_TO_SCENE | number, _isGroup);
-    queryActualLevel(700);
+    // queryActualLevel(700);
 }
 
 void DaliChannel::koHandleColorRel(GroupObject &ko, uint8_t index)
@@ -905,7 +913,7 @@ void DaliChannel::setBrightness(uint8_t value)
 {
     logDebugP("Set Brightness: %i %%", value);
     daliMaster.sendArc(_channelIndex, DaliHelper::percentToArc(value), _isGroup);
-    sendKoStateOnChange(DGW_Kodimm_state, value, Dpt(5, 1));
+    // sendKoStateOnChange(DGW_Kodimm_state, value, Dpt(5, 1));
 }
 
 bool DaliChannel::isDimmOnLocked() {
@@ -1024,13 +1032,20 @@ void DaliChannel::setSwitchState(bool value, bool isSwitchCommand)
         _hclIsAutoMode = true;
 
     // logDebugP("AutoConfSwitch %i %i %i", value, ParamDGW_hcl_auto_off, _hclIsAutoMode);
+    if (!_isGroup) return;
+    sendSwitchState(value);
+}
 
+void DaliChannel::sendSwitchState(bool value)
+{
     GroupObject &ko = knx.getGroupObject(calcKoNumber(_isGroup ? DGWG_Koswitch_state : DGW_Koswitch_state));
     bool currentState = ko.value(DPT_Switch);
     if (value == currentState && ko.initialized())
         return;
     ko.value(value, DPT_Switch);
 }
+
+
 
 void DaliChannel::setDimmState(uint8_t value, bool isDimmCommand, bool isLastCommand)
 {
@@ -1047,8 +1062,13 @@ void DaliChannel::setDimmState(uint8_t value, bool isDimmCommand, bool isLastCom
         setSwitchState(value > 0, false);
         currentStep = value;
     }
+    // sendDimmState(value);
+}
 
+void DaliChannel::sendDimmState(uint8_t value)
+{
     float perc = DaliHelper::arcToPercentFloat(value);
+    // sendKoStateOnChange(DGW_Kodimm_state, value, Dpt(5, 1));
 
     GroupObject& ko = knx.getGroupObject(calcKoNumber(DGW_Kodimm_state));
     if(ko.valueNoSendCompare(perc, Dpt(5, 1)))

@@ -6,6 +6,8 @@
 #include "Dali/Commands.h"
 #include <array>
 #include <vector>
+#include "OpenKNX.h"
+#include "DaliChannel.h"
 
 // Interval used for UP/DOWN rate steps (milliseconds)
 static constexpr uint32_t UPDOWN_FADE_INTERVAL_MS = 200;
@@ -16,8 +18,9 @@ public:
     DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceType, bool isGroup = false,
                 uint8_t minLevel = 0, uint8_t maxLevel = 254, uint8_t onLevel = 254,
                 uint8_t fadeTime = 0, uint8_t fadeRate = 0, bool errorState = false, bool startOn = false,
-                bool realDevicePresent = false);
+                DaliChannel *realDevicePtr = nullptr);
     virtual ~DaliEVGBase();
+    virtual const std::string logPrefix() const;
 
     static void loop(uint32_t nowMs);
     static DaliEVGBase *getByAddress(uint8_t address);
@@ -26,8 +29,7 @@ public:
     static void registerMasterMonitor(Dali::Master *master);
     static void handleFrameStatic(const Dali::Frame &frame, Dali::Master *master);
     bool hasRealDevicePresent() const;
-    void setRealDevicePresent(bool present);
-    bool handleFrame(const Dali::Frame &frame);
+    void setRealDevicePtr(DaliChannel *realDevicePtr);
 
     bool isOn() const;
     uint8_t getLevel() const;
@@ -55,6 +57,11 @@ public:
     void setSceneLevel(uint8_t scene, uint8_t level);
     void setSceneActive(uint8_t scene, bool active);
     void setCurrentLevel(uint8_t level);
+
+    // Synchronization with real device
+    void startSyncWithRealDevice();
+    void loopInitData();
+    bool isSyncInProgress() const;
     
     // Time-based fade/transition support
     void update(uint32_t nowMs);
@@ -65,6 +72,24 @@ public:
     void debugOutputIfDue(bool force = false);
 
     enum class FrameType { Unknown, Arc, Command, Special };
+
+    enum class InitDataState {
+        OFF,
+        QUERY_MIN_LEVEL,
+        QUERY_MAX_LEVEL,
+        QUERY_POWER_ON_LEVEL,
+        QUERY_ACTUAL_LEVEL,
+        QUERY_STATUS,
+        QUERY_GROUPS_0_7,
+        QUERY_GROUPS_8_15,
+        // QUERY_FADE_TIME,
+        // QUERY_FADE_RATE,
+        QUERY_SCENE_LEVELS,
+        DONE
+    };
+
+    // Helper method for asynchronous query handling
+    bool handleInitDataResponse(uint8_t queryCommand, uint8_t response);
 
 protected:
 
@@ -84,6 +109,8 @@ protected:
     void respond(uint8_t value);
     void clearPendingDeviceType();
 
+    uint16_t calcKoNumber(int asap);
+
     bool matchesFrameTarget(const ParsedFrame &parsed) const;
     ParsedFrame parseFrame(const Dali::Frame &frame) const;
     bool handleArcCommand(uint8_t arcLevel);
@@ -91,6 +118,11 @@ protected:
     bool handleSpecialCommand(uint8_t specialCommand, uint8_t value);
     bool handleQuery(uint8_t query, const ParsedFrame &parsed);
 
+    void awaitRealDeviceResponse(uint8_t query, unsigned long ref);
+    void processRealDeviceResponse(uint8_t response);
+    void clearPendingRealDeviceResponse();
+
+    static void handleBackwardFrame(const Dali::Frame &frame);
     static ParsedFrame parseFrameStatic(const Dali::Frame &frame);
 
     static void registerInstance(uint8_t address, DaliEVGBase *instance);
@@ -118,7 +150,11 @@ protected:
     uint16_t groupBits;
     uint8_t pendingDeviceType;
     std::array<uint8_t, 3> dtr;
-    bool realDevicePresent;
+    DaliChannel *realDevicePtr;
+    unsigned long currentFrameRef;
+    uint8_t currentQueryType;
+    unsigned long pendingResponseRef;
+    uint8_t pendingResponseQuery;
     static constexpr size_t SCENE_COUNT = 16;
     std::array<uint8_t, SCENE_COUNT> sceneLevels;
     uint16_t sceneActiveMask;
@@ -131,5 +167,14 @@ protected:
     float fadeStepsPerSecOverride;
     // Debug output throttling state
     mutable uint32_t lastDebugOutputMs;
+    // Real device synchronization state
+    InitDataState initDataState;
+    uint32_t initDataStartMs;
+    uint32_t initDataNextMs;
+    uint8_t currentSceneQueryIndex;
+    uint16_t syncGroupBits;
+    unsigned long initDataPendingRef;
+    uint8_t initDataPendingQuery;
+    static constexpr uint32_t INIT_TIMEOUT_MS = 50000;
     // Note: fadeTime (0..15) maps to a steps/sec table implemented in cpp
 };

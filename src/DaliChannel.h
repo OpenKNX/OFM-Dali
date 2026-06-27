@@ -18,7 +18,7 @@ class DaliChannel : public OpenKNX::Channel
 		void loop() override;
 		void loop1();
 		void setup() override;
-		void loopInitData();
+		void loopInitData(uint8_t *sceneLevels = nullptr);
 		void processInputKo(GroupObject &ko) override;
 		const bool isConfigured();
 		const bool isGroup();
@@ -37,6 +37,9 @@ class DaliChannel : public OpenKNX::Channel
 		uint8_t getMin();
 		uint8_t getMax();
 		uint16_t getGroups();
+
+		void sendSwitchState(bool value);
+		void sendDimmState(uint8_t value);
 
 		bool isNight = false;
 		const std::string name() override;

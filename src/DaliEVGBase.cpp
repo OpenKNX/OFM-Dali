@@ -1,4 +1,5 @@
 #include "DaliEVGBase.h"
+#include "DaliHelper.h"
 #include <cstdio>
 #include <vector>
 #include <algorithm>
@@ -37,7 +38,7 @@ std::array<DaliEVGBase *, DaliEVGBase::MAX_SHORT_ADDRESSES> DaliEVGBase::instanc
 DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceType, bool isGroup,
                                                  uint8_t minLevel, uint8_t maxLevel, uint8_t onLevel,
                                                  uint8_t fadeTime, uint8_t fadeRate, bool errorState, bool startOn,
-                                                 bool realDevicePresent)
+                                                 DaliChannel *realDevicePtr)
     : daliMaster(master),
       address(address),
       deviceType(deviceType),
@@ -56,7 +57,11 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       groupBits(0),
       pendingDeviceType(0),
       dtr{0, 0, 0},
-      realDevicePresent(realDevicePresent),
+      realDevicePtr(realDevicePtr),
+      currentFrameRef(0),
+      currentQueryType(0),
+      pendingResponseRef(0),
+      pendingResponseQuery(0),
       sceneLevels{},
       sceneActiveMask(0),
       fadeTargetLevel(currentLevel),
@@ -64,7 +69,13 @@ DaliEVGBase::DaliEVGBase(Dali::Master &master, uint8_t address, uint8_t deviceTy
       fadeLastMs(0),
       fadeAccumulator(0.0f),
       fadeStepsPerSecOverride(0.0f),
-      lastDebugOutputMs(0)
+      lastDebugOutputMs(0),
+      initDataState(InitDataState::OFF),
+      initDataStartMs(0),
+      currentSceneQueryIndex(0),
+      syncGroupBits(0),
+      initDataPendingRef(0),
+      initDataPendingQuery(0)
 {
     registerInstance(address, this);
 }
@@ -73,6 +84,12 @@ DaliEVGBase::~DaliEVGBase()
 {
     unregisterInstance(address, this);
 }
+
+const std::string DaliEVGBase::logPrefix() const
+{
+    return openknx.logger.buildPrefix("DaliEVGBase", address + 1);
+}
+
 
 void DaliEVGBase::attachToMaster()
 {
@@ -136,7 +153,11 @@ void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *mast
     printf("DaliEVGBase::handleFrame size=%u flags=0x%02X\n", frame.size, frame.flags);
 
     if (frame.size == 0) return;
-    if (frame.flags & (DALI_FRAME_BACKWARD | DALI_FRAME_ERROR)) return;
+    if (frame.flags & DALI_FRAME_ERROR) return;
+    if (frame.size == 8) {
+        handleBackwardFrame(frame);
+        return;
+    }
 
     ParsedFrame parsed = parseFrameStatic(frame);
     printf("DaliEVGBase::handleFrame parsed frame type=%s addr=%u group=%u sel=%u cmd=0x%02X val=0x%02X\n",
@@ -164,16 +185,24 @@ void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *mast
             // broadcast to all
             for (auto *inst : instances) {
                 if (inst == nullptr) continue;
+                inst->currentFrameRef = frame.ref;
+                inst->currentQueryType = (parsed.type == FrameType::Command) ? parsed.command : 0;
                 if (parsed.type == FrameType::Arc) {
                     inst->startFadeTo(parsed.value, 0);
+                    inst->currentFrameRef = 0;
+                    inst->currentQueryType = 0;
                     continue;
                 }
                 if (inst->pendingDeviceType != 0) {
                     bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
                     inst->clearPendingDeviceType();
+                    inst->currentFrameRef = 0;
+                    inst->currentQueryType = 0;
                     if (handled) continue;
                 }
                 inst->handleCommand(parsed.command, parsed.value, parsed);
+                inst->currentFrameRef = 0;
+                inst->currentQueryType = 0;
             }
             return;
         }
@@ -183,16 +212,24 @@ void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *mast
             for (auto *inst : instances) {
                 if (inst == nullptr) continue;
                 if (!inst->isMemberOfGroup(parsed.address)) continue;
+                inst->currentFrameRef = frame.ref;
+                inst->currentQueryType = (parsed.type == FrameType::Command) ? parsed.command : 0;
                 if (parsed.type == FrameType::Arc) {
                     inst->startFadeTo(parsed.value, 0);
+                    inst->currentFrameRef = 0;
+                    inst->currentQueryType = 0;
                     continue;
                 }
                 if (inst->pendingDeviceType != 0) {
                     bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
                     inst->clearPendingDeviceType();
+                    inst->currentFrameRef = 0;
+                    inst->currentQueryType = 0;
                     if (handled) continue;
                 }
                 inst->handleCommand(parsed.command, parsed.value, parsed);
+                inst->currentFrameRef = 0;
+                inst->currentQueryType = 0;
             }
             return;
         }
@@ -202,16 +239,24 @@ void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *mast
     if (parsed.address < instances.size()) {
         DaliEVGBase *inst = instances[parsed.address];
         if (inst != nullptr) {
+            inst->currentFrameRef = frame.ref;
+            inst->currentQueryType = (parsed.type == FrameType::Command) ? parsed.command : 0;
             if (parsed.type == FrameType::Arc) {
                 inst->startFadeTo(parsed.value, 0);
+                inst->currentFrameRef = 0;
+                inst->currentQueryType = 0;
                 return;
             }
             if (inst->pendingDeviceType != 0) {
                 bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
                 inst->clearPendingDeviceType();
+                inst->currentFrameRef = 0;
+                inst->currentQueryType = 0;
                 if (handled) return;
             }
             inst->handleCommand(parsed.command, parsed.value, parsed);
+            inst->currentFrameRef = 0;
+            inst->currentQueryType = 0;
             return;
         }
     }
@@ -220,17 +265,54 @@ void DaliEVGBase::handleFrameStatic(const Dali::Frame &frame, Dali::Master *mast
     if (parsed.address == DALI_BROADCAST_ADDRESS) {
         for (auto *inst : instances) {
             if (inst == nullptr) continue;
+            inst->currentFrameRef = frame.ref;
+            inst->currentQueryType = (parsed.type == FrameType::Command) ? parsed.command : 0;
             if (parsed.type == FrameType::Arc) {
                 inst->startFadeTo(parsed.value, 0);
+                inst->currentFrameRef = 0;
+                inst->currentQueryType = 0;
                 continue;
             }
             if (inst->pendingDeviceType != 0) {
                 bool handled = inst->handleDeviceExtendedCommand(parsed.command, parsed.value);
                 inst->clearPendingDeviceType();
+                inst->currentFrameRef = 0;
+                inst->currentQueryType = 0;
                 if (handled) continue;
             }
             inst->handleCommand(parsed.command, parsed.value, parsed);
+            inst->currentFrameRef = 0;
+            inst->currentQueryType = 0;
         }
+    }
+}
+
+void DaliEVGBase::handleBackwardFrame(const Dali::Frame &frame)
+{
+    uint8_t response = static_cast<uint8_t>(frame.data & 0xFF);
+    if (frame.ref != 0) {
+        for (auto *inst : instances) {
+            if (inst == nullptr) continue;
+            if (inst->pendingResponseQuery == 0) continue;
+            if (inst->pendingResponseRef != frame.ref) continue;
+            inst->processRealDeviceResponse(response);
+            return;
+        }
+        return;
+    }
+
+    DaliEVGBase *pendingInst = nullptr;
+    int pendingCount = 0;
+    for (auto *inst : instances) {
+        if (inst == nullptr) continue;
+        if (inst->pendingResponseQuery == 0) continue;
+        if (inst->pendingResponseRef != 0) continue;
+        pendingInst = inst;
+        pendingCount++;
+        if (pendingCount > 1) break;
+    }
+    if (pendingCount == 1 && pendingInst != nullptr) {
+        pendingInst->processRealDeviceResponse(response);
     }
 }
 
@@ -239,8 +321,85 @@ void DaliEVGBase::loop(uint32_t nowMs)
     for (auto *instance : instances) {
         if (instance != nullptr) {
             instance->update(nowMs);
+            instance->loopInitData();
         }
     }
+}
+
+void DaliEVGBase::awaitRealDeviceResponse(uint8_t query, unsigned long ref)
+{
+    pendingResponseQuery = query;
+    pendingResponseRef = ref;
+}
+
+void DaliEVGBase::clearPendingRealDeviceResponse()
+{
+    pendingResponseQuery = 0;
+    pendingResponseRef = 0;
+}
+
+void DaliEVGBase::processRealDeviceResponse(uint8_t response)
+{
+    printf("DaliEVGBase[%u] real device response query=0x%02X response=0x%02X\n", address, pendingResponseQuery, response);
+    switch (pendingResponseQuery) {
+        case static_cast<uint8_t>(Dali::Command::QUERY_STATUS): {
+            errorState = (response & 0x20) != 0;
+            bool newOnState = (response & 0x10) != 0;
+            if (newOnState && currentLevel == 0) {
+                currentLevel = lastNonZeroLevel;
+            }
+            onState = newOnState;
+            if (!onState) {
+                currentLevel = 0;
+            }
+            debugOutputIfDue(true);
+            break;
+        }
+        case static_cast<uint8_t>(Dali::Command::QUERY_ACTUAL_LEVEL): {
+            currentLevel = response;
+            onState = currentLevel > 0;
+            if (onState) lastNonZeroLevel = currentLevel;
+            debugOutputIfDue(true);
+            break;
+        }
+        case static_cast<uint8_t>(Dali::Command::QUERY_MAX_LEVEL):
+            maxLevel = response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_MIN_LEVEL):
+            minLevel = response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_POWER_ON_LEVEL):
+            onLevel = response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_GROUPS_0_7):
+            groupBits = (groupBits & 0xFF00) | response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_GROUPS_8_15):
+            groupBits = (groupBits & 0x00FF) | (static_cast<uint16_t>(response) << 8);
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_DTR):
+            dtr[0] = response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_DEVICE_TYPE):
+            deviceType = response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_DTR1):
+            dtr[1] = response;
+            break;
+        case static_cast<uint8_t>(Dali::Command::QUERY_DTR2):
+            dtr[2] = response;
+            break;
+        default:
+            if (pendingResponseQuery >= static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL)
+                && pendingResponseQuery <= static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL) + 15) {
+                uint8_t scene = pendingResponseQuery - static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL);
+                if (scene < sceneLevels.size()) {
+                    sceneLevels[scene] = response;
+                }
+            }
+            break;
+    }
+    clearPendingRealDeviceResponse();
 }
 
 DaliEVGBase *DaliEVGBase::getByAddress(uint8_t address)
@@ -262,55 +421,6 @@ void DaliEVGBase::unregisterInstance(uint8_t address, DaliEVGBase *instance)
     }
 }
 
-bool DaliEVGBase::handleFrame(const Dali::Frame &frame)
-{
-    printf("DaliEVGBase[%u] handleFrame size=%u flags=0x%02X\n", address, frame.size, frame.flags);
-
-    if (frame.size == 0) {
-        return false;
-    }
-
-    if (frame.flags & (DALI_FRAME_BACKWARD | DALI_FRAME_ERROR)) {
-        return false;
-    }
-
-    ParsedFrame parsed = parseFrame(frame);
-    printf("DaliEVGBase[%u] parsed frame type=%s addr=%u group=%u sel=%u cmd=0x%02X val=0x%02X\n",
-           address,
-           frameTypeName(parsed.type),
-           parsed.address,
-           parsed.isGroup ? 1u : 0u,
-           parsed.selector ? 1u : 0u,
-           parsed.command,
-           parsed.value);
-    if (parsed.type == FrameType::Unknown) {
-        return false;
-    }
-
-    if (parsed.type == FrameType::Special) {
-        return handleSpecialCommand(parsed.command, parsed.value);
-    }
-
-    if (!matchesFrameTarget(parsed)) {
-        return false;
-    }
-
-    if (parsed.type == FrameType::Arc) {
-        // ARC telegrams should start a fade towards the ARC level
-        startFadeTo(parsed.value, 0);
-        return true;
-    }
-
-    if (pendingDeviceType != 0) {
-        bool handled = handleDeviceExtendedCommand(parsed.command, parsed.value);
-        clearPendingDeviceType();
-        if (handled) {
-            return true;
-        }
-    }
-
-    return handleCommand(parsed.command, parsed.value, parsed);
-}
 
 bool DaliEVGBase::isOn() const
 {
@@ -373,6 +483,11 @@ void DaliEVGBase::debugOutput() const
            address, currentLevel, onState ? 1u : 0u);
 }
 
+uint16_t DaliEVGBase::calcKoNumber(int asap)
+{
+    return asap + (DGW_KoBlockSize * address) + DGW_KoOffset;
+}
+
 void DaliEVGBase::debugOutputIfDue(bool force)
 {
     if (!force) {
@@ -389,8 +504,27 @@ void DaliEVGBase::debugOutputIfDue(bool force)
         lastDebugOutputMs = static_cast<uint32_t>(millis());
     }
 
-    printf("DaliEVGBase addr=%u currentValue=%u onState=%u\n",
-           address, currentLevel, onState ? 1u : 0u);
+    if (realDevicePtr != nullptr) {
+        realDevicePtr->sendSwitchState(onState);
+        realDevicePtr->sendDimmState(currentLevel);
+    }
+    // float perc = DaliHelper::arcToPercentFloat(currentLevel);
+
+    // GroupObject& ko = knx.getGroupObject(calcKoNumber(DGW_Kodimm_state));
+    // if(ko.valueNoSendCompare(perc, Dpt(5, 1)))
+    // {
+    //     logDebugP("SetDimmState %.1f/%i", perc, currentLevel);
+    //     ko.objectWritten();
+    // }
+
+    // ko = knx.getGroupObject(calcKoNumber(DGW_Koswitch_state));
+    // bool currentState = ko.value(DPT_Switch);
+    // if (onState == currentState && ko.initialized())
+    //     return;
+    // ko.value(onState, DPT_Switch);
+
+    // printf("DaliEVGBase addr=%u currentValue=%u onState=%u\n",
+    //        address, currentLevel, onState ? 1u : 0u);
 }
 
 void DaliEVGBase::debugOutputParams() const
@@ -412,7 +546,7 @@ void DaliEVGBase::debugOutputParams() const
            lastNonZeroLevel,
            (unsigned)groupBits,
            (unsigned)sceneActiveMask,
-           realDevicePresent ? 1u : 0u,
+           realDevicePtr ? 1u : 0u,
            dtr[0], dtr[1], dtr[2]);
 }
 
@@ -629,12 +763,12 @@ void DaliEVGBase::clearPendingDeviceType()
 
 bool DaliEVGBase::hasRealDevicePresent() const
 {
-    return realDevicePresent;
+    return realDevicePtr != nullptr;
 }
 
-void DaliEVGBase::setRealDevicePresent(bool present)
+void DaliEVGBase::setRealDevicePtr(DaliChannel *realDevicePtr)
 {
-    realDevicePresent = present;
+    this->realDevicePtr = realDevicePtr;
 }
 
 bool DaliEVGBase::matchesFrameTarget(const ParsedFrame &parsed) const
@@ -927,7 +1061,10 @@ bool DaliEVGBase::handleDeviceQuery(uint8_t query, const ParsedFrame &parsed)
 
 void DaliEVGBase::respond(uint8_t value)
 {
-    if (realDevicePresent) {
+    if (realDevicePtr != nullptr) {
+        if (currentQueryType != 0) {
+            awaitRealDeviceResponse(currentQueryType, currentFrameRef);
+        }
         return;
     }
 
@@ -936,4 +1073,193 @@ void DaliEVGBase::respond(uint8_t value)
     response.size = 8;
     response.flags = DALI_FRAME_BACKWARD;
     daliMaster.sendRaw(response);
+}
+
+void DaliEVGBase::startSyncWithRealDevice()
+{
+    if (realDevicePtr == nullptr) return;
+    
+    initDataState = InitDataState::QUERY_MIN_LEVEL;
+    initDataStartMs = millis() + 10000;
+    initDataNextMs = initDataStartMs;
+    currentSceneQueryIndex = 0;
+    syncGroupBits = 0;
+    printf("DaliEVGBase[%u] starting synchronization with real device\n", address);
+}
+
+bool DaliEVGBase::isSyncInProgress() const
+{
+    return initDataState != InitDataState::OFF && initDataState != InitDataState::DONE;
+}
+
+void DaliEVGBase::loopInitData()
+{
+    if (realDevicePtr == nullptr) return;
+    if (initDataState == InitDataState::OFF || initDataState == InitDataState::DONE) return;
+    
+    uint32_t nowMs = millis();
+
+    if (nowMs - initDataStartMs > INIT_TIMEOUT_MS) {
+        printf("DaliEVGBase[%u] sync timeout\n", address);
+        initDataState = InitDataState::DONE;
+        initDataPendingRef = 0;
+        initDataPendingQuery = 0;
+        return;
+    }
+    
+    // Step 1: Check if there's a pending response waiting
+    if (initDataPendingRef != 0) {
+        Dali::Response resp = daliMaster.getResponse(initDataPendingRef);
+        
+        if (resp.state == Dali::ResponseState::WAITING || resp.state == Dali::ResponseState::SENT) {
+            // Response not ready yet, try again next time
+            return;
+        }
+        
+        if (resp.state == Dali::ResponseState::NO_ANSWER || resp.state == Dali::ResponseState::NOT_REGISTERED) {
+            printf("DaliEVGBase[%u] sync error: no response for query 0x%02X\n", address, initDataPendingQuery);
+            initDataState = InitDataState::DONE;
+            initDataPendingRef = 0;
+            initDataPendingQuery = 0;
+            return;
+        }
+        
+        if (resp.state == Dali::ResponseState::RECEIVED) {
+            uint8_t responseValue = resp.frame.data & 0xFF;
+            printf("DaliEVGBase[%u] sync received response query=0x%02X value=0x%02X\n", address, initDataPendingQuery, responseValue);
+            
+            // Process the response and transition to next state
+            if (handleInitDataResponse(initDataPendingQuery, responseValue)) {
+                initDataPendingRef = 0;
+                initDataPendingQuery = 0;
+            } else {
+                // Error in response handling
+                initDataState = InitDataState::DONE;
+                initDataPendingRef = 0;
+                initDataPendingQuery = 0;
+            }
+            return;
+        }
+        
+        return;
+    }
+    
+    if (nowMs < initDataNextMs) {
+        return;
+    }
+    initDataNextMs = nowMs + 200;
+
+    // Step 2: No pending response, send the next command for this state
+    uint8_t queryCmd = 0;
+    
+    switch (initDataState) {
+        case InitDataState::QUERY_MIN_LEVEL:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_MIN_LEVEL);
+            break;
+        case InitDataState::QUERY_MAX_LEVEL:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_MAX_LEVEL);
+            break;
+        case InitDataState::QUERY_POWER_ON_LEVEL:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_POWER_ON_LEVEL);
+            break;
+        case InitDataState::QUERY_ACTUAL_LEVEL:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_ACTUAL_LEVEL);
+            break;
+        case InitDataState::QUERY_STATUS:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_STATUS);
+            break;
+        case InitDataState::QUERY_GROUPS_0_7:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_GROUPS_0_7);
+            break;
+        case InitDataState::QUERY_GROUPS_8_15:
+            queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_GROUPS_8_15);
+            break;
+        case InitDataState::QUERY_SCENE_LEVELS: {
+            if (currentSceneQueryIndex < SCENE_COUNT) {
+                queryCmd = static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL) + currentSceneQueryIndex;
+            } else {
+                // All scene levels retrieved
+                initDataState = InitDataState::DONE;
+                printf("DaliEVGBase[%u] sync complete, all parameters retrieved\n", address);
+                return;
+            }
+            break;
+        }
+        case InitDataState::OFF:
+        case InitDataState::DONE:
+            return;
+    }
+    
+    // Send the command and store the pending ref/query
+    initDataPendingRef = daliMaster.sendCommand(address, queryCmd, false, true);
+    initDataPendingQuery = queryCmd;
+    printf("DaliEVGBase[%u] sync sending query 0x%02X (ref=%lu)\n", address, queryCmd, initDataPendingRef);
+}
+
+bool DaliEVGBase::handleInitDataResponse(uint8_t queryCommand, uint8_t response)
+{
+    printf("DaliEVGBase[%u] sync processing query 0x%02X response=0x%02X\n", address, queryCommand, response);
+    
+    switch (queryCommand) {
+        case static_cast<uint8_t>(Dali::Command::QUERY_MIN_LEVEL):
+            minLevel = response;
+            initDataState = InitDataState::QUERY_MAX_LEVEL;
+            return true;
+            
+        case static_cast<uint8_t>(Dali::Command::QUERY_MAX_LEVEL):
+            maxLevel = response;
+            initDataState = InitDataState::QUERY_POWER_ON_LEVEL;
+            return true;
+            
+        case static_cast<uint8_t>(Dali::Command::QUERY_POWER_ON_LEVEL):
+            onLevel = response;
+            nightOnLevel = onLevel;
+            initDataState = InitDataState::QUERY_ACTUAL_LEVEL;
+            return true;
+            
+        case static_cast<uint8_t>(Dali::Command::QUERY_ACTUAL_LEVEL):
+            currentLevel = response;
+            onState = currentLevel > 0;
+            if (onState) lastNonZeroLevel = currentLevel;
+            initDataState = InitDataState::QUERY_STATUS;
+            return true;
+            
+        case static_cast<uint8_t>(Dali::Command::QUERY_STATUS): {
+            uint8_t status = response;
+            errorState = (status & 0x20) != 0;
+            bool newOnState = (status & 0x10) != 0;
+            onState = newOnState;
+            if (!onState) currentLevel = 0;
+            initDataState = InitDataState::QUERY_GROUPS_0_7;
+            return true;
+        }
+            
+        case static_cast<uint8_t>(Dali::Command::QUERY_GROUPS_0_7):
+            syncGroupBits = response & 0xFF;
+            initDataState = InitDataState::QUERY_GROUPS_8_15;
+            return true;
+            
+        case static_cast<uint8_t>(Dali::Command::QUERY_GROUPS_8_15):
+            syncGroupBits |= (static_cast<uint16_t>(response & 0xFF) << 8);
+            groupBits = syncGroupBits;
+            initDataState = InitDataState::QUERY_SCENE_LEVELS;
+            currentSceneQueryIndex = 0;
+            return true;
+            
+        default:
+            // Check if it's a scene level query
+            if (queryCommand >= static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL)
+                && queryCommand <= static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL) + 15) {
+                uint8_t sceneIdx = queryCommand - static_cast<uint8_t>(Dali::Command::QUERY_SCENE_LEVEL);
+                if (sceneIdx < SCENE_COUNT) {
+                    sceneLevels[sceneIdx] = response;
+                    currentSceneQueryIndex++;
+                    // Stay in QUERY_SCENE_LEVELS state, loopInitData will send next scene query
+                    return true;
+                }
+            }
+            break;
+    }
+    
+    return false;
 }

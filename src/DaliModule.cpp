@@ -228,7 +228,23 @@ void DaliModule::loopInitData()
         {
             channel.setGroupState(0xFFFF, (uint8_t)resp);
         }
-        channel.loopInitData();
+
+        uint8_t scenes[16];
+        for (int scene = 0; scene < 16; scene++)
+        {
+            resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_SCENE_LEVEL + scene);
+            if (resp < 0)
+            {
+                logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
+                return;
+            }
+            else
+            {
+                scenes[scene] = resp;
+                logDebugP("CH%i set scene %i to %i", _adrFound - 1, scene, resp);
+            }
+        }
+        channel.loopInitData(scenes);
     }
 
     if (_adrFound > 63)
@@ -721,32 +737,29 @@ bool DaliModule::getDaliBusState()
 
 void DaliModule::showHelp()
 {
-    openknx.console.printHelpLine("scan", "Dali scan for EVGs");
-    openknx.console.printHelpLine("arc", "Dali set Value for EVG, Group or Broadcast");
-    openknx.console.printHelpLine("set", "Dali set EVG short address");
-    openknx.console.printHelpLine("stepUp", "stepUp xyy => send x times StepUp to evg y");
-    openknx.console.printHelpLine("stepDown", "stepDown xyy => send x times StepDown to evg y");
-    openknx.console.printHelpLine("getLvl", "getLvl yy => get level of evg y");
+    openknx.console.printHelpLine("dali scan", "Dali scan for EVGs");
+    openknx.console.printHelpLine("dali arc", "Dali set Value for EVG, Group or Broadcast");
+    openknx.console.printHelpLine("dali set", "Dali set EVG short address");
+    openknx.console.printHelpLine("dali stepUp", "stepUp xyy => send x times StepUp to evg y");
+    openknx.console.printHelpLine("dali stepDown", "stepDown xyy => send x times StepDown to evg y");
+    openknx.console.printHelpLine("dali getLvl", "getLvl yy => get level of evg y");
 }
 
 bool DaliModule::processCommand(const std::string cmd, bool diagnoseKo)
 {
     if (diagnoseKo)
         return false;
-
-    std::size_t pos = cmd.find(' ');
-    std::string command;
+    if (cmd.substr(0, 4) != "dali")
+        return false;
+    std::string command = cmd.substr(5, cmd.length() - 5);
+    std::size_t pos = command.find(' ');
     std::string arg;
     bool hasArg = false;
     if (pos != -1)
     {
-        command = cmd.substr(0, pos);
-        arg = cmd.substr(pos + 1, cmd.length() - pos - 1);
+        command = command.substr(0, pos);
+        arg = command.substr(pos + 1, command.length() - pos - 1);
         hasArg = true;
-    }
-    else
-    {
-        command = cmd;
     }
 
     if (command == "scan")
