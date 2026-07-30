@@ -5,6 +5,7 @@
 #include "Dali/Commands.h"
 #include "colorhelper.h"
 #include "DaliHelper.h"
+#include "DaliConstants.h"
 
 #define DimmInterval 200
 #define DimmStatusInterval 500
@@ -12,6 +13,8 @@
 class DaliChannel : public OpenKNX::Channel
 {
 	public:
+        static constexpr uint16_t AllGroups = DaliConstants::AllGroups;
+
         DaliChannel(Dali::Master &master);
         ~DaliChannel();
 
@@ -44,19 +47,28 @@ class DaliChannel : public OpenKNX::Channel
 		// uint16_t flashSize() override;
 
 	private:
-		enum class DimmDirection {
+        static constexpr uint8_t GroupCount = DaliConstants::GroupCount;
+        static constexpr uint8_t HclDisabled = 255;
+        static constexpr uint8_t NoDimmReference = 255;
+
+        enum class DimmDirection : uint8_t {
 			Down,
 			Up,
 			None
 		};
-		enum class DimmType {
+		enum class DimmType : uint8_t {
 			Brigthness,
 			Color
+		};
+		enum class ColorChannel : uint8_t {
+			Red = 0,
+			Green = 1,
+			Blue = 2
 		};
 
 		Dali::Master &daliMaster;
 
-		//relatives Dimmen
+		//Relative dimming
 		DimmDirection _dimmDirection = DimmDirection::None;
 		uint8_t _dimmStep = 0;
 		unsigned long _dimmLast = 0;
@@ -64,11 +76,11 @@ class DaliChannel : public OpenKNX::Channel
 		uint8_t *currentDimmValue;
 		DimmType currentDimmType;
 		uint8_t _dimmStatusInterval = 0;
-		uint8_t _dimmReferenceAddress = 255;
-		//Treppenlicht
+		uint8_t _dimmReferenceAddress = NoDimmReference;
+		//Staircase light
 		unsigned long startTime = 0;
 		uint interval = 0;
-		//Initialwerte
+		//Initial values
 		uint8_t _min = 0;
 		uint8_t _max = 0;
 		uint8_t _onDay = 100;
@@ -77,36 +89,36 @@ class DaliChannel : public OpenKNX::Channel
 		bool _isGroup = false;
 		bool _isConfigured = false;
 		//HCL
-		uint8_t _hclCurve = 255;
+		uint8_t _hclCurve = HclDisabled;
 		uint16_t _hclCurrentTemp = 0;
 		uint8_t _hclCurrentBri = 0;
 		bool _hclIsAlsoOn = false;
 		bool _hclIsAutoMode = true;
-		bool _hclLastState = true; //TOOD remove
-		//EVG Fehler auslesen
+		bool _hclLastState = true; //TODO remove
+		//Reading EVG error state
 		bool _getError = false;
 		bool _errorState = false;
 		uint32_t _errorResp = 0;
 		unsigned long _lastError = 40000;
-		//Aktueller Status
+		//Current state
 		bool currentState = false;
-		//Aktuelle Helligkeit
+		//Current brightness
 		uint8_t currentStep = 0;
-		//Aktueller Sperrstatus
+		//Current lock state
 		bool currentIsLocked = false;
-		//Aktuelle Farbe
+		//Current color
 		uint8_t currentColor[4];
 
-		//Aktueller Status abfragen
+		//Querying current state
 		uint32_t _queryId = 0;
 		uint16_t _queryInterval = 0;
 		unsigned long _lastValueQuery = 0;
 
-		//Einschalten mit letztem Wert
+		//Turn-on with last value
 		uint8_t _lastDayValue = 100;
 		uint8_t _lastNightValue = 10;
 
-		//Gruppenzugehörigkeit
+		//Group membership
 		uint16_t _groups = 0;
 
 		void loopError();
@@ -118,6 +130,8 @@ class DaliChannel : public OpenKNX::Channel
 		void setDimmState(uint8_t value, bool isDimmCommand = true, bool isLastCommand = false);
 		void updateCurrentDimmValue();
 		void sendColor();
+		void sendColorAsRGB(uint8_t r, uint8_t g, uint8_t b);
+		void sendColorAsXY(uint8_t r, uint8_t g, uint8_t b);
 		void sendKoStateOnChange(uint16_t koNr, const KNXValue &value, const Dpt &type);
 		void setTemperature(uint16_t value);
 		void setBrightness(uint8_t value);
@@ -130,8 +144,12 @@ class DaliChannel : public OpenKNX::Channel
 		void koHandleDimmAbs(GroupObject &ko);
 		void koHandleLock(GroupObject & ko);
 		void koHandleColor(GroupObject &ko);
-		void koHandleColorRel(GroupObject &ko, uint8_t index);
-		void koHandleColorAbs(GroupObject &ko, uint8_t index);
+		void handleColorHSV(GroupObject &ko);
+		void handleColorRGB(GroupObject &ko);
+		void handleColorTW(GroupObject &ko);
+		void handleColorXYY(GroupObject &ko);
+		void koHandleColorRel(GroupObject &ko, ColorChannel channel);
+		void koHandleColorAbs(GroupObject &ko, ColorChannel channel);
 		void koHandleHclCurve(GroupObject &ko);
 		void koHandleScene(GroupObject &ko);
 

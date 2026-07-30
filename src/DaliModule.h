@@ -5,6 +5,8 @@
 #include "Dali/Master.h"
 #include "Dali/Commands.h"
 #include "DaliChannel.h"
+#include "DaliAddressing.h"
+#include "DaliConstants.h"
 #include "Ballast.hpp"
 #include "HclCurve.h"
 
@@ -24,6 +26,12 @@ typedef void (*EventHandlerChangedGroupFuncPtr)(uint8_t index, uint8_t value);
 class DaliModule : public OpenKNX::Module
 {
 	public:
+		static constexpr uint8_t ChannelCount = DaliConstants::ChannelCount;
+		static constexpr uint8_t GroupCount = DaliConstants::GroupCount;
+		static constexpr uint8_t HclCurveCount = DaliConstants::HclCurveCount;
+		static constexpr uint8_t BroadcastAddress = DaliConstants::BroadcastAddress;
+		static constexpr uint16_t DisabledDptValue = 0xFFFF;
+
 		void loop(bool configured) override;
 		void loop1(bool configured);
 		void setup(bool conf) override;
@@ -43,54 +51,6 @@ class DaliModule : public OpenKNX::Module
 		Dali::Master daliMaster;
 		
 	private:
-		enum class AddressingState {
-			OFF,
-			INIT,
-			INIT2,
-			WRITE_DTR,
-			REMOVE_SHORT,
-			REMOVE_SHORT2,
-			RANDOM,
-			RANDOMWAIT,
-			STARTSEARCH,
-			SEARCHHIGH,
-			SEARCHMID,
-			SEARCHLOW,
-			COMPARE,
-			GETSHORT,
-			CHECKFOUND,
-			PROGRAMSHORT,
-			VERIFYSHORT,
-			VERIFYSHORTRESPONSE,
-			WITHDRAW,
-			TERMINATE,
-			SEARCHSHORT,
-			CHECKSEARCHSHORT
-		};
-		enum class AssigningState {
-			OFF,
-			INIT,
-			QUERY,
-			CHECKQUERY,
-			STARTSEARCH,
-			COMPARE,
-			CHECKFOUND,
-			WITHDRAW,
-			PROGRAMSHORT,
-			VERIFYSHORT,
-			VERIFYSHORTRESPONSE,
-			TERMINATE
-		};
-		enum class AssigningResponse {
-			AR_SUCCESS,
-			NOT_FREE,
-			NO_RESPONSE,
-			NO_RESPONSE_LONG,
-			FAILED
-		};
-		
-		void loopAddressing();
-		void loopAssigning();
 		void loopBusState();
 		void loopInitData();
 		void loopGroupState();
@@ -105,21 +65,9 @@ class DaliModule : public OpenKNX::Module
 		bool _currentLockState = false;
 		int16_t getInfo(byte address, uint8_t command, uint8_t additional = 0);
 	
-		AddressingState _adrState = AddressingState::OFF;
-		AssigningState _assState = AssigningState::OFF;
-		AssigningResponse _assResponse = AssigningResponse::AR_SUCCESS;
-		Ballast ballasts[64];
-		bool addresses[64];
-		int _adrFound = 0;
-		uint8_t _adrNew = 0;
+		DaliAddressing _addressing{daliMaster};
+		uint8_t _initDataIndex = 0;
 		uint8_t _lastBusState = 2;
-		byte _adrIterations;
-		unsigned long _adrSearch;
-		bool _adrAssign = false;
-		bool _adrOnlyNew = false;
-		bool _adrRandomize = false;
-		bool _adrDeleteAll = false;
-		uint32_t _adrResponse = 0;
 
 
 		uint8_t _lastChangedGroup = 255;
@@ -130,9 +78,11 @@ class DaliModule : public OpenKNX::Module
 		bool _daliBusState = true;
 		bool _daliBusStateToSet = true;
 		unsigned long _daliStateLast = 1;
-		DaliChannel channels[64] {daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster};
-		DaliChannel groups[16] {daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster};
-		HclCurve curves[3];
+		// DaliChannel has a Dali::Master& member, so each element must be
+		// explicitly initialized with `daliMaster` - it cannot be default-constructed.
+		DaliChannel channels[ChannelCount] {daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster};
+		DaliChannel groups[GroupCount] {daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster,daliMaster};
+		HclCurve curves[HclCurveCount];
 		#ifdef DALI_NO_TIMER
 		struct repeating_timer _timer;
 		#endif
@@ -143,11 +93,23 @@ class DaliModule : public OpenKNX::Module
 		void koHandleOnValue(GroupObject & ko);
 		void koHandleScene(GroupObject & ko);
 
+		bool processChannelKo(int koNum, GroupObject &ko);
+		bool processGroupKo(int koNum, GroupObject &ko);
+		bool processHclKo(int koNum, GroupObject &ko);
+		void processGlobalKo(int koNum, GroupObject &ko);
+
+		void broadcastGroupState(bool value);
+		void broadcastGroupState(uint8_t value);
+		void setAllOnValue(uint8_t value);
+		void setAllNightMode(bool value);
+
 		void funcHandleType(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleScan(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleAssign(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
-		void funcHandleAddress(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+		void writeEvgDtrByte(uint8_t address, uint8_t value, uint8_t command);
+		uint8_t readEvgLevel(uint8_t address, uint8_t command, const char *label, uint8_t errorBit, uint8_t &errorByte);
+		uint8_t readEvgRaw(uint8_t address, uint8_t command, const char *label, uint8_t errorBit, uint8_t errorFallback, uint8_t &errorByte);
 		void funcHandleEvgRead(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleSetScene(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleGetScene(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
@@ -156,7 +118,6 @@ class DaliModule : public OpenKNX::Module
 		void cmdHandleScan(bool hasArg, std::string arg);
 		void cmdHandleArc(bool hasArg, std::string arg);
 		void cmdHandleSet(bool hasArg, std::string arg);
-		void cmdHandleAuto(bool hasArg, std::string arg);
 		void cmdHandleStepUp(bool hasArg, std::string arg);
 		void cmdHandleStepDown(bool hasArg, std::string arg);
 		void cmdHandleGetLvl(bool hasArg, std::string arg);

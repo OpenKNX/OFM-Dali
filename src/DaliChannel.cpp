@@ -117,7 +117,7 @@ void DaliChannel::loopStaircase()
     {
         if (millis() - startTime > interval * 1000)
         {
-            logDebugP("Zeit abgelaufen");
+            logDebugP("Time expired");
             currentState = false;
             daliMaster.sendArc(_channelIndex, 0x00, _isGroup);
             setSwitchState(false);
@@ -193,7 +193,7 @@ void DaliChannel::loopError()
         {
             _errorResp = daliMaster.sendCommand(_channelIndex, Dali::Command::QUERY_STATUS, false, true);
             _lastError = millis();
-            logDebugP("EVG abfragen %i", _errorResp);
+            logDebugP("Querying EVG %i", _errorResp);
             return;
         }
         if(_errorResp == 0)
@@ -211,12 +211,12 @@ void DaliChannel::loopError()
         
         if(response.state == Dali::ResponseState::NO_ANSWER)
         {
-            logErrorP("EVG hat nicht geantwortet");
+            logErrorP("EVG did not respond");
             _errorState = true;
         }
         else
         {
-            logDebugP("EVG hat geantwortet");
+            logDebugP("EVG responded");
             _errorState = false;
         }
 
@@ -227,7 +227,7 @@ void DaliChannel::loopError()
 
         if(_errorState)
         {
-            logErrorP("EVG hat ein Fehler");
+            logErrorP("EVG reports an error");
         }
         _errorResp = 0;
     }
@@ -258,7 +258,7 @@ void DaliChannel::loopQueryLevel()
             return; // no answer yet
         if(response.state == Dali::ResponseState::NO_ANSWER)
         {
-            logErrorP("EVG hat nicht geantwortet");
+            logErrorP("EVG did not respond");
             _queryId = 0;
             return;
         }
@@ -267,7 +267,7 @@ void DaliChannel::loopQueryLevel()
             _queryId = 0;
             if(response.frame.flags & DALI_FRAME_ERROR)
             {
-                logErrorP("EVG hat ein Fehler");
+                logErrorP("EVG reports an error");
                 return;
             } else {
                 uint8_t data = response.frame.data & 0xFF;
@@ -303,30 +303,22 @@ void DaliChannel::processInputKo(GroupObject &ko)
         //logDebugP("Got SHORT KO %i", chanIndex);
     }
 
+    // Case numbers not listed below (1, 4, 7, 10, 13, 16, 19) are read-only
+    // *_state KOs and are never received as input here.
     switch (chanIndex)
     {
-    // Schalten
     case DGW_Koswitch:
         koHandleSwitch(ko);
         break;
 
-    // Schalten Status
-    // case 1
-
-    // Dimmen relativ
     case DGW_Kodimm_relative:
         koHandleDimmRel(ko);
         break;
 
-    // Dimmen Absolut
     case DGW_Kodimm_absolute:
         koHandleDimmAbs(ko);
         break;
 
-    // Dimmen Status
-    // case 4
-
-    // Sperren
     case DGW_Kolock:
         koHandleLock(ko);
         break;
@@ -335,47 +327,29 @@ void DaliChannel::processInputKo(GroupObject &ko)
         koHandleColor(ko);
         break;
 
-    // Farbe Status
-    // case 7
-
-    // Farbe Rot Dimmen relativ
     case DGW_Kocolor_red_relative:
-        koHandleColorRel(ko, 0);
+        koHandleColorRel(ko, ColorChannel::Red);
         break;
 
-    // Farbe Rot Dimmen absolut
     case DGW_Kocolor_red_absolute:
-        koHandleColorAbs(ko, 0);
+        koHandleColorAbs(ko, ColorChannel::Red);
         break;
 
-    // Farbe Rot Status
-    // case 10
-
-    // Farbe Grün Dimmen relativ
     case DGW_Kocolor_green_relative:
-        koHandleColorRel(ko, 1);
+        koHandleColorRel(ko, ColorChannel::Green);
         break;
 
-    // Farbe Grün Dimmen absolut
     case DGW_Kocolor_green_absolute:
-        koHandleColorAbs(ko, 1);
+        koHandleColorAbs(ko, ColorChannel::Green);
         break;
 
-    // Farbe Grün Status
-    // case 13
-
-    // Farbe Blau Dimmen relativ
     case DGW_Kocolor_blue_relative:
-        koHandleColorRel(ko, 2);
+        koHandleColorRel(ko, ColorChannel::Blue);
         break;
 
-    // Farbe Blau Dimmen absolut
     case DGW_Kocolor_blue_absolute:
-        koHandleColorAbs(ko, 2);
+        koHandleColorAbs(ko, ColorChannel::Blue);
         break;
-
-    // Farbe Blau Status
-    // case 16
 
     case DGW_Kohcl_curve:
         koHandleHclCurve(ko);
@@ -384,9 +358,6 @@ void DaliChannel::processInputKo(GroupObject &ko)
     case DGW_Koscene:
         koHandleScene(ko);
         break;
-        
-    // Error
-    // case 19
     }
 }
 
@@ -395,7 +366,7 @@ void DaliChannel::koHandleHclCurve(GroupObject &ko)
     uint8_t curve = ko.value(Dpt(5,1));
     if(curve > 2)
     {
-        logErrorP("Setzen der HCL Kurve ignoriert, da zu hoch: %i, max %i", curve, 2);
+        logErrorP("Ignoring HCL curve, too high: %i, max %i", curve, 2);
         return;
     }
     _hclCurve = curve;
@@ -404,19 +375,19 @@ void DaliChannel::koHandleHclCurve(GroupObject &ko)
 void DaliChannel::koHandleScene(GroupObject &ko)
 {
     uint8_t number = ko.value(Dpt(17,1));
-    logDebugP("Szene KNX %i to DALI %i", number + 1, number);
+    logDebugP("Scene KNX %i to DALI %i", number + 1, number);
     if(number > 15)
     {
-        logErrorP("Szene ignoriert, da zu hoch: %i, max 15", number);
+        logErrorP("Ignoring scene, too high: %i, max 15", number);
         return;
     }
 
     daliMaster.sendCommand(_channelIndex, Dali::Command::GO_TO_SCENE | number, _isGroup);
 }
 
-void DaliChannel::koHandleColorRel(GroupObject &ko, uint8_t index)
+void DaliChannel::koHandleColorRel(GroupObject &ko, ColorChannel channel)
 {
-    logDebugP("Farbe relativ %i", index);
+    logDebugP("Color relative %i", (int)channel);
     if (currentIsLocked)
     {
         logErrorP("is locked");
@@ -458,9 +429,9 @@ void DaliChannel::koHandleColorRel(GroupObject &ko, uint8_t index)
     }
 }
 
-void DaliChannel::koHandleColorAbs(GroupObject &ko, uint8_t index)
+void DaliChannel::koHandleColorAbs(GroupObject &ko, ColorChannel channel)
 {
-    logDebugP("Farbe absolut %i", index);
+    logDebugP("Color absolute %i", (int)channel);
     if (currentIsLocked)
     {
         logErrorP("is locked");
@@ -472,7 +443,7 @@ void DaliChannel::koHandleColorAbs(GroupObject &ko, uint8_t index)
         
     logDebugP("AutoSwitchConfig %i %i", ParamDGW_hcl_manu_col, _hclIsAutoMode);
 
-    currentColor[index] = ko.value(Dpt(5, 4));
+    currentColor[(uint8_t)channel] = ko.value(Dpt(5, 4));
     updateCurrentDimmValue();
     sendColor();
     logDebugP("AutoSwitchConfig2 %i %i", ParamDGW_hcl_manu_col, _hclIsAutoMode);
@@ -480,7 +451,7 @@ void DaliChannel::koHandleColorAbs(GroupObject &ko, uint8_t index)
 
 void DaliChannel::koHandleSwitch(GroupObject &ko)
 {
-    logDebugP("Schalten");
+    logDebugP("Switching");
     if (currentIsLocked)
     {
         logErrorP("is locked");
@@ -503,29 +474,29 @@ void DaliChannel::handleSwitchNormal(GroupObject &ko)
             onValue = isNight ? _lastNightValue : _lastDayValue;
     
         bool hclBriActivated = false;
-        if(_hclCurve != 255 && _hclIsAutoMode)
+        if(_hclCurve != HclDisabled && _hclIsAutoMode)
         {
             uint8_t _channelIndex = _hclCurve;
             hclBriActivated = ParamDGWH_checkBrightness;
             if(hclBriActivated)
             {
                 onValue = DaliHelper::percentToArc(_hclCurrentBri);
-                logDebugP("Einschalten HCL");
+                logDebugP("Turning on HCL");
             }
         }
         if(!hclBriActivated) {
-            logDebugP(isNight ? "Einschalten Nacht" : "Einschalten Tag");
+            logDebugP(isNight ? "Turning on night value" : "Turning on day value");
         }
         daliMaster.sendArc(_channelIndex, onValue, _isGroup);
 
         bool hclTempActivated = false;
-        if(_hclCurve != 255 && _hclIsAutoMode)
+        if(_hclCurve != HclDisabled && _hclIsAutoMode)
         {
             uint8_t _channelIndex = _hclCurve;
             hclTempActivated = ParamDGWH_checkTemperature;
             if(hclTempActivated)
             {
-                logDebugP("Setze Temperatur auf %iK", _hclCurrentTemp);
+                logDebugP("Setting temperature to %iK", _hclCurrentTemp);
                 setTemperature(_hclCurrentTemp);
             }
         }
@@ -533,7 +504,7 @@ void DaliChannel::handleSwitchNormal(GroupObject &ko)
     }
     else
     {
-        logDebugP("Ausschalten");
+        logDebugP("Turning off");
         daliMaster.sendArc(_channelIndex, 0x00, _isGroup);
         setSwitchState(false);
     }
@@ -546,12 +517,12 @@ void DaliChannel::handleSwitchStaircase(GroupObject &ko)
     {
         if (currentState)
         {
-            logDebugP("ist bereits an");
+            logDebugP("already on");
 
             bool retrigger = _isGroup ? ParamDGWG_manuoff : ParamDGW_manuoff;
             if (retrigger)
             {
-                logDebugP("wurde nachgetriggert");
+                logDebugP("retriggered");
                 startTime = millis();
                 return;
             }
@@ -564,15 +535,15 @@ void DaliChannel::handleSwitchStaircase(GroupObject &ko)
         uint8_t onValue = isNight ? _onNight : _onDay;
         if (onValue == 0)
             onValue = isNight ? _lastNightValue : _lastDayValue;
-        if(_hclCurve != 255 && _hclIsAutoMode)
+        if(_hclCurve != HclDisabled && _hclIsAutoMode)
         {
             onValue = DaliHelper::percentToArc(_hclCurrentBri);
-            logDebugP("Einschalten HCL");
+            logDebugP("Turning on HCL");
         } else {
-            logDebugP(isNight ? "Einschalten Nacht" : "Einschalten Tag");
+            logDebugP(isNight ? "Turning on night value" : "Turning on day value");
         }
         daliMaster.sendArc(_channelIndex, onValue, _isGroup);
-        if(_hclCurve != 255 && _hclIsAutoMode)
+        if(_hclCurve != HclDisabled && _hclIsAutoMode)
             setTemperature(_hclCurrentTemp);
         setDimmState(DaliHelper::percentToArc(onValue));
     }
@@ -585,7 +556,7 @@ void DaliChannel::handleSwitchStaircase(GroupObject &ko)
             return;
         }
 
-        logDebugP("Ausschalten");
+        logDebugP("Turning off");
         daliMaster.sendArc(_channelIndex, 0x00, _isGroup);
         setSwitchState(false);
         currentState = false;
@@ -594,7 +565,7 @@ void DaliChannel::handleSwitchStaircase(GroupObject &ko)
 
 void DaliChannel::koHandleDimmRel(GroupObject &ko)
 {
-    logDebugP("Dimmen relativ");
+    logDebugP("Dimming relative");
     if (currentIsLocked)
     {
         logErrorP("is locked");
@@ -649,7 +620,7 @@ void DaliChannel::koHandleDimmRel(GroupObject &ko)
 
 void DaliChannel::koHandleDimmAbs(GroupObject &ko)
 {
-    logDebugP("Dimmen absolut");
+    logDebugP("Dimming absolute");
     if (currentIsLocked)
     {
         logErrorP("is locked");
@@ -660,7 +631,7 @@ void DaliChannel::koHandleDimmAbs(GroupObject &ko)
         _hclIsAutoMode = false;
 
     uint8_t value = ko.value(Dpt(5, 1));
-    logDebugP("Dimmen Absolut auf %i%%", value);
+    logDebugP("Dimming absolute to %i%%", value);
     uint8_t arc = DaliHelper::percentToArc(value);
     daliMaster.sendArc(_channelIndex, arc, _isGroup);
     setDimmState(arc, true, true);
@@ -688,13 +659,13 @@ void DaliChannel::koHandleLock(GroupObject &ko)
     uint8_t behavevalue;
     if (currentIsLocked)
     {
-        logDebugP("Sperren");
+        logDebugP("Locking");
         behave = ParamDGW_lockbehave;
         behavevalue = ParamDGW_lockvalue;
     }
     else
     {
-        logDebugP("Entsperren");
+        logDebugP("Unlocking");
         behave = ParamDGW_unlockbehave;
         behavevalue = ParamDGW_unlockvalue;
     }
@@ -703,29 +674,29 @@ void DaliChannel::koHandleLock(GroupObject &ko)
     {
     // nothing
     case PT_lock_no:
-        logDebugP("Nichts");
+        logDebugP("Nothing");
         return;
 
-    // Ausschalten
+    // Turn off
     case PT_lock_off:
     {
-        logDebugP("Ein");
+        logDebugP("On");
         behavevalue = isNight ? _onNight : _onDay;
         break;
     }
 
-    // Einschalten
+    // Turn on
     case PT_lock_on:
     {
-        logDebugP("Aus");
+        logDebugP("Off");
         behavevalue = 0;
         break;
     }
 
-    // Fester Wert
+    // Fixed value
     case PT_lock_value:
     {
-        logDebugP("Wert");
+        logDebugP("Value");
         break;
     }
     }
@@ -736,7 +707,7 @@ void DaliChannel::koHandleLock(GroupObject &ko)
 
 void DaliChannel::koHandleColor(GroupObject &ko)
 {
-    logDebugP("Farbe absolut");
+    logDebugP("Color absolute");
     if (currentIsLocked)
     {
         logErrorP("is locked");
@@ -752,94 +723,101 @@ void DaliChannel::koHandleColor(GroupObject &ko)
 
     switch(colorType)
     {
-        //HSV
         case PT_colorType_HSV:
-        {
-            uint32_t value = ko.value(Dpt(232, 600));
-            logDebugP("Got Color: %X", value);
-
-            currentColor[0] = (value >> 16) & 0xFF;
-            currentColor[1] = (value >> 8) & 0xFF;
-            currentColor[2] = value & 0xFF;
-
-            sendKoStateOnChange(DGW_Kocolor_rgb_state, value, Dpt(232, 600));
-            sendKoStateOnChange(DGW_Kocolor_red_state, currentColor[0], Dpt(5, 4));
-            sendKoStateOnChange(DGW_Kocolor_green_state, currentColor[1], Dpt(5, 4));
-            sendKoStateOnChange(DGW_Kodimm_state, currentColor[2], Dpt(5, 4));
-
-            sendColor();
+            handleColorHSV(ko);
             break;
-        }
 
-        //RGB
         case PT_colorType_RGB:
-        {
-            uint32_t value = ko.value(Dpt(232, 600));
-            logDebugP("Got Color: %X", value);
-
-            currentColor[0] = (value >> 16) & 0xFF;
-            currentColor[1] = (value >> 8) & 0xFF;
-            currentColor[2] = value & 0xFF;
-
-            sendKoStateOnChange(DGW_Kocolor_rgb_state, value, Dpt(232, 600));
-            sendKoStateOnChange(DGW_Kocolor_red_state, currentColor[0], Dpt(5, 4));
-            sendKoStateOnChange(DGW_Kocolor_green_state, currentColor[1], Dpt(5, 4));
-            sendKoStateOnChange(DGW_Kocolor_blue_state, currentColor[2], Dpt(5, 4));
-
-            sendColor();
+            handleColorRGB(ko);
             break;
-        }
 
-        //TW
         case PT_colorType_TW:
-        {
-            uint16_t kelvin = ko.value(Dpt(7, 600));
-            setTemperature(kelvin);
+            handleColorTW(ko);
             break;
-        }
 
-        //xyY
         case PT_colorType_XYY:
-        {
-            uint8_t* data = ko.valueRef();
-            /*
-                <UnsignedInteger Id="DPST-242-600_F-1" Width="16" Name="x-axis" Unit="None" />
-                <UnsignedInteger Id="DPST-242-600_F-2" Width="16" Name="y-axis" Unit="None" />
-                <UnsignedInteger Id="DPST-242-600_F-3" Width="8" Name="brightness" Unit="%" />
-                <Reserved Width="6" />
-                <Bit Id="DPST-242-600_F-10" Cleared="invalid" Set="valid" Name="Validity xy" />
-                <Bit Id="DPST-242-600_F-11" Cleared="invalid" Set="valid" Name="Validity brightness" />
-            */
-            uint16_t x = data[0] << 8 | data[1];
-            uint16_t y = data[2] << 8 | data[3];
-            uint8_t b = data[4];
-            bool xyIgnore = _isGroup ? ParamDGWG_xyIgnore : ParamDGW_xyIgnore;
-            if(xyIgnore)
-            {
-                pushWord(x, currentColor);
-                pushWord(y, currentColor + 2);
-                
-                logDebugP("Got Color: %.4f %.4f", x / 65535.0, y / 65535.0);
-            } else {
-                ColorHelper::xyyToRGB(x, y, b, currentColor[0], currentColor[1], currentColor[2]);
-
-                uint32_t value = currentColor[0] << 16 | currentColor[1] << 8 | currentColor[2];
-                logDebugP("Got Color: %X", value);
-            }
-
-
-            sendColor();
-            
-            // use 7.600 to send 2 byte unsigned int
-            sendKoStateOnChange(DGW_Kocolor_rgb_state, data, Dpt(7, 600));
+            handleColorXYY(ko);
             break;
-        }
     }
 
     if(!currentState)
         setDimmState(_onDay, true, true); // TODO get real
     
     logDebugP("AutoConf %i %i %i", _isGroup, _isGroup ? ParamDGW_hcl_manu_col : ParamDGWG_hcl_manu_col, _hclIsAutoMode);
+}
+
+void DaliChannel::handleColorHSV(GroupObject &ko)
+{
+    uint32_t value = ko.value(Dpt(232, 600));
+    logDebugP("Got Color: %X", value);
+
+    currentColor[0] = (value >> 16) & 0xFF;
+    currentColor[1] = (value >> 8) & 0xFF;
+    currentColor[2] = value & 0xFF;
+
+    sendKoStateOnChange(DGW_Kocolor_rgb_state, value, Dpt(232, 600));
+    sendKoStateOnChange(DGW_Kocolor_red_state, currentColor[0], Dpt(5, 4));
+    sendKoStateOnChange(DGW_Kocolor_green_state, currentColor[1], Dpt(5, 4));
+    sendKoStateOnChange(DGW_Kodimm_state, currentColor[2], Dpt(5, 4));
+
+    sendColor();
+}
+
+void DaliChannel::handleColorRGB(GroupObject &ko)
+{
+    uint32_t value = ko.value(Dpt(232, 600));
+    logDebugP("Got Color: %X", value);
+
+    currentColor[0] = (value >> 16) & 0xFF;
+    currentColor[1] = (value >> 8) & 0xFF;
+    currentColor[2] = value & 0xFF;
+
+    sendKoStateOnChange(DGW_Kocolor_rgb_state, value, Dpt(232, 600));
+    sendKoStateOnChange(DGW_Kocolor_red_state, currentColor[0], Dpt(5, 4));
+    sendKoStateOnChange(DGW_Kocolor_green_state, currentColor[1], Dpt(5, 4));
+    sendKoStateOnChange(DGW_Kocolor_blue_state, currentColor[2], Dpt(5, 4));
+
+    sendColor();
+}
+
+void DaliChannel::handleColorTW(GroupObject &ko)
+{
+    uint16_t kelvin = ko.value(Dpt(7, 600));
+    setTemperature(kelvin);
+}
+
+void DaliChannel::handleColorXYY(GroupObject &ko)
+{
+    uint8_t* data = ko.valueRef();
+    /*
+        <UnsignedInteger Id="DPST-242-600_F-1" Width="16" Name="x-axis" Unit="None" />
+        <UnsignedInteger Id="DPST-242-600_F-2" Width="16" Name="y-axis" Unit="None" />
+        <UnsignedInteger Id="DPST-242-600_F-3" Width="8" Name="brightness" Unit="%" />
+        <Reserved Width="6" />
+        <Bit Id="DPST-242-600_F-10" Cleared="invalid" Set="valid" Name="Validity xy" />
+        <Bit Id="DPST-242-600_F-11" Cleared="invalid" Set="valid" Name="Validity brightness" />
+    */
+    uint16_t x = data[0] << 8 | data[1];
+    uint16_t y = data[2] << 8 | data[3];
+    uint8_t b = data[4];
+    bool xyIgnore = _isGroup ? ParamDGWG_xyIgnore : ParamDGW_xyIgnore;
+    if(xyIgnore)
+    {
+        pushWord(x, currentColor);
+        pushWord(y, currentColor + 2);
+        
+        logDebugP("Got Color: %.4f %.4f", x / 65535.0, y / 65535.0);
+    } else {
+        ColorHelper::xyyToRGB(x, y, b, currentColor[0], currentColor[1], currentColor[2]);
+
+        uint32_t value = currentColor[0] << 16 | currentColor[1] << 8 | currentColor[2];
+        logDebugP("Got Color: %X", value);
+    }
+
+    sendColor();
+
+    // use 7.600 to send 2 byte unsigned int
+    sendKoStateOnChange(DGW_Kocolor_rgb_state, data, Dpt(7, 600));
 }
 
 void DaliChannel::sendKoStateOnChange(uint16_t koNr, const KNXValue &value, const Dpt &type)
@@ -880,7 +858,7 @@ bool DaliChannel::isDimmOffLocked() {
 
 void DaliChannel::queryActualLevel()
 {
-    if (_isGroup && _dimmReferenceAddress == 255)
+    if (_isGroup && _dimmReferenceAddress == NoDimmReference)
     {
         logDebugP("Skip QUERY_ACTUAL_LEVEL: no valid dimm reference address set for group");
         return;
@@ -891,7 +869,7 @@ void DaliChannel::queryActualLevel()
 
 void DaliChannel::sendColor()
 {
-    // TODO senden nur alle 100? ms
+    // TODO only send every 100ms?
     uint8_t r, g, b;
     uint8_t colorType = _isGroup ? ParamDGWG_colorType : ParamDGW_colorType;
     if (colorType == PT_colorType_HSV)
@@ -912,46 +890,44 @@ void DaliChannel::sendColor()
     logDebugP("Send: %i %i %i", r, g, b);
 
     uint8_t sendType = _isGroup ? ParamDGWG_colorSpace : ParamDGW_colorSpace;
-    switch (sendType)
+    if (sendType == PT_colorSpace_rgb)
+        sendColorAsRGB(r, g, b);
+    else
+        sendColorAsXY(r, g, b);
+}
+
+void DaliChannel::sendColorAsRGB(uint8_t r, uint8_t g, uint8_t b)
+{
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, r);
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, g);
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR2, b);
+    daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::SET_TEMP_RGB_LEVEL, _isGroup);
+    daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::ACTIVATE, _isGroup);
+}
+
+void DaliChannel::sendColorAsXY(uint8_t r, uint8_t g, uint8_t b)
+{
+    uint16_t x;
+    uint16_t y;
+
+    bool xyIgnore = _isGroup ? ParamDGWG_xyIgnore : ParamDGW_xyIgnore;
+    if(xyIgnore)
     {
-    // send as rgb
-    case PT_colorSpace_rgb:
-    {
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, r);
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, g);
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR2, b);
-        daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::SET_TEMP_RGB_LEVEL, _isGroup);
-        daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::ACTIVATE, _isGroup);
-        break;
+        popWord(x, currentColor);
+        popWord(y, currentColor + 2);
+    } else {
+        ColorHelper::rgbToXY(r, g, b, x, y);
     }
 
-    // send as xy
-    case PT_colorSpace_xy:
-    {
-        uint16_t x;
-        uint16_t y;
-        
-        bool xyIgnore = _isGroup ? ParamDGWG_xyIgnore : ParamDGW_xyIgnore;
-        if(xyIgnore)
-        {
-            popWord(x, currentColor);
-            popWord(y, currentColor + 2);
-        } else {
-            ColorHelper::rgbToXY(r, g, b, x, y);
-        }
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, x & 0xFF);
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, (x >> 8) & 0xFF);
+    daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::SET_COORDINATE_X, _isGroup);
 
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, x & 0xFF);
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, (x >> 8) & 0xFF);
-        daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::SET_COORDINATE_X, _isGroup);
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, y & 0xFF);
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, (y >> 8) & 0xFF);
+    daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::SET_COORDINATE_Y, _isGroup);
 
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, y & 0xFF);
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, (y >> 8) & 0xFF);
-        daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::SET_COORDINATE_Y, _isGroup);
-
-        daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::ACTIVATE, _isGroup);
-        break;
-    }
-    }
+    daliMaster.sendExtendedCommand(_channelIndex, 0x08, Dali::ExtendedCommandDT8::ACTIVATE, _isGroup);
 }
 
 void DaliChannel::setSwitchState(bool value, bool isSwitchCommand)
@@ -1062,7 +1038,7 @@ void DaliChannel::setGroups(uint16_t groupBits, DaliChannel* groups)
     // when relative dimming a group
     if(!_isGroup)
     {
-        for(int i = 0; i < 16; i++)
+        for(int i = 0; i < GroupCount; i++)
         {
             if((groupBits >> i) & 1)
             {
@@ -1074,7 +1050,7 @@ void DaliChannel::setGroups(uint16_t groupBits, DaliChannel* groups)
 
 void DaliChannel::setDimmRef(uint8_t ref)
 {
-    if(_isGroup && _dimmReferenceAddress == 255)
+    if(_isGroup && _dimmReferenceAddress == NoDimmReference)
     {
         logDebugP("Set Dimmref for %u to %u", _channelIndex, ref);
         _dimmReferenceAddress = ref;
@@ -1083,13 +1059,13 @@ void DaliChannel::setDimmRef(uint8_t ref)
 
 void DaliChannel::setGroupState(uint16_t group, bool state)
 {
-    if (group == 0xFFFF || _groups & 1 << group)
+    if (group == AllGroups || _groups & 1 << group)
         setSwitchState(state, false);
 }
 
 void DaliChannel::setGroupState(uint16_t group, uint8_t value)
 {
-    if (group == 0xFFFF || _groups & (1 << group))
+    if (group == AllGroups || _groups & (1 << group))
         setDimmState(value, true, true);
 }
 
@@ -1106,7 +1082,7 @@ void DaliChannel::setMaxArc(uint8_t max)
 void DaliChannel::setHcl(uint8_t curve, uint16_t value)
 {
     //TODO add ComObject for selecting curve
-    if(_hclCurve == 255) return;
+    if(_hclCurve == HclDisabled) return;
     logDebugP("Temp curve %i | state %i | isAlsoOn %i", _hclCurve, currentState, _hclIsAlsoOn);
     if(!_hclIsAutoMode)
     {
@@ -1131,7 +1107,7 @@ void DaliChannel::setHcl(uint8_t curve, uint16_t value)
 
 void DaliChannel::setHcl(uint8_t curve, uint8_t value)
 {
-    if(_hclCurve == 255) return;
+    if(_hclCurve == HclDisabled) return;
     logDebugP("Bri curve %i | state %i | isAlsoOn %i", _hclCurve, currentState, _hclIsAlsoOn);
     if(!_hclIsAutoMode)
     {
