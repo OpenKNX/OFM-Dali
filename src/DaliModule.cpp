@@ -30,19 +30,19 @@ void DaliModule::setup(bool conf)
     if (!conf)
         return;
 
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < ChannelCount; i++)
     {
         channels[i].init(i, false);
         channels[i].setup();
     }
 
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < GroupCount; i++)
     {
         groups[i].init(i, true);
         groups[i].setup();
     }
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < HclCurveCount; i++)
     {
         curves[i].setup(i);
     }
@@ -73,20 +73,20 @@ void DaliModule::handleFunc(uint8_t setting)
     {
     case PT_clickAction_on:
         logDebugP("Broadcast on");
-        daliMaster.sendCommand(0xFF, Dali::Command::RECALL_MAX, true);
+        daliMaster.sendCommand(BroadcastAddress, Dali::Command::RECALL_MAX, true);
         _currentIdentifyDevice = 0;
         // openknx.info1Led.errorCode();
         break;
     case PT_clickAction_off:
         logDebugP("Broadcast off");
-        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+        daliMaster.sendCommand(BroadcastAddress, Dali::Command::OFF, true);
         _currentIdentifyDevice = 0;
         // openknx.info1Led.errorCode();
         break;
     case PT_clickAction_toggle:
         _currentToggleState = !_currentToggleState;
         logDebugP("Broadcast toggle %i", _currentToggleState);
-        daliMaster.sendCommand(0xFF, _currentToggleState ? Dali::Command::RECALL_MAX : Dali::Command::OFF, true);
+        daliMaster.sendCommand(BroadcastAddress, _currentToggleState ? Dali::Command::RECALL_MAX : Dali::Command::OFF, true);
         _currentIdentifyDevice = 0;
         // openknx.info1Led.errorCode();
         break;
@@ -131,21 +131,13 @@ void DaliModule::loop(bool configured)
     if (currentTime.minute != _lastTimeMinute)
     {
         _lastTimeMinute = currentTime.minute;
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < HclCurveCount; i++)
             curves[i].loop();
     }
 
-    if (_adrState != AddressingState::OFF)
-    {
-        loopAddressing();
+    if (_addressing.loop())
         return;
-    }
-    if (_assState != AssigningState::OFF)
-    {
-        loopAssigning();
-        return;
-    }
-    
+
     loopBusState();
 
     // TODO remove if scan moved to core1
@@ -159,12 +151,12 @@ void DaliModule::loop(bool configured)
         return;
     }
 
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < ChannelCount; i++)
     {
         channels[i].loop();
         channels[i].loop1();
     }
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < GroupCount; i++)
     {
         groups[i].loop();
         groups[i].loop1();
@@ -178,19 +170,19 @@ void DaliModule::loop1(bool configured)
 
 void DaliModule::loopInitData()
 {
-    DaliChannel& channel = channels[_adrFound];
-    _adrFound++;
+    DaliChannel& channel = channels[_initDataIndex];
+    _initDataIndex++;
 
     if (channel.isConfigured())
     {
-        if (_adrFound == 0)
-            daliMaster.sendArc(0xFF, DaliHelper::percentToArc((uint8_t)10), true);
+        if (_initDataIndex == 0)
+            daliMaster.sendArc(BroadcastAddress, DaliHelper::percentToArc((uint8_t)10), true);
 
         uint16_t groupBits = 0;
         int16_t resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_GROUPS_0_7);
         if (resp < 0)
         {
-            logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
+            logErrorP("Dali Error %i: Code %i", _initDataIndex - 1, resp);
             return;
         }
         groupBits = resp;
@@ -198,7 +190,7 @@ void DaliModule::loopInitData()
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_GROUPS_8_15);
         if (resp < 0)
         {
-            logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
+            logErrorP("Dali Error %i: Code %i", _initDataIndex - 1, resp);
             return;
         }
         groupBits |= resp << 8;
@@ -207,30 +199,30 @@ void DaliModule::loopInitData()
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_MIN_LEVEL);
         if (resp < 0)
         {
-            logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
+            logErrorP("Dali Error %i: Code %i", _initDataIndex - 1, resp);
             return;
         }
         else
         {
             channel.setMinArc(resp);
-            logDebugP("CH%i set min to %i", _adrFound - 1, resp);
+            logDebugP("CH%i set min to %i", _initDataIndex - 1, resp);
         }
 
         resp = getInfo(channel.channelIndex(), Dali::Command::QUERY_ACTUAL_LEVEL);
         if (resp < 0)
         {
-            logErrorP("Dali Error %i: Code %i", _adrFound - 1, resp);
+            logErrorP("Dali Error %i: Code %i", _initDataIndex - 1, resp);
             return;
         }
         else
         {
-            channel.setGroupState(0xFFFF, (uint8_t)resp);
+            channel.setGroupState(DaliChannel::AllGroups, (uint8_t)resp);
         }
     }
 
-    if (_adrFound > 63)
+    if (_initDataIndex >= ChannelCount)
     {
-        _adrFound = 0;
+        _initDataIndex = 0;
         _gotInitData = true;
         _daliStateLast = 1;
         logInfoP("Finished init");
@@ -241,15 +233,15 @@ void DaliModule::loopGroupState()
 {
     if (_lastChangedGroup != 255)
     {
-        if (_lastChangedGroup > 15)
+        if (_lastChangedGroup > GroupCount - 1)
         {
-            _lastChangedGroup -= 16;
-            for (int i = 0; i < 64; i++)
+            _lastChangedGroup -= GroupCount;
+            for (int i = 0; i < ChannelCount; i++)
                 channels[i].setGroupState(_lastChangedGroup, _lastChangedValue == 1);
         }
         else
         {
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < ChannelCount; i++)
                 channels[i].setGroupState(_lastChangedGroup, _lastChangedValue);
         }
 
@@ -261,7 +253,7 @@ void DaliModule::loopGroupState()
 void DaliModule::loopError()
 {
     bool error = false;
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < ChannelCount; i++)
     {
         if (channels[i].hasError())
         {
@@ -306,374 +298,6 @@ int16_t DaliModule::getInfo(byte address, uint8_t command, uint8_t additional)
         }
     }
     return -1;
-}
-
-void DaliModule::loopAddressing()
-{
-    // if (dali->busIsIdle())
-    // { // wait until bus is idle
-        switch (_adrState)
-        {
-        case AddressingState::INIT:
-            _adrFound = 0;
-            if (_adrOnlyNew)
-                logInfoP("Searching unaddressed only");
-            else
-                logInfoP("Searching all");
-
-            if (_adrRandomize)
-                logInfoP("Do Randomize");
-            else
-                logInfoP("Don't Randomize");
-
-            if (_adrDeleteAll)
-                logInfoP("Delete all short addresses");
-            else
-                logInfoP("Keeping all short addresses");
-
-            if (_adrAssign)
-                logInfoP("Assigning short addresses");
-            else
-                logInfoP("Not assigning short addresses");
-
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::INITIALISE, _adrOnlyNew ? 255 : 0);
-            if (_adrDeleteAll)
-                _adrState = AddressingState::WRITE_DTR;
-            else
-                _adrState = (_adrRandomize ? AddressingState::RANDOM : AddressingState::STARTSEARCH);
-            break;
-        case AddressingState::WRITE_DTR:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, 255);
-            _adrState = AddressingState::REMOVE_SHORT;
-            break;
-        case AddressingState::REMOVE_SHORT:
-            daliMaster.sendCommand(0xFF, Dali::Command::DTR_AS_SHORT, true);
-            _adrState = AddressingState::REMOVE_SHORT2;
-            break;
-        case AddressingState::REMOVE_SHORT2:
-            daliMaster.sendCommand(0xFF, Dali::Command::DTR_AS_SHORT, true);
-            _adrState = (_adrRandomize ? AddressingState::RANDOM : AddressingState::STARTSEARCH);
-            break;
-        case AddressingState::RANDOM:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::RANDOMISE);
-            _adrState = AddressingState::RANDOMWAIT;
-            _adrSearch = millis();
-            break;
-        case AddressingState::RANDOMWAIT: // wait 100ms for random address to generate
-            if (millis() - _adrSearch > 100)
-            {
-                _adrState = AddressingState::STARTSEARCH;
-            }
-            break;
-        case AddressingState::STARTSEARCH:
-            _adrIterations = 0;
-            _adrSearch = 0xFFFFFF;
-        case AddressingState::SEARCHHIGH:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SEARCHADDRH, (_adrSearch >> 16) & 0xFF, true);
-            _adrState = AddressingState::SEARCHMID;
-            break;
-        case AddressingState::SEARCHMID:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SEARCHADDRM, (_adrSearch >> 8) & 0xFF);
-            _adrState = AddressingState::SEARCHLOW;
-            break;
-        case AddressingState::SEARCHLOW:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SEARCHADDRL, (_adrSearch) & 0xFF);
-            _adrState = AddressingState::COMPARE;
-            break;
-        case AddressingState::COMPARE:
-            _adrResponse = daliMaster.sendSpecialCommand(Dali::SpecialCommand::COMPARE, 0, true);
-            _adrState = AddressingState::CHECKFOUND;
-            break;
-        case AddressingState::CHECKFOUND:
-        { // create scope for response variable
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                if (_adrIterations >= 24) // ballast found
-                {
-                    logInfoP("Found ballast at %.6X", _adrSearch);
-                    ballasts[_adrFound].high = (_adrSearch >> 16) & 0xFF;
-                    ballasts[_adrFound].middle = (_adrSearch >> 8) & 0xFF;
-                    ballasts[_adrFound].low = _adrSearch & 0xFF;
-                    if (_adrAssign)
-                    {
-                        _adrState = AddressingState::PROGRAMSHORT;
-                    }
-                    else
-                    {
-                        _adrState = AddressingState::GETSHORT;
-                        _adrResponse = daliMaster.sendSpecialCommand(Dali::SpecialCommand::QUERY_SHORT, 0, true);
-                    }
-                }
-                else
-                {
-                    _adrSearch -= (0x800000 >> _adrIterations);
-                    _adrState = AddressingState::SEARCHHIGH;
-                }
-            }
-            else if (_adrIterations == 0 || _adrIterations > 24) // no device at all responded or error
-                _adrState = AddressingState::TERMINATE;
-            else if (_adrIterations == 24)
-            {                 // device responded before, but didn't now, so address is one higher
-                _adrSearch++; // and for the device to act at upcoming commands, we need to send the actual address
-                _adrState = AddressingState::SEARCHHIGH;
-            }
-            else
-            { // there's a device that didn't respond anymore, increase address
-                _adrSearch += (0x800000 >> _adrIterations);
-                _adrState = AddressingState::SEARCHHIGH;
-            }
-            _adrIterations++;
-            break;
-        }
-        case AddressingState::GETSHORT:
-        {
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-            uint8_t responseAddr = 255;
-
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                if(response.frame.flags & DALI_FRAME_ERROR)
-                {
-                    responseAddr = 255;
-                }
-                else
-                {
-                    responseAddr = response.frame.data & 0xFF;
-                }
-            }
-            else
-            {
-                responseAddr = 255;
-            }
-            
-            if (responseAddr == 0xFF)
-            {
-                logInfoP(" -> has no Short Address");
-            }
-            else
-            {
-                logInfoP(" -> has Short Address %i", responseAddr >> 1);
-                responseAddr = responseAddr >> 1;
-            }
-
-            ballasts[_adrFound].address = responseAddr;
-            _adrFound++;
-            _adrState = AddressingState::WITHDRAW;
-            break;
-        }
-        case AddressingState::PROGRAMSHORT:
-            _adrNew = 0;
-            while (addresses[_adrNew] == true)
-                _adrNew++;
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::PROGRAMSHORT, (_adrNew << 1) | 1, true);
-            ballasts[_adrFound].address = _adrNew;
-            addresses[_adrNew] = true;
-            _adrFound++;
-            _adrState = AddressingState::VERIFYSHORT;
-            break;
-        case AddressingState::VERIFYSHORT:
-            _adrResponse = daliMaster.sendSpecialCommand(Dali::SpecialCommand::VERIFYSHORT, (_adrNew << 1) | 1, true);
-            _adrState = AddressingState::VERIFYSHORTRESPONSE;
-            break;
-        case AddressingState::VERIFYSHORTRESPONSE:
-        {
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                if(response.frame.flags & DALI_FRAME_ERROR || (response.frame.data & 0xFF) != 0xFF)
-                {
-                    logErrorP(" -> error setting address %i", _adrNew);
-                    _adrState = AddressingState::TERMINATE;
-                }
-                else
-                {
-                    logInfoP(" -> new address %i", _adrNew);
-                    _adrState = AddressingState::WITHDRAW;
-                }
-            }
-            else
-            {
-                logErrorP(" -> error setting address %i", _adrNew);
-                _adrState = AddressingState::TERMINATE;
-            }
-            break;
-        }
-        case AddressingState::WITHDRAW:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::WITHDRAW);
-            _adrState = AddressingState::STARTSEARCH;
-            break;
-        case AddressingState::TERMINATE:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::TERMINATE);
-            _adrState = AddressingState::OFF;
-            logInfoP("Found %i ballasts", _adrFound);
-            break;
-        case AddressingState::SEARCHSHORT:
-            _adrResponse = daliMaster.sendCommand(_adrFound, Dali::Command::QUERY_ACTUAL_LEVEL, false, true);
-            _adrState = AddressingState::CHECKSEARCHSHORT;
-            break;
-        case AddressingState::CHECKSEARCHSHORT:
-        {
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                addresses[_adrFound] = true;
-                _adrFound++;
-                _adrState = _adrFound < 64 ? AddressingState::SEARCHSHORT : AddressingState::INIT;
-            }
-            else
-            {
-                addresses[_adrFound] = false;
-                _adrFound++;
-                _adrState = _adrFound < 64 ? AddressingState::SEARCHSHORT : AddressingState::INIT;
-            }
-        }
-        break;
-        }
-    //}
-}
-
-void DaliModule::loopAssigning()
-{
-    // if (dali->busIsIdle())
-    // { // wait until bus is idle
-        switch (_assState)
-        {
-        case AssigningState::INIT:
-            _adrFound = 0;
-            _adrAssign = false;
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::INITIALISE);
-            _assState = AssigningState::QUERY;
-            break;
-        case AssigningState::QUERY:
-            _adrResponse = daliMaster.sendCommand(_adrNew, Dali::Command::QUERY_ACTUAL_LEVEL, false, true);
-            _assState = AssigningState::CHECKQUERY;
-            break;
-        case AssigningState::CHECKQUERY:
-        { // create scope for response variable
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                logInfoP("Short Address is in use");
-                _assState = AssigningState::OFF;
-                _assResponse = AssigningResponse::NOT_FREE;
-            }
-            else
-            {
-                logInfoP("Short Address is free");
-                _adrSearch--;
-                _assState = AssigningState::STARTSEARCH;
-            }
-            break;
-        }
-        case AssigningState::STARTSEARCH:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SEARCHADDRH, (_adrSearch >> 16) & 0xFF);
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SEARCHADDRM, (_adrSearch >> 8) & 0xFF);
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::SEARCHADDRL, (_adrSearch) & 0xFF);
-            _assState = AssigningState::COMPARE;
-            break;
-        case AssigningState::COMPARE:
-            if (_adrAssign)
-            {
-                _adrResponse = daliMaster.sendSpecialCommand(Dali::SpecialCommand::COMPARE, 0, true);
-                _assState = AssigningState::CHECKFOUND;
-            }
-            else
-            {
-                daliMaster.sendSpecialCommand(Dali::SpecialCommand::COMPARE);
-                _assState = AssigningState::WITHDRAW;
-            }
-            break;
-        case AssigningState::WITHDRAW:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::WITHDRAW);
-            _adrSearch++;
-            _adrAssign = true;
-            _assState = AssigningState::STARTSEARCH;
-            break;
-        case AssigningState::CHECKFOUND:
-        { // create scope for response variable
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                logInfoP("Long Address does exist");
-                _assState = AssigningState::PROGRAMSHORT;
-            }
-            else
-            {
-                logInfoP("Long Address does not exist");
-                _assState = AssigningState::OFF;
-                _assResponse = AssigningResponse::NO_RESPONSE_LONG;
-            }
-            break;
-        }
-        case AssigningState::PROGRAMSHORT:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::PROGRAMSHORT, (_adrNew << 1) | 1);
-            ballasts[_adrFound].address = _adrNew;
-            _assState = AssigningState::VERIFYSHORT;
-            break;
-        case AssigningState::VERIFYSHORT:
-            _adrResponse = daliMaster.sendSpecialCommand(Dali::SpecialCommand::VERIFYSHORT, (_adrNew << 1) | 1, true);
-            _assState = AssigningState::VERIFYSHORTRESPONSE;
-            break;
-        case AssigningState::VERIFYSHORTRESPONSE:
-        {
-            Dali::Response response = daliMaster.getResponse(_adrResponse);
-            if(response.state == Dali::ResponseState::SENT || response.state == Dali::ResponseState::WAITING)
-            {
-                // no answer yet
-                return;
-            }
-            else if(response.state == Dali::ResponseState::RECEIVED)
-            {
-                logInfoP(" -> new address %i", _adrNew);
-                _assResponse = AssigningResponse::AR_SUCCESS;
-            }
-            else
-            {
-                // error, stop commissioning
-                logErrorP(" -> error setting address %i", _adrNew);
-                _assResponse = AssigningResponse::FAILED;
-            }
-            _assState = AssigningState::TERMINATE;
-            break;
-        }
-        case AssigningState::TERMINATE:
-            daliMaster.sendSpecialCommand(Dali::SpecialCommand::TERMINATE);
-            _assState = AssigningState::OFF;
-            break;
-        }
-    //}
 }
 
 void DaliModule::loopBusState()
@@ -863,16 +487,14 @@ void DaliModule::cmdHandleScan(bool hasArg, std::string arg)
     }
     logInfoP("Starting Scan manually");
     uint8_t resultLength = 254;
-    uint8_t *data = new uint8_t[5];
-    uint8_t *resultData = new uint8_t[4];
+    uint8_t data[5] = {};
+    uint8_t resultData[4] = {};
     data[1] = arg.at(0) == '1';
     data[2] = arg.at(1) == '1';
     data[3] = arg.at(2) == '1';
     data[4] = arg.at(3) == '1';
 
     funcHandleScan(data, resultData, resultLength);
-    delete[] data;
-    delete[] resultData;
 }
 
 void DaliModule::cmdHandleArc(bool hasArg, std::string arg)
@@ -903,7 +525,7 @@ void DaliModule::cmdHandleArc(bool hasArg, std::string arg)
     if (arg.at(0) == 'B')
     {
         logInfoP("Sending Arc %i to Broadcast", value);
-        daliMaster.sendArc(0xFF, value, true);
+        daliMaster.sendArc(BroadcastAddress, value, true);
     }
     else if (arg.at(0) == 'A')
     {
@@ -947,8 +569,8 @@ void DaliModule::cmdHandleSet(bool hasArg, std::string arg)
     }
 
     uint8_t resultLength = 254;
-    uint8_t *data = new uint8_t[5];
-    uint8_t *resultData = new uint8_t[4];
+    uint8_t data[5] = {};
+    uint8_t resultData[4] = {};
     data[1] = std::stoi(arg.substr(6, 2));
     if (data[1] > 63 && data[1] != 99)
     {
@@ -960,82 +582,100 @@ void DaliModule::cmdHandleSet(bool hasArg, std::string arg)
     data[4] = std::stoi(arg.substr(4, 2), nullptr, 16);
 
     funcHandleAssign(data, resultData, resultLength);
-    delete[] data;
-    delete[] resultData;
 }
 
 void DaliModule::processInputKo(GroupObject &ko)
 {
     // logDebugP("Received Ko %i", ko.asap());
-    if (_adrState != AddressingState::OFF || _currentLockState)
+    if (!_addressing.isAddressingIdle() || _currentLockState)
         return;
 
     int koNum = ko.asap();
-    if (koNum >= DGW_KoOffset && koNum < DGW_KoOffset + DGW_KoBlockSize * 64)
-    {
-        int index = floor((koNum - DGW_KoOffset) / DGW_KoBlockSize);
-        // logDebugP("For Channel %i", index);
-        channels[index].processInputKo(ko);
+    if (processChannelKo(koNum, ko))
         return;
+    if (processGroupKo(koNum, ko))
+        return;
+    if (processHclKo(koNum, ko))
+        return;
+    processGlobalKo(koNum, ko);
+}
+
+bool DaliModule::processChannelKo(int koNum, GroupObject &ko)
+{
+    if (koNum < DGW_KoOffset || koNum >= DGW_KoOffset + DGW_KoBlockSize * ChannelCount)
+        return false;
+
+    int index = floor((koNum - DGW_KoOffset) / DGW_KoBlockSize);
+    // logDebugP("For Channel %i", index);
+    channels[index].processInputKo(ko);
+    return true;
+}
+
+bool DaliModule::processGroupKo(int koNum, GroupObject &ko)
+{
+    if (koNum < DGWG_KoOffset || koNum >= DGWG_KoOffset + DGWG_KoBlockSize * GroupCount)
+        return false;
+
+    int index = floor((koNum - DGWG_KoOffset) / DGWG_KoBlockSize);
+    int chanIndex = (koNum - DGWG_KoOffset) % DGWG_KoBlockSize;
+    // logDebugP("For Group %i", index);
+    groups[index].processInputKo(ko);
+
+    if (chanIndex == DGWG_Koswitch_state)
+    {
+        _lastChangedGroup = index + GroupCount;
+        uint8_t value = ko.value(DPT_Switch);
+        _lastChangedValue = DaliHelper::percentToArc(value);
+    }
+    if (chanIndex == DGWG_Kodimm_state)
+    {
+        _lastChangedGroup = index;
+        uint8_t value = ko.value(DPT_Switch);
+        _lastChangedValue = DaliHelper::percentToArc(value);
     }
 
-    if (koNum >= DGWG_KoOffset && koNum < DGWG_KoOffset + DGWG_KoBlockSize * 16)
+    return true;
+}
+
+bool DaliModule::processHclKo(int koNum, GroupObject &ko)
+{
+    if (koNum < DGWH_KoOffset || koNum >= DGWH_KoOffset + DGWH_KoBlockSize * HclCurveCount)
+        return false;
+
+    int index = floor((koNum - DGWH_KoOffset) / DGWH_KoBlockSize);
+    int chanIndex = (koNum - DGWH_KoOffset) % DGWH_KoBlockSize;
+    // logDebugP("For HCL %i - Ko %i", index, chanIndex);
+
+    switch (chanIndex)
     {
-        int index = floor((koNum - DGWG_KoOffset) / DGWG_KoBlockSize);
-        int chanIndex = (ko.asap() - DGWG_KoOffset) % DGWG_KoBlockSize;
-        // logDebugP("For Group %i", index);
-        groups[index].processInputKo(ko);
-
-        if (chanIndex == DGWG_Koswitch_state)
-        {
-            _lastChangedGroup = index + 16;
-            uint8_t value = ko.value(DPT_Switch);
-            _lastChangedValue = DaliHelper::percentToArc(value);
-        }
-        if (chanIndex == DGWG_Kodimm_state)
-        {
-            _lastChangedGroup = index;
-            uint8_t value = ko.value(DPT_Switch);
-            _lastChangedValue = DaliHelper::percentToArc(value);
-        }
-
-        return;
+    case DGWH_Kohcl_state:
+    {
+        uint16_t kelvin = ko.value(Dpt(7, 600));
+        for (int i = 0; i < ChannelCount; i++)
+            channels[i].setHcl(index, kelvin);
+        for (int i = 0; i < GroupCount; i++)
+            groups[i].setHcl(index, kelvin);
+        break;
     }
 
-    if (koNum >= DGWH_KoOffset && koNum < DGWH_KoOffset + DGWH_KoBlockSize * 3)
+    case DGWH_Kobri_state:
     {
-        int index = floor((koNum - DGWH_KoOffset) / DGWH_KoBlockSize);
-        int chanIndex = (koNum - DGWH_KoOffset) % DGWH_KoBlockSize;
-        // logDebugP("For HCL %i - Ko %i", index, chanIndex);
-
-        switch (chanIndex)
-        {
-        case DGWH_Kohcl_state:
-        {
-            uint16_t kelvin = ko.value(Dpt(7, 600));
-            for (int i = 0; i < 64; i++)
-                channels[i].setHcl(index, kelvin);
-            for (int i = 0; i < 16; i++)
-                groups[i].setHcl(index, kelvin);
-            break;
-        }
-
-        case DGWH_Kobri_state:
-        {
-            uint8_t brightness = ko.value(Dpt(5, 1));
-            for (int i = 0; i < 64; i++)
-                channels[i].setHcl(index, brightness);
-            for (int i = 0; i < 16; i++)
-                groups[i].setHcl(index, brightness);
-            break;
-        }
-
-        default:
-            logDebugP("unhandled KO: %i", ko.asap());
-        }
-        return;
+        uint8_t brightness = ko.value(Dpt(5, 1));
+        for (int i = 0; i < ChannelCount; i++)
+            channels[i].setHcl(index, brightness);
+        for (int i = 0; i < GroupCount; i++)
+            groups[i].setHcl(index, brightness);
+        break;
     }
 
+    default:
+        logDebugP("unhandled KO: %i", ko.asap());
+    }
+    return true;
+}
+
+void DaliModule::processGlobalKo(int koNum, GroupObject &ko)
+{
     switch (koNum)
     {
         // broadcast switch
@@ -1072,23 +712,9 @@ void DaliModule::koHandleSwitch(GroupObject &ko)
 {
     bool value = ko.value(DPT_Switch);
     logDebugP("Broadcast Switch %i", value);
-    daliMaster.sendArc(0xFF, value ? 0xFE : 0x00, true);
+    daliMaster.sendArc(BroadcastAddress, value ? 0xFE : 0x00, true);
 
-    for (int i = 0; i < 64; i++)
-    {
-        logDebugP("%i: %u - %u", i, openknx.common.freeStackMin(), openknx.common.freeMemoryMin());
-        if(!channels[i].isConfigured())
-            continue;
-        channels[i].setGroupState(0xFFFF, value);
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        logDebugP("%i: %u - %u", i,  openknx.common.freeStackMin(), openknx.common.freeMemoryMin());
-        if(!groups[i].isConfigured())
-            continue;
-        groups[i].setGroupState(0xFFFF, value);
-    }
+    broadcastGroupState(value);
     logDebugP("Broadcast Switch set");
 }
 
@@ -1098,21 +724,9 @@ void DaliModule::koHandleDimm(GroupObject &ko)
     logDebugP("Broadcast Dimm %i", value);
     value = ((253 / 3) * (log10(value) + 1)) + 1;
     value++;
-    daliMaster.sendArc(0xFF, value, true);
+    daliMaster.sendArc(BroadcastAddress, value, true);
 
-    for (int i = 0; i < 64; i++)
-    {
-        if(!channels[i].isConfigured())
-            continue;
-        channels[i].setGroupState(0xFFFF, value);
-    }
-
-    for (int i = 0; i < 16; i++)
-    {
-        if(!groups[i].isConfigured())
-            continue;
-        groups[i].setGroupState(0xFFFF, value);
-    }
+    broadcastGroupState(value);
 }
 
 void DaliModule::koHandleDayNight(GroupObject &ko)
@@ -1122,10 +736,7 @@ void DaliModule::koHandleDayNight(GroupObject &ko)
         value = !value;
     logDebugP("Broadcast Day/Night %i", value);
 
-    for (int i = 0; i < 64; i++)
-        channels[i].isNight = value;
-    for (int i = 0; i < 16; i++)
-        groups[i].isNight = value;
+    setAllNightMode(value);
 }
 
 void DaliModule::koHandleOnValue(GroupObject &ko)
@@ -1134,10 +745,43 @@ void DaliModule::koHandleOnValue(GroupObject &ko)
     logDebugP("KO OnValue: %i", value);
     value = DaliHelper::percentToArc(value);
 
-    for (int i = 0; i < 64; i++)
+    setAllOnValue(value);
+}
+
+void DaliModule::broadcastGroupState(bool value)
+{
+    for (int i = 0; i < ChannelCount; i++)
+        if (channels[i].isConfigured())
+            channels[i].setGroupState(DaliChannel::AllGroups, value);
+    for (int i = 0; i < GroupCount; i++)
+        if (groups[i].isConfigured())
+            groups[i].setGroupState(DaliChannel::AllGroups, value);
+}
+
+void DaliModule::broadcastGroupState(uint8_t value)
+{
+    for (int i = 0; i < ChannelCount; i++)
+        if (channels[i].isConfigured())
+            channels[i].setGroupState(DaliChannel::AllGroups, value);
+    for (int i = 0; i < GroupCount; i++)
+        if (groups[i].isConfigured())
+            groups[i].setGroupState(DaliChannel::AllGroups, value);
+}
+
+void DaliModule::setAllOnValue(uint8_t value)
+{
+    for (int i = 0; i < ChannelCount; i++)
         channels[i].setOnValue(value);
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < GroupCount; i++)
         groups[i].setOnValue(value);
+}
+
+void DaliModule::setAllNightMode(bool value)
+{
+    for (int i = 0; i < ChannelCount; i++)
+        channels[i].isNight = value;
+    for (int i = 0; i < GroupCount; i++)
+        groups[i].isNight = value;
 }
 
 void DaliModule::koHandleScene(GroupObject &ko)
@@ -1311,19 +955,7 @@ void DaliModule::funcHandleScan(uint8_t *data, uint8_t *resultData, uint8_t &res
 {
     logInfoP("Starting Scan %i %i %i %i", data[1], data[2], data[3], data[4]);
 
-    _adrOnlyNew = data[1] == 1;
-    _adrRandomize = data[2] == 1;
-    _adrDeleteAll = data[3] == 1;
-    _adrAssign = data[4] == 1;
-
-    _adrFound = 0;
-    for (int i = 0; i < 64; i++)
-        addresses[i] = false;
-
-    if (!_adrDeleteAll && _adrAssign)
-        _adrState = AddressingState::SEARCHSHORT;
-    else
-        _adrState = AddressingState::INIT;
+    _addressing.startScan(data[1] == 1, data[2] == 1, data[3] == 1, data[4] == 1);
 
     resultLength = 0;
 }
@@ -1332,190 +964,102 @@ void DaliModule::funcHandleAssign(uint8_t *data, uint8_t *resultData, uint8_t &r
 {
     logInfoP("Starting assigning address");
 
-    _adrSearch = data[2] << 16;
-    _adrSearch |= data[3] << 8;
-    _adrSearch |= data[4];
-    logInfoP("Long  Addr %X", _adrSearch);
+    uint32_t longAddress = (data[2] << 16) | (data[3] << 8) | data[4];
+    logInfoP("Long  Addr %X", longAddress);
 
-    if (data[1] == 99)
+    uint8_t shortAddress = data[1];
+    if (shortAddress == 99)
     {
-        data[1] = 255;
+        shortAddress = 255;
         logInfoP("Removing Short Addr");
     }
     else
     {
-        logInfoP("Short Addr %i", data[1]);
+        logInfoP("Short Addr %i", shortAddress);
     }
-    _adrNew = data[1]; // ((data[1] << 1) | 1) & 0xFF;
 
-    _assState = AssigningState::INIT;
+    _addressing.startAssign(longAddress, shortAddress);
     resultLength = 0;
+}
+
+void DaliModule::writeEvgDtrByte(uint8_t address, uint8_t value, uint8_t command)
+{
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, value);
+    daliMaster.sendCommand(address, command);
 }
 
 void DaliModule::funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    DaliChannel channel = channels[data[1]];
-    logInfoP("Starting setting up EVG %i", data[1]);
+    // Index == raw 4-bit DALI fade time / fade rate value, text is only used for logging.
+    static constexpr const char *const FadeTimeLabels[16] = {
+        "inactive", "0.7s", "1.0s", "1.4s", "2.0s", "2.8s", "4.0s", "5.7s",
+        "8.0s", "11.3s", "16.0s", "22.6s", "32.0s", "45.3s", "64.0s", "90.5s"};
+    static constexpr const char *const FadeRateLabels[16] = {
+        "unknown", "358 steps/s", "253 steps/s", "179 steps/s", "127 steps/s",
+        "89.4 steps/s", "63.3 steps/s", "44.7 steps/s", "31.6 steps/s",
+        "22.4 steps/s", "15.8 steps/s", "11.2 steps/s", "7.9 steps/s",
+        "5.6 steps/s", "4.0 steps/s", "2.8 steps/s"};
+
+    uint8_t address = data[1];
+    DaliChannel &channel = channels[address];
+    logInfoP("Starting setting up EVG %i", address);
     logIndentUp();
 
     uint16_t tempValue = 0;
     popWord(tempValue, data + 2);
+    uint8_t minArc = DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100);
     logDebugP("set min %3.2f%%", ColorHelper::getFloat(tempValue) * 100);
-    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
-    daliMaster.sendCommand(data[1], Dali::Command::DTR_AS_MIN);
-    channel.setMinArc(DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
+    writeEvgDtrByte(address, minArc, Dali::Command::DTR_AS_MIN);
+    channel.setMinArc(minArc);
 
     popWord(tempValue, data + 4);
+    uint8_t maxArc = DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100);
     logDebugP("set max %3.2f%%", ColorHelper::getFloat(tempValue) * 100);
-    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
-    daliMaster.sendCommand(data[1], Dali::Command::DTR_AS_MAX);
-    channel.setMaxArc(DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
+    writeEvgDtrByte(address, maxArc, Dali::Command::DTR_AS_MAX);
+    channel.setMaxArc(maxArc);
 
     popWord(tempValue, data + 6);
-    if (tempValue == 0xFFFF)
+    uint8_t powerArc = (tempValue == DisabledDptValue) ? 255 : DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100);
+    if (tempValue == DisabledDptValue)
         logDebugP("set power disabled");
     else
         logDebugP("set power %3.2f", ColorHelper::getFloat(tempValue) * 100);
-    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, (tempValue == 0xFFFF) ? 255 : DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
-    daliMaster.sendCommand(data[1], Dali::Command::DTR_AS_POWER_ON);
+    writeEvgDtrByte(address, powerArc, Dali::Command::DTR_AS_POWER_ON);
 
     popWord(tempValue, data + 8);
-    if (tempValue == 0xFFFF)
+    uint8_t failArc = (tempValue == DisabledDptValue) ? 255 : DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100);
+    if (tempValue == DisabledDptValue)
         logDebugP("set fail disabled");
     else
         logDebugP("set fail %3.2f", ColorHelper::getFloat(tempValue) * 100);
-    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, (tempValue == 0xFFFF) ? 255 : DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
-    daliMaster.sendCommand(data[1], Dali::Command::DTR_AS_FAIL);
+    writeEvgDtrByte(address, failArc, Dali::Command::DTR_AS_FAIL);
 
-    switch ((data[10] >> 4) & 0xF)
-    {
-    case 0:
-        logDebugP("set fade time inactive");
-        break;
-    case 1:
-        logDebugP("set fade time 0.7s");
-        break;
-    case 2:
-        logDebugP("set fade time 1.0s");
-        break;
-    case 3:
-        logDebugP("set fade time 1.4s");
-        break;
-    case 4:
-        logDebugP("set fade time 2.0s");
-        break;
-    case 5:
-        logDebugP("set fade time 2.8s");
-        break;
-    case 6:
-        logDebugP("set fade time 4.0s");
-        break;
-    case 7:
-        logDebugP("set fade time 5.7s");
-        break;
-    case 8:
-        logDebugP("set fade time 8.0s");
-        break;
-    case 9:
-        logDebugP("set fade time 11.3s");
-        break;
-    case 10:
-        logDebugP("set fade time 16.0s");
-        break;
-    case 11:
-        logDebugP("set fade time 22.6s");
-        break;
-    case 12:
-        logDebugP("set fade time 32.0s");
-        break;
-    case 13:
-        logDebugP("set fade time 45.3s");
-        break;
-    case 14:
-        logDebugP("set fade time 64.0s");
-        break;
-    case 15:
-        logDebugP("set fade time 90.5s");
-        break;
-    default:
-        logDebugP("set fade time unknown");
-        break;
-    }
     // TODO maybe add a function for setting things from dtr
-    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, (data[10] >> 4) & 0xF);
-    daliMaster.sendCommand(data[1], Dali::Command::DTR_AS_FADE_TIME);
-    
-    switch (data[10] & 0xF)
-    {
-    case 1:
-        logDebugP("set fade rate 358 steps/s");
-        break;
-    case 2:
-        logDebugP("set fade rate 253 steps/s");
-        break;
-    case 3:
-        logDebugP("set fade rate 179 steps/s");
-        break;
-    case 4:
-        logDebugP("set fade rate 127 steps/s");
-        break;
-    case 5:
-        logDebugP("set fade rate 89.4 steps/s");
-        break;
-    case 6:
-        logDebugP("set fade rate 63.3 steps/s");
-        break;
-    case 7:
-        logDebugP("set fade rate 44.7 steps/s");
-        break;
-    case 8:
-        logDebugP("set fade rate 31.6 steps/s");
-        break;
-    case 9:
-        logDebugP("set fade rate 22.4 steps/s");
-        break;
-    case 10:
-        logDebugP("set fade rate 15.8 steps/s");
-        break;
-    case 11:
-        logDebugP("set fade rate 11.2 steps/s");
-        break;
-    case 12:
-        logDebugP("set fade rate 7.9 steps/s");
-        break;
-    case 13:
-        logDebugP("set fade rate 5.6 steps/s");
-        break;
-    case 14:
-        logDebugP("set fade rate 4.0 steps/s");
-        break;
-    case 15:
-        logDebugP("set fade rate 2.8 steps/s");
-        break;
-    default:
-        logDebugP("set fade rate unknwon");
-        break;
-    }
-    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, data[10] & 0xF);
-    daliMaster.sendCommand(data[1], Dali::Command::DTR_AS_FADE_RATE);
+    uint8_t fadeTimeIndex = (data[10] >> 4) & 0xF;
+    logDebugP("set fade time %s", FadeTimeLabels[fadeTimeIndex]);
+    writeEvgDtrByte(address, fadeTimeIndex, Dali::Command::DTR_AS_FADE_TIME);
+
+    uint8_t fadeRateIndex = data[10] & 0xF;
+    logDebugP("set fade rate %s", FadeRateLabels[fadeRateIndex]);
+    writeEvgDtrByte(address, fadeRateIndex, Dali::Command::DTR_AS_FADE_RATE);
 
     // 1byte free
 
     uint16_t groupBits = data[12];
     groupBits |= data[13] << 8;
-    channels[data[1]].setGroups(groupBits, this->groups);
+    channels[address].setGroups(groupBits, this->groups);
 
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < GroupCount; i++)
     {
         if ((groupBits >> i) & 0x1)
         {
             logDebugP("add to Group %i", i);
-            daliMaster.sendCommand(data[1], Dali::Command::ADD_TO_GROUP | i);
+            daliMaster.sendCommand(address, Dali::Command::ADD_TO_GROUP | i);
         }
         else
         {
             logDebugP("remove from Group %i", i);
-            daliMaster.sendCommand(data[1], Dali::Command::REMOVE_FROM_GROUP | i);
+            daliMaster.sendCommand(address, Dali::Command::REMOVE_FROM_GROUP | i);
         }
     }
     logIndentDown();
@@ -1523,85 +1067,51 @@ void DaliModule::funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t 
     resultLength = 0;
 }
 
+uint8_t DaliModule::readEvgLevel(uint8_t address, uint8_t command, const char *label, uint8_t errorBit, uint8_t &errorByte)
+{
+    int16_t resp = getInfo(address, command);
+    if (resp < 0)
+    {
+        logErrorP("Dali Error (%s): Code %i", label, resp);
+        errorByte |= errorBit;
+        resp = 0xFF;
+    }
+    logDebugP("%s: %.2X / %.2f", label, resp, DaliHelper::arcToPercentFloat(resp));
+    return (uint8_t)resp;
+}
+
+uint8_t DaliModule::readEvgRaw(uint8_t address, uint8_t command, const char *label, uint8_t errorBit, uint8_t errorFallback, uint8_t &errorByte)
+{
+    int16_t resp = getInfo(address, command);
+    if (resp < 0)
+    {
+        logErrorP("Dali Error (%s): Code %i", label, resp);
+        errorByte |= errorBit;
+        resp = errorFallback;
+    }
+    logDebugP("%s: %.2X", label, resp);
+    return (uint8_t)resp;
+}
+
 void DaliModule::funcHandleEvgRead(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
     logInfoP("Starting reading EVG settings");
 
+    uint8_t address = data[1];
     resultData[0] = 0x00;
 
     uint8_t errorByte = 0;
 
-    int16_t resp = getInfo(data[1], Dali::Command::QUERY_MIN_LEVEL);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (MIN): Code %i", resp);
-        errorByte |= 0b1;
-        resp = 0xFF;
-    }
-    logDebugP("MIN: %.2X / %.2f", resp, DaliHelper::arcToPercentFloat(resp));
-    resultData[1] = resp;
-
-    resp = getInfo(data[1], Dali::Command::QUERY_MAX_LEVEL);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (MAX): Code %i", resp);
-        errorByte |= 0b10;
-        resp = 0xFF;
-    }
-    logDebugP("MAX: %.2X / %.2f", resp, DaliHelper::arcToPercentFloat(resp));
-    resultData[2] = resp;
-
-    resp = getInfo(data[1], Dali::Command::QUERY_POWER_ON_LEVEL);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (POWER): Code %i", resp);
-        errorByte |= 0b100;
-        resp = 0xFF;
-    }
-    logDebugP("POWER: %.2X / %.2f", resp, DaliHelper::arcToPercentFloat(resp));
-    resultData[3] = resp;
-
-    resp = getInfo(data[1], Dali::Command::QUERY_FAIL_LEVEL);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (FAILURE): Code %i", resp);
-        errorByte |= 0b1000;
-        resp = 0xFF;
-    }
-    logDebugP("FAILURE: %.2X / %.2f", resp, DaliHelper::arcToPercentFloat(resp));
-    resultData[4] = resp;
-
-    resp = getInfo(data[1], Dali::Command::QUERY_FADE_SPEEDS);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (FAID): Code %i", resp);
-        errorByte |= 0b10000;
-        resp = 0xFF;
-    }
-    logDebugP("FAID: %.2X", resp);
-    resultData[5] = resp;
+    resultData[1] = readEvgLevel(address, Dali::Command::QUERY_MIN_LEVEL, "MIN", 0b1, errorByte);
+    resultData[2] = readEvgLevel(address, Dali::Command::QUERY_MAX_LEVEL, "MAX", 0b10, errorByte);
+    resultData[3] = readEvgLevel(address, Dali::Command::QUERY_POWER_ON_LEVEL, "POWER", 0b100, errorByte);
+    resultData[4] = readEvgLevel(address, Dali::Command::QUERY_FAIL_LEVEL, "FAILURE", 0b1000, errorByte);
+    resultData[5] = readEvgRaw(address, Dali::Command::QUERY_FADE_SPEEDS, "FAID", 0b10000, 0xFF, errorByte);
 
     // 1byte free
 
-    resp = getInfo(data[1], Dali::Command::QUERY_GROUPS_0_7);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (GROUP1): Code %i", resp);
-        errorByte |= 0b1000000;
-        resp = 0;
-    }
-    logDebugP("GROUPS0-7: %.2X", resp);
-    resultData[7] = resp;
-
-    resp = getInfo(data[1], Dali::Command::QUERY_GROUPS_8_15);
-    if (resp < 0)
-    {
-        logErrorP("Dali Error (GROUP2): Code %i", resp);
-        errorByte |= 0b10000000;
-        resp = 0;
-    }
-    logDebugP("GROUPS8-15: %.2X", resp);
-    resultData[8] = resp;
+    resultData[7] = readEvgRaw(address, Dali::Command::QUERY_GROUPS_0_7, "GROUPS0-7", 0b1000000, 0, errorByte);
+    resultData[8] = readEvgRaw(address, Dali::Command::QUERY_GROUPS_8_15, "GROUPS8-15", 0b10000000, 0, errorByte);
 
     resultData[9] = errorByte;
     resultLength = 10;
@@ -1658,12 +1168,12 @@ void DaliModule::funcHandleSetScene(uint8_t *data, uint8_t *resultData, uint8_t 
 
         uint16_t tempValue = 0;
         popWord(tempValue, data + 6);
-        if (tempValue == 0xFFFF)
+        if (tempValue == DisabledDptValue)
             logDebugP("bri disabled");
         else
             logDebugP("bri %.2f%%", ColorHelper::getFloat(tempValue) * 100);
 
-        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, (tempValue == 0xFFFF) ? 255 : DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
+        daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, (tempValue == DisabledDptValue) ? 255 : DaliHelper::percentToArc(ColorHelper::getFloat(tempValue) * 100));
         daliMaster.sendCommand(addr, Dali::Command::DTR_AS_SCENE | data[2]);
         logIndentDown();
     }
@@ -1747,12 +1257,12 @@ void DaliModule::funcHandleIdentify(uint8_t *data, uint8_t *resultData, uint8_t 
     if (isStopCommand)
     {
         daliMaster.sendSpecialCommand(Dali::SpecialCommand::TERMINATE, 0);
-        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+        daliMaster.sendCommand(BroadcastAddress, Dali::Command::OFF, true);
     }
     else
     {
         daliMaster.sendSpecialCommand(Dali::SpecialCommand::INITIALISE, 0);
-        daliMaster.sendCommand(0xFF, Dali::Command::OFF, true);
+        daliMaster.sendCommand(BroadcastAddress, Dali::Command::OFF, true);
         daliMaster.sendCommand(address, Dali::Command::RECALL_MAX, isGroupAddress);
     }
     resultLength = 0;
@@ -1783,17 +1293,17 @@ bool DaliModule::processFunctionPropertyState(uint8_t objectIndex, uint8_t prope
 
 void DaliModule::stateHandleAssign(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    resultData[0] = (uint8_t)(_adrState == AddressingState::OFF); // ? AssigningState::Success : AssigningState::Working);
-    resultData[1] = (uint8_t)_assResponse;
+    resultData[0] = (uint8_t)_addressing.isAddressingIdle(); // ? AssigningState::Success : AssigningState::Working);
+    resultData[1] = (uint8_t)_addressing.assignResponse();
     resultLength = 2;
 }
 
 void DaliModule::stateHandleScanAndAddress(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
-    resultData[0] = _adrState == AddressingState::OFF;
+    resultData[0] = _addressing.isAddressingIdle();
     if (data[0] == 3)
     {
-        resultData[1] = _adrFound;
+        resultData[1] = _addressing.foundCount();
         resultLength = 2;
     }
     else
@@ -1809,18 +1319,19 @@ void DaliModule::stateHandleFoundEVGs(uint8_t *data, uint8_t *resultData, uint8_
         // delete[] ballasts;
         // delete[] addresses;
         resultLength = 0;
-        _adrState = AddressingState::OFF;
+        _addressing.resetToIdle();
         // _assState = AssigningState::None;
         return;
     }
 
-    resultData[0] = data[1] < _adrFound;
-    if (data[1] < _adrFound)
+    resultData[0] = data[1] < _addressing.foundCount();
+    if (data[1] < _addressing.foundCount())
     {
-        resultData[1] = ballasts[data[1]].high;
-        resultData[2] = ballasts[data[1]].middle;
-        resultData[3] = ballasts[data[1]].low;
-        resultData[4] = ballasts[data[1]].address;
+        const Ballast &foundBallast = _addressing.ballast(data[1]);
+        resultData[1] = foundBallast.high;
+        resultData[2] = foundBallast.middle;
+        resultData[3] = foundBallast.low;
+        resultData[4] = foundBallast.address;
         resultLength = 5;
     }
     else
