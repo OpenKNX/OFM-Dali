@@ -1,3 +1,59 @@
+// Function Property addressing - must match DaliModule::processFunctionProperty / processFunctionPropertyState in DaliModule.cpp
+var DALI_OBJECT_INDEX = 160;
+var DALI_PROPERTY_ID = 1;
+
+// Function codes - must match the data[0] switch in DaliModule.cpp
+var FUNC_READ_DEVICETYPE = 2;
+var FUNC_SCAN = 3;
+var FUNC_ASSIGN_ADDRESS = 4;
+var FUNC_EVG_WRITE = 10;
+var FUNC_EVG_READ = 11;
+var FUNC_SET_SCENE = 12;
+var FUNC_GET_SCENE = 13;
+var FUNC_IDENTIFY = 14;
+var FUNC_FOUND_EVGS = 7;
+var FUNC_READ_INFO = 15;
+
+var CHANNEL_COUNT = 64;
+var SCENE_COUNT = 16;
+var DISABLED_VALUE = 255;
+var STOP_READING_RESULTS = 254;
+
+// EVG read error bits - must match funcHandleEvgRead in DaliModule.cpp
+var ERR_MIN = 1;
+var ERR_MAX = 2;
+var ERR_POWER = 4;
+var ERR_FAILURE = 8;
+var ERR_FADE = 16;
+var ERR_DIMMCURVE = 32;
+var ERR_GROUPS_LOW = 64;
+var ERR_GROUPS_HIGH = 128;
+var DIMMING_CURVE_UNSUPPORTED = 255;
+
+// Assign response codes - must match DaliAddressing::AssigningResponse in DaliAddressing.h
+var ASSIGNING_RESPONSE_SUCCESS = 0;
+var ASSIGNING_RESPONSE_NOT_FREE = 1;
+var ASSIGNING_RESPONSE_NO_RESPONSE = 2;
+var ASSIGNING_RESPONSE_NO_RESPONSE_LONG = 3;
+// Note: AssigningResponse only spans 0-4, so a response of 12 can never
+// actually occur - kept here only to document the unreachable case below.
+var ASSIGNING_RESPONSE_CONFIRM_FAILED = 12;
+
+// Raw DALI device type (as resolved by funcHandleType/FUNC_READ_DEVICETYPE) - index matches the value.
+// Wording must stay in sync with the DT0-DT8 Enumeration texts of PT-deviceType in DaliModule.share.xml
+// (that enum is offset by +1 because it also has a "Deaktiviert" = 0 entry).
+var DEVICE_TYPE_LABELS = [
+    "DT0 - Fluoreszierend",
+    "DT1 - Eigenst\u00e4ndige Notallbeleuchtung",
+    "DT2 - Entladungslampe",
+    "DT3 - Niedervolt Halogen",
+    "DT4 - Gl\u00fchlampe",
+    "DT5 - DC Converter (1-10V, 0-10V)",
+    "DT6 - LED",
+    "DT7 - Schaltrelais",
+    "DT8 - Farbe"
+];
+
 function getFloat(data, offset) {
     var level = (data[offset] << 8 | data[offset + 1]);
     return level / 65534;
@@ -31,13 +87,92 @@ function arcToPercent(arc) {
     return Math.pow(10, ((arc - 1) / (253 / 3)) - 1);
 }
 
+// Device info read error bits - must match funcHandleReadInfo in DaliModule.cpp
+var ERR_INFO_MEMORY_READ = 1;
+var ERR_INFO_LEGACY_BANK0 = 2;
+var ERR_INFO_PHYSMIN = 4;
+
+// Splits a decimal GTIN into vendor name (or "Unknown (<country>)") and article/model
+// number (item reference, only known once the vendor's GS1 company prefix matches).
+// A GTIN-14 is 1 indicator digit + a 13-digit body (GS1 prefix + item reference + check
+// digit); a plain GTIN-13/EAN-13 is the same body with an implicit indicator digit "0".
+function parseGtin(gtinDecimal) {
+    var padded = gtinDecimal;
+    while (padded.length < 14)
+        padded = "0" + padded;
+    var body = padded.substr(1);
+
+    for (var i = 0; i < VENDOR_BY_GTIN_PREFIX.length; i++) {
+        var prefix = VENDOR_BY_GTIN_PREFIX[i].prefix;
+        if (body.indexOf(prefix) == 0) {
+            return {
+                vendor: VENDOR_BY_GTIN_PREFIX[i].name,
+                articleNumber: body.substring(prefix.length, body.length - 1)
+            };
+        }
+    }
+
+    var countryPrefix = parseInt(body.substr(0, 3), 10);
+    for (var j = 0; j < GTIN_COUNTRY_PREFIXES.length; j++) {
+        if (countryPrefix >= GTIN_COUNTRY_PREFIXES[j].min && countryPrefix <= GTIN_COUNTRY_PREFIXES[j].max)
+            return { vendor: "Unknown (" + GTIN_COUNTRY_PREFIXES[j].name + ")", articleNumber: "-" };
+    }
+    return { vendor: "Unknown", articleNumber: "-" };
+}
+
+// Unpacks 8 group membership bits (g<startIndex> .. g<startIndex+7>) from a
+// single byte read from the device into the matching ETS parameters.
+function unpackGroupByte(device, prefix, byteValue, startIndex) {
+    for (var bit = 0; bit < 8; bit++) {
+        setPara(device, prefix + "g" + (startIndex + bit), (byteValue >> bit) & 1);
+    }
+}
+
+// Packs 8 group membership parameters (g<startIndex> .. g<startIndex+7>) from
+// ETS into a single byte to send to the device.
+function packGroupByte(device, prefix, startIndex) {
+    var value = 0;
+    for (var bit = 0; bit < 8; bit++) {
+        value |= getParaInt(device, prefix + "g" + (startIndex + bit)) << bit;
+    }
+    return value;
+}
+
+function bytesToHex(data, start, end) {
+    var hex = "";
+    for (var i = start; i < end; i++) {
+        var b = data[i].toString(16).toUpperCase();
+        if (b.length < 2)
+            b = "0" + b;
+        hex += b;
+    }
+    return hex;
+}
+
+function bytesToDecimal(data, start, end) {
+    var value = 0;
+    for (var i = start; i < end; i++)
+        value = value * 256 + data[i];
+    return value.toString();
+}
+
+function clearDeviceInfoParas(device, prefix) {
+    setPara(device, prefix + "gtin", "-");
+    setPara(device, prefix + "vendor", "Unknown");
+    setPara(device, prefix + "articleNumber", "-");
+    setPara(device, prefix + "firmwareVersion", "-");
+    setPara(device, prefix + "serialNumber", "-");
+    setPara(device, prefix + "hardwareVersion", "-");
+    setPara(device, prefix + "physMinLevel", "-");
+}
+
 function dali_read(device, online, progress, context) {
     // Start read devicetype
     progress.setText(device.getMessage(calcMessage("DGW_devicetype_read")));
 
-    var data = [2, context.Channel - 1];
+    var data = [FUNC_READ_DEVICETYPE, context.Channel - 1];
     online.connect();
-    var resp = online.invokeFunctionProperty(160, 1, data); //invoke readdevicetype
+    var resp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data); //invoke readdevicetype
 
     if (resp[0] != 0) {
         // Dali Error:
@@ -47,7 +182,7 @@ function dali_read(device, online, progress, context) {
     var prefix = "DGW" + "_" + context.Channel;
 
     var para = device.getParameterByName(prefix + "deviceType");
-    if (resp[1] == 255) {
+    if (resp[1] == DISABLED_VALUE) {
         para.value = 0;
         throw new Error(device.getMessage(calcMessage("DGW_devicetype_unknown"))) // Unknown DeviceType
     }
@@ -75,88 +210,76 @@ function dali_settingsRead(device, online, progress, context) {
     Log.info("Prefix: " + prefix);
     progress.setText(device.getMessage(calcMessage("DGW_evgReadStart"))); // Start reading Data from EVG
     online.connect();
-    var data = online.invokeFunctionProperty(160, 1, [11, context.Channel - 1]);
+    var data = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_EVG_READ, context.Channel - 1]);
     progress.setProgress(10);
     if (data[0] != 0)
         throw new Error("Dali Error: " + data[0]);
     var errors = "";
 
-    if (data[9] & 1) 
+    if (data[9] & ERR_MIN) 
         errors += "Min Level, ";
     else {
         setPara(device, prefix + "min", arcToPercent(data[1]).toFixed(2).replace(".", ","));
     }
-    if (data[9] & 2)
+    if (data[9] & ERR_MAX)
         errors += "Max Level, ";
     else {
         setPara(device, prefix + "max", arcToPercent(data[2]).toFixed(2).replace(".", ","));
     }
-    if (data[9] & 4) 
+    if (data[9] & ERR_POWER) 
         errors += "Power On, ";
     else {
-        setPara(device, prefix + "poweron", data[3] == 255);
-        if (data[3] != 255)
+        setPara(device, prefix + "poweron", data[3] == DISABLED_VALUE);
+        if (data[3] != DISABLED_VALUE)
             setPara(device, prefix + "poweronlevel", arcToPercent(data[3]).toFixed(2).replace(".", ","));
     }
-    if (data[9] & 8)
+    if (data[9] & ERR_FAILURE)
         errors += "Failure On, ";
     else {
-        setPara(device, prefix + "failureon", data[4] == 255);
-        if (data[4] != 255)
+        setPara(device, prefix + "failureon", data[4] == DISABLED_VALUE);
+        if (data[4] != DISABLED_VALUE)
             setPara(device, prefix + "failureonlevel", arcToPercent(data[4]).toFixed(2).replace(".", ","));
     }
-    if (data[9] & 16)
+    if (data[9] & ERR_FADE)
         errors += "FadeTime/Rate, ";
     else {
         setPara(device, prefix + "fadeTime", (data[5] >> 4).toString());
         setPara(device, prefix + "fadeRate", (data[5] & 15).toString());
     }
+    if (data[9] & ERR_DIMMCURVE)
+        errors += "Dimmkurve, ";
+    else
+        setPara(device, prefix + "dimmingCurve", data[6]);
     //1 byte free
-    if (data[9] & 64)
+    if (data[9] & ERR_GROUPS_LOW)
         errors += "Groups 0-7, ";
-    else {
-        setPara(device, prefix + "g0", (data[7] & 1));
-        setPara(device, prefix + "g1", ((data[7] >> 1) & 1));
-        setPara(device, prefix + "g2", ((data[7] >> 2) & 1));
-        setPara(device, prefix + "g3", ((data[7] >> 3) & 1));
-        setPara(device, prefix + "g4", ((data[7] >> 4) & 1));
-        setPara(device, prefix + "g5", ((data[7] >> 5) & 1));
-        setPara(device, prefix + "g6", ((data[7] >> 6) & 1));
-        setPara(device, prefix + "g7", ((data[7] >> 7) & 1));
-    }
-    if (data[9] & 128)
+    else
+        unpackGroupByte(device, prefix, data[7], 0);
+    if (data[9] & ERR_GROUPS_HIGH)
         errors += "Groups 8-15, ";
-    else {
-        setPara(device, prefix + "g8", (data[8] & 1));
-        setPara(device, prefix + "g9", ((data[8] >> 1) & 1));
-        setPara(device, prefix + "g10", ((data[8] >> 2) & 1));
-        setPara(device, prefix + "g11", ((data[8] >> 3) & 1));
-        setPara(device, prefix + "g12", ((data[8] >> 4) & 1));
-        setPara(device, prefix + "g13", ((data[8] >> 5) & 1));
-        setPara(device, prefix + "g14", ((data[8] >> 6) & 1));
-        setPara(device, prefix + "g15", ((data[8] >> 7) & 1));
-    }
+    else
+        unpackGroupByte(device, prefix, data[8], 8);
 
     progress.setProgress(20);
 
     data = [
-        13,
+        FUNC_GET_SCENE,
         context.Channel - 1,
         0, //scene number
         getParaInt(device, prefix + "deviceType"),
         getParaInt(device, prefix + "colorType")
     ];
 
-    for (var i = 0; i < 16; i++)
+    for (var i = 0; i < SCENE_COUNT; i++)
     {
         progress.setText(device.getMessage(calcMessage("DGW_evgReadScene")) + i.toString()); // Parsing data
         data[2] = i;
 
-        resp = online.invokeFunctionProperty(160, 1, data);
+        resp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
 
-        setPara(device, prefix + "s" + i + "t", resp[0] != 255);
+        setPara(device, prefix + "s" + i + "t", resp[0] != DISABLED_VALUE);
 
-        if (resp[0] != 255) {
+        if (resp[0] != DISABLED_VALUE) {
             setPara(device, prefix + "s" + i + "v", arcToPercent(resp[0]).toFixed(2).replace(".", ","));
             //deviceType is Color
             if (data[3] == 9) {
@@ -164,8 +287,6 @@ function dali_settingsRead(device, online, progress, context) {
                 if (data[4] == 2) {
                     var kelvin = parseInt((resp[1] << 8) | resp[2]);
                     setPara(device, prefix + "s" + i + "ct", kelvin);
-                    // data[7] = kelvin &gt;&gt; 8;
-                    // data[8] = kelvin &amp; 256;
                 } else { //it is RGB
                     var color = (resp[1] << 16) | (resp[2] << 8) | resp[3];
                     var hexString = "#" + ("000000" + color.toString(16).toUpperCase()).slice(-6);
@@ -188,13 +309,11 @@ function dali_settingsWrite(device, online, progress, context) {
     var prefix = "DGW" + "_" + context.Channel;
     Log.info("Start writing settings to EVG");
     Log.info("Prefix: " + prefix);
-    // if(getParaInt("fadeTime") != "0" &amp;&amp; getParaInt("fadeTimeExtendedMultiplier") != "0")
-    //     throw new Error(device.getMessage(4000018)); // error 
     progress.setText(device.getMessage(calcMessage("DGW_evgWriteStart"))); // start
 
     var index = 0;
     var data = [];
-    data[index++] = 10;
+    data[index++] = FUNC_EVG_WRITE;
     data[index++] = context.Channel - 1;
     var temp = getBytes(getParaFloat(device, prefix + "min") / 100.0);
     data[index++] = temp >> 8;
@@ -207,50 +326,33 @@ function dali_settingsWrite(device, online, progress, context) {
         data[index++] = temp >> 8;
         data[index++] = temp & 255;
     } else {
-        data[index++] = 255;
-        data[index++] = 255;
+        data[index++] = DISABLED_VALUE;
+        data[index++] = DISABLED_VALUE;
     }
     if (!getParaBool(device, prefix + "failureon")) {
         temp = getBytes(getParaFloat(device, prefix + "failureonlevel") / 100.0);
         data[index++] = temp >> 8;
         data[index++] = temp & 255;
     } else {
-        data[index++] = 255;
-        data[index++] = 255;
+        data[index++] = DISABLED_VALUE;
+        data[index++] = DISABLED_VALUE;
     }
 
     var fade = getParaInt(device, prefix + "fadeTime");
     fade = fade << 4;
     fade |= getParaInt(device, prefix + "fadeRate");
     data[index++] = fade;
-    data[index++] = 0;//1byte free
-    var groups = getParaInt(device, prefix + "g0");
-    groups |= getParaInt(device, prefix + "g1") << 1;
-    groups |= getParaInt(device, prefix + "g2") << 2;
-    groups |= getParaInt(device, prefix + "g3") << 3;
-    groups |= getParaInt(device, prefix + "g4") << 4;
-    groups |= getParaInt(device, prefix + "g5") << 5;
-    groups |= getParaInt(device, prefix + "g6") << 6;
-    groups |= getParaInt(device, prefix + "g7") << 7;
-    data[index++] = groups;
-    groups = getParaInt(device, prefix + "g8");
-    groups |= getParaInt(device, prefix + "g9") << 1;
-    groups |= getParaInt(device, prefix + "g10") << 2;
-    groups |= getParaInt(device, prefix + "g11") << 3;
-    groups |= getParaInt(device, prefix + "g12") << 4;
-    groups |= getParaInt(device, prefix + "g13") << 5;
-    groups |= getParaInt(device, prefix + "g14") << 6;
-    groups |= getParaInt(device, prefix + "g15") << 7;
-    data[index++] = groups;
+    data[index++] = getParaInt(device, prefix + "dimmingCurve");
+    data[index++] = packGroupByte(device, prefix, 0);
+    data[index++] = packGroupByte(device, prefix, 8);
 
     progress.setText(device.getMessage(calcMessage("DGW_evgWriteTransmit"))); // transmit
     online.connect();
-    var resp = online.invokeFunctionProperty(160, 1, data);
-    progress.setText("after");
+    var resp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
     progress.setProgress(20);
 
     data = [
-        12,
+        FUNC_SET_SCENE,
         context.Channel - 1, // + 128; only for group!
         0, //scene number
         0, //enabled
@@ -259,7 +361,7 @@ function dali_settingsWrite(device, online, progress, context) {
         0, 0, 0, 0 //will be filled later
     ];
 
-    for (var i = 0; i < 16; i++)
+    for (var i = 0; i < SCENE_COUNT; i++)
     {
         data[2] = i;
         var isEnabled = getParaBool(device, prefix + "s" + i + "t");
@@ -269,12 +371,12 @@ function dali_settingsWrite(device, online, progress, context) {
             data[6] = temp >> 8;
             data[7] = temp & 255;
         } else {
-            data[6] = 255;
-            data[7] = 255;
+            data[6] = DISABLED_VALUE;
+            data[7] = DISABLED_VALUE;
         }
 
-        Log.info("Schreibe Szene " + i);
-        Log.info("isEnabled: " + (isEnabled ? "ja" : "nein"));
+        Log.info("Writing scene " + i);
+        Log.info("isEnabled: " + (isEnabled ? "yes" : "no"));
         Log.info("deviceType: " + data[4]);
         Log.info("colorType: " + data[5]);
         //deviceType is Color
@@ -296,8 +398,8 @@ function dali_settingsWrite(device, online, progress, context) {
             }
         }
 
-        progress.setText(device.getMessage(calcMessage("DGW_evgWriteScene")) + i); // Übertrage Szene i
-        resp = online.invokeFunctionProperty(160, 1, data);
+        progress.setText(device.getMessage(calcMessage("DGW_evgWriteScene")) + i); // Transmitting scene i
+        resp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
         progress.setProgress(i * 5 + 25);
     }
 
@@ -312,50 +414,48 @@ function dali_assingAddr(device, online, progress, context) {
     //assign address to device
     progress.setText(device.getMessage(calcMessage("DGW_addr_start")));
 
-    var bytes = [4, parseInt(ashort.value)];
+    var bytes = [FUNC_ASSIGN_ADDRESS, parseInt(ashort.value)];
     for (var c = 0; c < along.value.length; c += 2)
     bytes.push(parseInt(along.value.substr(c, 2), 16));
 
     online.connect();
 
-    online.invokeFunctionProperty(160, 1, bytes);
+    online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, bytes);
 
     bytes = [];
     while (true) {
         if (progress.isCanceled()) {
-            online.readFunctionProperty(160, 1, [4, 255]);
+            online.readFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_ASSIGN_ADDRESS, DISABLED_VALUE]);
             return;
         }
 
-        var resp = online.readFunctionProperty(160, 1, [4]);
+        var resp = online.readFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_ASSIGN_ADDRESS]);
 
         if (resp[0] == 0)
-            continue; // we are not finished yet
+            continue;
 
         switch (resp[1]) {
-            case 0:
-                //address set successfully
+            case ASSIGNING_RESPONSE_SUCCESS:
                 progress.setText(device.getMessage(calcMessage("DGW_addr_success")));
                 return;
 
-            case 1:
-                //address is already in use
+            case ASSIGNING_RESPONSE_NOT_FREE:
                 throw new Error(device.getMessage(calcMessage("DGW_addr_double")));
 
-            case 2:
-                //device wont answer
+            case ASSIGNING_RESPONSE_NO_RESPONSE:
                 throw new Error(device.getMessage(calcMessage("DGW_response_timeout")));
 
-            case 3:
-                //long address dont exists
+            case ASSIGNING_RESPONSE_NO_RESPONSE_LONG:
                 throw new Error(device.getMessage(calcMessage("DGW_addr_long_dont_exists")));
 
-            case 12:
+            // TODO NOTE: stateHandleAssign() in DaliModule.cpp only ever returns
+            // resp[1] in range 0-4 (AssigningResponse enum), so this case is
+            // currently unreachable - kept as-is, not touched by this refactor.
+            case ASSIGNING_RESPONSE_CONFIRM_FAILED:
                 //short address confirm failed
                 throw new Error(device.getMessage(calcMessage("DGW_addr_confirm_failed")));
 
             default:
-                //dali error
                 progress.setText(device.getMessage(calcMessage("DGW_dali_error")));
                 return;
 
@@ -366,7 +466,7 @@ function dali_assingAddr(device, online, progress, context) {
 function dali_scan(device, online, progress, context) {
     online.connect();
 
-    var data = [3];
+    var data = [FUNC_SCAN];
     var para2 = device.getParameterByName("DGW_onlyUnaddressed");
     data.push(parseInt(para2.value));
     para2 = device.getParameterByName("DGW_dontRandomize");
@@ -377,13 +477,15 @@ function dali_scan(device, online, progress, context) {
     data.push(parseInt(para2.value));
 
     //start addressing
-    online.invokeFunctionProperty(160, 1, data);
+    online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
     progress.setText(device.getMessage(calcMessage("DGW_scanStart")));
 
-    for (var i = 0; i < 64; i++)
+    for (var i = 0; i < CHANNEL_COUNT; i++)
     {
-        var para = device.getParameterByName("DGW_ballast" + i);
-        para.value = "";
+        device.getParameterByName("DGW_ballastLong" + i).value = "";
+        device.getParameterByName("DGW_ballastShort" + i).value = "";
+        device.getParameterByName("DGW_ballastType" + i).value = "";
+        device.getParameterByName("DGW_ballastVendor" + i).value = "";
     }
 
     var counter = 0;
@@ -391,14 +493,14 @@ function dali_scan(device, online, progress, context) {
     while (true) {
         if (progress.isCanceled()) {
             //get State with max devicecount so device will stop and delete variables
-            online.readFunctionProperty(160, 1, [7, 254]);
+            online.readFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_FOUND_EVGS, STOP_READING_RESULTS]);
             return;
         }
 
-        var resp = online.readFunctionProperty(160, 1, [3]);
+        var resp = online.readFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_SCAN]);
         if (resp[0]) break;
         progress.setText(resp[1] + " " + device.getMessage(calcMessage("DGW_scanFound")));
-        progress.setProgress((100.0 / 64) * resp[1]);
+        progress.setProgress((100.0 / CHANNEL_COUNT) * resp[1]);
 
         //just skip some time so we dont overkill the 
         //~2s depends on device
@@ -414,26 +516,47 @@ function dali_scan(device, online, progress, context) {
     while (true) {
         if (progress.isCanceled()) {
             //get State with max devicecount so device will stop and delete variables
-            online.readFunctionProperty(160, 1, [7, 254]);
+            online.readFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_FOUND_EVGS, STOP_READING_RESULTS]);
             return;
         }
 
-        var resp = online.readFunctionProperty(160, 1, [7, counter]);
+        var resp = online.readFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_FOUND_EVGS, counter]);
 
         if (resp[0]) {
             //found ballast
-            var high = "";
-            if (resp[1] < 16) high = "0";
-            high += resp[1].toString(16);
-            if (resp[2] < 16) high += "0";
-            high += resp[2].toString(16);
-            if (resp[3] < 16) high += "0";
-            high += resp[3].toString(16);
-            var para = device.getParameterByName("DGW_ballast" + counter);
-            high = "0x" + high;
-            if (resp[4] < 99)
-            high += " -> " + resp[4];
-            para.value = high;
+            var longAddr = bytesToHex(resp, 1, 4);
+            var shortAddr = resp[4];
+
+            device.getParameterByName("DGW_ballastLong" + counter).value = longAddr;
+
+            if (shortAddr < CHANNEL_COUNT) {
+                device.getParameterByName("DGW_ballastShort" + counter).value = shortAddr.toString();
+
+                try {
+                    var typeResp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_READ_DEVICETYPE, shortAddr]);
+                    if (typeResp[0] == 0 && typeResp[1] < DEVICE_TYPE_LABELS.length)
+                        device.getParameterByName("DGW_ballastType" + counter).value = DEVICE_TYPE_LABELS[typeResp[1]];
+                    else
+                        device.getParameterByName("DGW_ballastType" + counter).value = "Unknown";
+                } catch (e) {
+                    device.getParameterByName("DGW_ballastType" + counter).value = "Unknown";
+                }
+
+                try {
+                    var infoResp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_READ_INFO, shortAddr]);
+                    if (infoResp[0] == 0 && !(infoResp[21] & ERR_INFO_MEMORY_READ))
+                        device.getParameterByName("DGW_ballastVendor" + counter).value = parseGtin(bytesToDecimal(infoResp, 1, 7)).vendor;
+                    else
+                        device.getParameterByName("DGW_ballastVendor" + counter).value = "Unknown";
+                } catch (e) {
+                    device.getParameterByName("DGW_ballastVendor" + counter).value = "Unknown";
+                }
+            } else {
+                device.getParameterByName("DGW_ballastShort" + counter).value = "-";
+                device.getParameterByName("DGW_ballastType" + counter).value = "-";
+                device.getParameterByName("DGW_ballastVendor" + counter).value = "-";
+            }
+
             counter++;
         } else {
             break;
@@ -455,9 +578,54 @@ function dali_identify(device, online, progress, context) {
         }
     }
     online.connect();
-    var data = [14];
+    var data = [FUNC_IDENTIFY];
     data.push(channel);
     data.push(context.group);
     data.push(context.stop);
-    online.invokeFunctionProperty(160, 1, data);
+    online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
+}
+
+function dali_readInfo(device, online, progress, context) {
+    // Reads GTIN, firmware version, serial number, hardware version and the
+    // physical minimum arc-power level from Memory Bank 0 (IEC 62386-102).
+    // Note: DALI does not expose a manufacturer name, article number or device
+    // name as readable text - only these numeric identity fields are available.
+    var prefix = "DGW" + "_" + context.Channel;
+
+    try {
+        progress.setText("Reading device info");
+
+        var data = [FUNC_READ_INFO, context.Channel - 1];
+        online.connect();
+        var resp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
+
+        if (resp[0] != 0)
+            throw new Error("Dali Error: " + resp[0]);
+
+        var errorByte = resp[21];
+        if (errorByte & ERR_INFO_MEMORY_READ)
+            throw new Error("Gear did not respond to Memory Bank 0 read");
+
+        var gtin = bytesToDecimal(resp, 1, 7);
+        var gtinInfo = parseGtin(gtin);
+        setPara(device, prefix + "gtin", gtin);
+        setPara(device, prefix + "vendor", gtinInfo.vendor);
+        setPara(device, prefix + "articleNumber", gtinInfo.articleNumber);
+        setPara(device, prefix + "firmwareVersion", resp[7] + "." + resp[8]);
+        setPara(device, prefix + "serialNumber", bytesToDecimal(resp, 9, 17));
+        setPara(device, prefix + "hardwareVersion", resp[17] + "." + resp[18]);
+
+        if (errorByte & ERR_INFO_PHYSMIN)
+            setPara(device, prefix + "physMinLevel", "0");
+        else
+            setPara(device, prefix + "physMinLevel", arcToPercent(resp[20]).toFixed(2).replace(".", ","));
+
+        if (errorByte & ERR_INFO_LEGACY_BANK0)
+            progress.setText("Read (legacy DALI gear, serial number may be incomplete)");
+        else
+            progress.setText("Device info read successfully");
+    } catch (e) {
+        clearDeviceInfoParas(device, prefix);
+        progress.setText("Could not read device info: " + e.message);
+    }
 }

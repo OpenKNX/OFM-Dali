@@ -186,6 +186,14 @@
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="4" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%2%CC%131" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%132" Name="%C%dimmingCurve" ParameterType="%AID%_PT-dimmingCurve" Text="" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%133" Name="%C%gtin" ParameterType="%AID%_PT-name30" Text="" Access="Read" Value="" />
+              <Parameter Id="%AID%_P-%T%2%CC%134" Name="%C%firmwareVersion" ParameterType="%AID%_PT-name14" Text="" Access="Read" Value="" />
+              <Parameter Id="%AID%_P-%T%2%CC%135" Name="%C%serialNumber" ParameterType="%AID%_PT-name30" Text="" Access="Read" Value="" />
+              <Parameter Id="%AID%_P-%T%2%CC%136" Name="%C%hardwareVersion" ParameterType="%AID%_PT-name14" Text="" Access="Read" Value="" />
+              <Parameter Id="%AID%_P-%T%2%CC%137" Name="%C%vendor" ParameterType="%AID%_PT-name30" Text="" Access="Read" Value="" />
+              <Parameter Id="%AID%_P-%T%2%CC%138" Name="%C%physMinLevel" ParameterType="%AID%_PT-floatPercent" Text="" Access="Read" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%139" Name="%C%articleNumber" ParameterType="%AID%_PT-name30" Text="" Access="Read" Value="" />
             </Parameters>
             <ParameterRefs>
               <ParameterRef RefId="%AID%_P-%T%2%CC%001" Id="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101" Name="%C%deviceType" />
@@ -266,6 +274,14 @@
               <ParameterRef RefId="%AID%_P-%T%2%CC%085" Id="%AID%_P-%T%2%CC%085_R-%T%2%CC%08501" Name="%C%tempMax" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%086" Id="%AID%_P-%T%2%CC%086_R-%T%2%CC%08601" Name="%C%hcl" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%087" Id="%AID%_P-%T%2%CC%087_R-%T%2%CC%08701" Name="%C%fadeRate" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%132" Id="%AID%_P-%T%2%CC%132_R-%T%2%CC%13201" Name="%C%dimmingCurve" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%133" Id="%AID%_P-%T%2%CC%133_R-%T%2%CC%13301" Name="%C%gtin" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%134" Id="%AID%_P-%T%2%CC%134_R-%T%2%CC%13401" Name="%C%firmwareVersion" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%135" Id="%AID%_P-%T%2%CC%135_R-%T%2%CC%13501" Name="%C%serialNumber" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%136" Id="%AID%_P-%T%2%CC%136_R-%T%2%CC%13601" Name="%C%hardwareVersion" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%137" Id="%AID%_P-%T%2%CC%137_R-%T%2%CC%13701" Name="%C%vendor" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%138" Id="%AID%_P-%T%2%CC%138_R-%T%2%CC%13801" Name="%C%physMinLevel" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%139" Id="%AID%_P-%T%2%CC%139_R-%T%2%CC%13901" Name="%C%articleNumber" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%088" Id="%AID%_P-%T%2%CC%088_R-%T%2%CC%08801" Name="%C%queryTime" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%089" Id="%AID%_P-%T%2%CC%089_R-%T%2%CC%08901" Name="%C%xyIgnore" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%090" Id="%AID%_P-%T%2%CC%090_R-%T%2%CC%09001" Name="%C%s0cc" />
@@ -518,6 +534,38 @@
                     <when test="1">
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="" />
                       <ParameterSeparator Id="%AID%_PS-nnn" Text="Einstellungen für das EVG bitte links im Tab &quot;DALI Einstellungen&quot; vornehmen." UIHint="Information" />
+                      <ParameterBlock Id="%AID%_PB-nnn" Text="Geräteinformationen" Icon="idea">
+                        <Button Id="%AID%_B-%T%2%CC%006" Text="Geräteinfo auslesen" Name="readInfo" EventHandler="dali_readInfo" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
+                        <ParameterBlock Id="%AID%_PB-nnn" Inline="true" Layout="Grid">
+                          <Rows>
+                            <Row Id="%AID%_PB-nnn_R-1" Name="gtin" />
+                            <Row Id="%AID%_PB-nnn_R-2" Name="vendor" />
+                            <Row Id="%AID%_PB-nnn_R-3" Name="article" />
+                            <Row Id="%AID%_PB-nnn_R-4" Name="fw" />
+                            <Row Id="%AID%_PB-nnn_R-5" Name="serial" />
+                            <Row Id="%AID%_PB-nnn_R-6" Name="hw" />
+                            <Row Id="%AID%_PB-nnn_R-7" Name="physMin" />
+                          </Rows>
+                          <Columns>
+                            <Column Id="%AID%_PB-nnn_C-1" Name="label" Width="40%" />
+                            <Column Id="%AID%_PB-nnn_C-2" Name="value" Width="60%" />
+                          </Columns>
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="GTIN" Cell="1,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%133_R-%T%2%CC%13301" Cell="1,2" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Hersteller" Cell="2,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%137_R-%T%2%CC%13701" Cell="2,2" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Artikel-/Modellnummer" Cell="3,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%139_R-%T%2%CC%13901" Cell="3,2" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Firmware-Version" Cell="4,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%134_R-%T%2%CC%13401" Cell="4,2" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Seriennummer" Cell="5,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%135_R-%T%2%CC%13501" Cell="5,2" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Hardware-Version" Cell="6,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%136_R-%T%2%CC%13601" Cell="6,2" />
+                          <ParameterSeparator Id="%AID%_PS-nnn" Text="Physical minimum dimming level" Cell="7,1" />
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%138_R-%T%2%CC%13801" Cell="7,2" />
+                        </ParameterBlock>
+                      </ParameterBlock>
                       <ParameterBlock Id="%AID%_PB-nnn" Text="DALI Einstellungen" Name="evg" Icon="idea">
                         <Button Id="%AID%_B-%T%2%CC%002" Text="Aus Gerät lesen" Name="settingsRead" EventHandler="dali_settingsRead" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
                         <Button Id="%AID%_B-%T%2%CC%003" Text="Auf Gerät übertragen" Name="settingsWrite" EventHandler="dali_settingsWrite" EventHandlerParameters="{ &quot;Channel&quot;: %C% }" EventHandlerOnline="ConnectionOriented" />
@@ -532,6 +580,7 @@
                             <Row Id="%AID%_PB-nnn_R-6" Name="fadeTime" />
                             <Row Id="%AID%_PB-nnn_R-7" Name="fadeTimeExt" />
                             <Row Id="%AID%_PB-nnn_R-8" Name="fadeRate" />
+                            <Row Id="%AID%_PB-nnn_R-9" Name="dimmingCurve" />
                           </Rows>
                           <Columns>
                             <Column Id="%AID%_PB-nnn_C-1" Name="title" Width="25%" />
@@ -553,6 +602,8 @@
                               <ParameterRefRef RefId="%AID%_P-%T%2%CC%083_R-%T%2%CC%08301" Cell="7,3" />
                               <ParameterSeparator Id="%AID%_PS-nnn" Text="Fade Rate" Cell="8,1" />
                               <ParameterRefRef RefId="%AID%_P-%T%2%CC%087_R-%T%2%CC%08701" Cell="8,3" />
+                              <ParameterSeparator Id="%AID%_PS-nnn" Text="Dimmkurve" Cell="9,1" />
+                              <ParameterRefRef RefId="%AID%_P-%T%2%CC%132_R-%T%2%CC%13201" Cell="9,3" />
                             </when>
                             <when test="=8">
                               <ParameterSeparator Id="%AID%_PS-nnn" Text="0% = Aus" Cell="2,3" />
