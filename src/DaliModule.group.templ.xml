@@ -116,10 +116,10 @@
               <ParameterRef RefId="%AID%_P-%T%3%CC%028" Id="%AID%_P-%T%3%CC%028_R-%T%3%CC%02801" Name="%C%hclCurve" />
               <ParameterRef RefId="%AID%_P-%T%3%CC%029" Id="%AID%_P-%T%3%CC%029_R-%T%3%CC%02901" Name="%C%dimmLock" />
               <ParameterRef RefId="%AID%_P-%T%3%CC%030" Id="%AID%_P-%T%3%CC%030_R-%T%3%CC%03001" Name="%C%hclStart" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%031" Id="%AID%_P-%T%3%CC%031_R-%T%3%CC%03101" Name="%C%hcl_auto_bri" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%032" Id="%AID%_P-%T%3%CC%032_R-%T%3%CC%03201" Name="%C%hcl_auto_col" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%033" Id="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" Name="%C%hcl_manu_off" />
-              <ParameterRef RefId="%AID%_P-%T%3%CC%034" Id="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" Name="%C%hcl_manu_day" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%031" Id="%AID%_P-%T%3%CC%031_R-%T%3%CC%03101" Name="%C%hcl_manu_bri" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%032" Id="%AID%_P-%T%3%CC%032_R-%T%3%CC%03201" Name="%C%hcl_manu_col" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%033" Id="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" Name="%C%hcl_auto_off" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%034" Id="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" Name="%C%hcl_auto_day" />
               <ParameterRef RefId="%AID%_P-%T%3%CC%035" Id="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" Name="%C%scene" />
             </ParameterRefs>
             <ComObjectTable>
