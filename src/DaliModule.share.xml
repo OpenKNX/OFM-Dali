@@ -723,10 +723,10 @@
                 </Rows>
                 <Columns>
                   <Column Id="%AID%_PB-nnn_C-1" Name="nr" Width="8%" />
-                  <Column Id="%AID%_PB-nnn_C-2" Name="long" Width="27%" />
-                  <Column Id="%AID%_PB-nnn_C-3" Name="short" Width="20%" />
-                  <Column Id="%AID%_PB-nnn_C-4" Name="type" Width="25%" />
-                  <Column Id="%AID%_PB-nnn_C-5" Name="vendor" Width="20%" />
+                  <Column Id="%AID%_PB-nnn_C-2" Name="long" Width="16%" />
+                  <Column Id="%AID%_PB-nnn_C-3" Name="short" Width="15%" />
+                  <Column Id="%AID%_PB-nnn_C-4" Name="type" Width="19%" />
+                  <Column Id="%AID%_PB-nnn_C-5" Name="vendor" Width="42%" />
                 </Columns>
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Nr." Cell="1,1" />
                 <ParameterSeparator Id="%AID%_PS-nnn" Text="Langadresse" Cell="1,2" />
