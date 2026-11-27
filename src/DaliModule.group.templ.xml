@@ -44,7 +44,7 @@
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="7" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%3%CC%019" Name="%C%colorType" ParameterType="%AID%_PT-colorType" Text="Farbe ansteuern per" Value="0">
-                <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="2" />
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="17" BitOffset="2" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%3%CC%020" Name="%C%colorSpace" ParameterType="%AID%_PT-colorSpace" Text="Farbe übertragen per" Value="1">
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="3" BitOffset="7" />
@@ -89,6 +89,12 @@
                 <Memory CodeSegment="%AID%_RS-04-00000" Offset="17" BitOffset="1" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%3%CC%035" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
+              <Parameter Id="%AID%_P-%T%3%CC%036" Name="%C%rgbwBri" ParameterType="%AID%_PT-rgbwBri" Text="Helligkeit bei RGBW" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="17" BitOffset="5" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%T%3%CC%037" Name="%C%unlockRestore" ParameterType="%AID%_PT-noyes" Text="Bei Entsperren vorherigen Zustand wiederherstellen" Value="0">
+                <Memory CodeSegment="%AID%_RS-04-00000" Offset="4" BitOffset="2" />
+              </Parameter>
             </Parameters>
             <ParameterRefs>
               <ParameterRef RefId="%AID%_P-%T%3%CC%001" Id="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" Name="%C%name" />
@@ -121,6 +127,8 @@
               <ParameterRef RefId="%AID%_P-%T%3%CC%033" Id="%AID%_P-%T%3%CC%033_R-%T%3%CC%03301" Name="%C%hcl_auto_off" />
               <ParameterRef RefId="%AID%_P-%T%3%CC%034" Id="%AID%_P-%T%3%CC%034_R-%T%3%CC%03401" Name="%C%hcl_auto_day" />
               <ParameterRef RefId="%AID%_P-%T%3%CC%035" Id="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501" Name="%C%scene" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%036" Id="%AID%_P-%T%3%CC%036_R-%T%3%CC%03601" Name="%C%rgbwBri" />
+              <ParameterRef RefId="%AID%_P-%T%3%CC%037" Id="%AID%_P-%T%3%CC%037_R-%T%3%CC%03701" Name="%C%unlockRestore" />
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%3%CC%000" Name="%C%switch" Text="G%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
@@ -173,6 +181,8 @@
               <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00703" FunctionText="Farbtemperatur Status" DatapointType="DPST-7-600" ObjectSize="2 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
               <ComObjectRef RefId="%AID%_O-%T%3%CC%006" Id="%AID%_O-%T%3%CC%006_R-%T%3%CC%00604" FunctionText="Farbe xyY / xy" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
               <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00704" FunctionText="Farbe xyY / xy Status" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%006" Id="%AID%_O-%T%3%CC%006_R-%T%3%CC%00605" FunctionText="Farbe RGBW" DatapointType="DPST-251-600" ObjectSize="6 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
+              <ComObjectRef RefId="%AID%_O-%T%3%CC%007" Id="%AID%_O-%T%3%CC%007_R-%T%3%CC%00705" FunctionText="Farbe RGBW Status" DatapointType="DPST-251-600" ObjectSize="6 Bytes" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
               <ComObjectRef RefId="%AID%_O-%T%3%CC%017" Id="%AID%_O-%T%3%CC%017_R-%T%3%CC%01701" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
               <ComObjectRef RefId="%AID%_O-%T%3%CC%018" Id="%AID%_O-%T%3%CC%018_R-%T%3%CC%01801" TextParameterRefId="%AID%_P-%T%3%CC%001_R-%T%3%CC%00101" />
             </ComObjectRefs>
@@ -288,6 +298,16 @@
                           <ComObjectRefRef RefId="%AID%_O-%T%3%CC%006_R-%T%3%CC%00604" />
                           <ComObjectRefRef RefId="%AID%_O-%T%3%CC%007_R-%T%3%CC%00704" />
                         </when>
+                        <when test="=4">
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%036_R-%T%3%CC%03601" />
+                          <choose ParamRefId="%AID%_P-%T%3%CC%036_R-%T%3%CC%03601">
+                            <when test="=1">
+                              <ParameterSeparator Id="%AID%_PS-nnn" Text="Der größte Kanal des RGBW-Werts ist die Helligkeit (z. B. Home Assistant ohne Helligkeitsadresse). Das Objekt &quot;Dimmen absolut&quot; stellt den Pegel weiterhin direkt, der RGBW-Status passt sich an." UIHint="Information" />
+                            </when>
+                          </choose>
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%006_R-%T%3%CC%00605" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%3%CC%007_R-%T%3%CC%00705" />
+                        </when>
                       </choose>
                       <choose ParamRefId="%AID%_P-%T%3%CC%020_R-%T%3%CC%02001">
                         <when test="!=0">
@@ -303,6 +323,14 @@
                   <choose ParamRefId="%AID%_P-%T%3%CC%035_R-%T%3%CC%03501">
                     <when test="1">
                       <ComObjectRefRef RefId="%AID%_O-%T%3%CC%018_R-%T%3%CC%01801" />
+                    </when>
+                  </choose>
+                  <choose ParamRefId="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401">
+                    <when test="1">
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Treppenlicht" UIHint="Headline" Icon="timer-outline" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%006_R-%T%3%CC%00601" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%007_R-%T%3%CC%00701" />
+                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%005_R-%T%3%CC%00501" />
                     </when>
                   </choose>
                   <choose ParamRefId="%AID%_P-%T%3%CC%003_R-%T%3%CC%00301">
@@ -322,14 +350,16 @@
                           <ParameterRefRef RefId="%AID%_P-%T%3%CC%011_R-%T%3%CC%01101" />
                         </when>
                       </choose>
-                    </when>
-                  </choose>
-                  <choose ParamRefId="%AID%_P-%T%3%CC%004_R-%T%3%CC%00401">
-                    <when test="1">
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Treppenlicht" UIHint="Headline" Icon="timer-outline" />
-                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%006_R-%T%3%CC%00601" />
-                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%007_R-%T%3%CC%00701" />
-                      <ParameterRefRef RefId="%AID%_P-%T%3%CC%005_R-%T%3%CC%00501" />
+                      <choose ParamRefId="%AID%_P-%T%3%CC%019_R-%T%3%CC%01901">
+                        <when test="4">
+                          <ParameterRefRef RefId="%AID%_P-%T%3%CC%037_R-%T%3%CC%03701" />
+                          <choose ParamRefId="%AID%_P-%T%3%CC%037_R-%T%3%CC%03701">
+                            <when test="1">
+                              <ParameterSeparator Id="%AID%_PS-nnn" Text="RGBW: Befehle während der Sperre werden gespeichert. Beim Entsperren kommt der gespeicherte Zustand (Ein/Aus, Helligkeit, Farbe); &quot;Verhalten bei Entsperren&quot; gilt dann nicht." UIHint="Information" />
+                            </when>
+                          </choose>
+                        </when>
+                      </choose>
                     </when>
                   </choose>
                 </when>
