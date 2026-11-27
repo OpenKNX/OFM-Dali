@@ -1,7 +1,6 @@
 // GTIN company-prefix -> vendor lookup for common DALI gear manufacturers.
 // Checked against the GTIN body (indicator digit stripped).
 var VENDOR_BY_GTIN_PREFIX = [
-    // eldoLED
     { prefix: "8717748", name: "eldoLED (Acuity Brands)" },
     { prefix: "6970602", name: "MiBoxer / Futlight" },
     { prefix: "4038816", name: "MiBoxer (Synergy 21 rebrand)" },
