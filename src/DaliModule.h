@@ -63,6 +63,11 @@ class DaliModule : public OpenKNX::Module
 		uint8_t _currentIdentifyDevice = 0;
 #endif
 		bool _currentLockState = false;
+		void broadcastOff();
+		void broadcastOn();
+		void rgbwCancelAll();
+		void koHandleBroadcastRgbw(GroupObject &ko);
+		void koHandleBroadcastBack(GroupObject &ko);
 		int16_t getInfo(byte address, uint8_t command, uint8_t additional = 0);
 	
 		DaliAddressing _addressing{daliMaster};
@@ -121,6 +126,10 @@ class DaliModule : public OpenKNX::Module
 		void cmdHandleStepUp(bool hasArg, std::string arg);
 		void cmdHandleStepDown(bool hasArg, std::string arg);
 		void cmdHandleGetLvl(bool hasArg, std::string arg);
+		void cmdHandleGetCol(bool hasArg, std::string arg);
+		void cmdHandleAaStat();
+		void cmdHandleAaOn(bool hasArg, std::string arg);
+		int16_t rgbwQueryGearFeatures(uint8_t addr);
 
 		void stateHandleAssign(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void stateHandleScanAndAddress(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);

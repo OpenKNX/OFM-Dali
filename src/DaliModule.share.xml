@@ -114,17 +114,24 @@
                 <TypeNumber Type="unsignedInt" minInclusive="1" maxInclusive="64" SizeInBit="7" />
               </ParameterType>
               <ParameterType Id="%AID%_PT-colorType" Name="colorType" op:headerExport="define">
-                <TypeRestriction Base="Value" SizeInBit="2">
+                <TypeRestriction Base="Value" SizeInBit="3">
                   <Enumeration Text="HSV" Value="0" Id="%ENID%" />
                   <Enumeration Text="RGB" Value="1" Id="%ENID%" />
                   <Enumeration Text="TW" Value="2" Id="%ENID%" />
                   <Enumeration Text="xyY / xy" Value="3" Id="%ENID%" op:headerName="XYY" />
+                  <Enumeration Text="RGBW" Value="4" Id="%ENID%" op:headerName="RGBW" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-colorSpace" Name="colorSpace" op:headerExport="define">
                 <TypeRestriction Base="Value" SizeInBit="1">
                   <Enumeration Text="RGB Werte" Value="1" Id="%ENID%" op:headerName="rgb" />
                   <Enumeration Text="X/Y Koordinaten" Value="0" Id="%ENID%" op:headerName="xy" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="%AID%_PT-rgbwBri" Name="rgbwBri" op:headerExport="define">
+                <TypeRestriction Base="Value" SizeInBit="1">
+                  <Enumeration Text="Über Objekt &quot;Dimmen absolut&quot; (Farbe = nur Mischung)" Value="0" Id="%ENID%" op:headerName="object" />
+                  <Enumeration Text="Aus dem RGBW-Wert (größter Kanal = Helligkeit)" Value="1" Id="%ENID%" op:headerName="colour" />
                 </TypeRestriction>
               </ParameterType>
               <ParameterType Id="%AID%_PT-fadeTimes" Name="fadeTimes">
@@ -368,6 +375,8 @@
               <ComObject Id="%AID%_O-%T%100003" Name="daynight" Text="Dali: Allgemein" Number="3" FunctionText="Tag/Nacht" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
               <ComObject Id="%AID%_O-%T%100004" Name="onValue" Text="Dali: Allgemein" Number="4" FunctionText="Einschaltwert Tag" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-5-1" />
               <ComObject Id="%AID%_O-%T%100005" Name="scenes" Text="Dali: Allgemein" Number="5" FunctionText="Szene" ObjectSize="1 Byte" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-18-1" />
+              <ComObject Id="%AID%_O-%T%100006" Name="broadcast_rgbw" Text="Dali: Broadcast" Number="6" FunctionText="Farbe RGBW (alle RGBW, Pegel an alle)" ObjectSize="6 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-251-600" />
+              <ComObject Id="%AID%_O-%T%100007" Name="broadcast_back" Text="Dali: Broadcast" Number="7" FunctionText="Zurück (RGBW-Zustände wiederherstellen)" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-15" />
             </ComObjectTable>
             <ComObjectRefs>
               <ComObjectRef Id="%AID%_O-%T%100001_R-%T%10000101" RefId="%AID%_O-%T%100001" />
@@ -375,6 +384,8 @@
               <ComObjectRef Id="%AID%_O-%T%100003_R-%T%10000301" RefId="%AID%_O-%T%100003" />
               <ComObjectRef Id="%AID%_O-%T%100004_R-%T%10000401" RefId="%AID%_O-%T%100004" />
               <ComObjectRef Id="%AID%_O-%T%100005_R-%T%10000501" RefId="%AID%_O-%T%100005" />
+              <ComObjectRef Id="%AID%_O-%T%100006_R-%T%10000601" RefId="%AID%_O-%T%100006" />
+              <ComObjectRef Id="%AID%_O-%T%100007_R-%T%10000701" RefId="%AID%_O-%T%100007" />
             </ComObjectRefs>
             <Messages>
               <Message Id="%AID%_M-%TT%00001" Name="dali_error" Text="Dali Error: " />
@@ -417,6 +428,8 @@
                 
                 <ComObjectRefRef RefId="%AID%_O-%T%100001_R-%T%10000101" />
                 <ComObjectRefRef RefId="%AID%_O-%T%100002_R-%T%10000201" />
+                <ComObjectRefRef RefId="%AID%_O-%T%100006_R-%T%10000601" />
+                <ComObjectRefRef RefId="%AID%_O-%T%100007_R-%T%10000701" />
                 <ComObjectRefRef RefId="%AID%_O-%T%100003_R-%T%10000301" />
                 <ComObjectRefRef RefId="%AID%_O-%T%100005_R-%T%10000501" />
 

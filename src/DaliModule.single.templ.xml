@@ -79,7 +79,7 @@
               <Parameter Id="%AID%_P-%T%2%CC%058" Name="%C%manuoff" ParameterType="%AID%_PT-noyes" Text="Manuelles ausschalten" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="0" BitOffset="7" />
               </Parameter>
-              <Parameter Id="%AID%_P-%T%2%CC%059" Name="%C%lockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Sperren" Value="0">
+              <Parameter Id="%AID%_P-%T%2%CC%059" Name="%C%lockbehave" ParameterType="%AID%_PT-lock" Text="Verhalten bei Sperre" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="0" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%2%CC%066" Name="%C%lockvalue" ParameterType="%AID%_PT-percent" Text="" Value="100">
@@ -105,7 +105,7 @@
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="4" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%2%CC%073" Name="%C%colorType" ParameterType="%AID%_PT-colorType" Text="Farbe ansteuern per" Value="0">
-              <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="5" />
+              <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="5" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%2%CC%074" Name="%C%colorSpace" ParameterType="%AID%_PT-colorSpace" Text="Farbe übertragen per" Value="0">
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="7" />
@@ -186,6 +186,12 @@
               <Memory CodeSegment="%AID%_RS-04-00000" Offset="21" BitOffset="4" />
               </Parameter>
               <Parameter Id="%AID%_P-%T%2%CC%131" Name="%C%scene" ParameterType="%AID%_PT-noyes" Text="Szenenobjekt" Value="0" />
+              <Parameter Id="%AID%_P-%T%2%CC%132" Name="%C%rgbwBri" ParameterType="%AID%_PT-rgbwBri" Text="Helligkeit bei RGBW" Value="0">
+              <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="5" />
+              </Parameter>
+              <Parameter Id="%AID%_P-%T%2%CC%133" Name="%C%unlockRestore" ParameterType="%AID%_PT-noyes" Text="Bei Entsperren vorherigen Zustand wiederherstellen" Value="0">
+              <Memory CodeSegment="%AID%_RS-04-00000" Offset="7" BitOffset="6" />
+              </Parameter>
             </Parameters>
             <ParameterRefs>
               <ParameterRef RefId="%AID%_P-%T%2%CC%001" Id="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101" Name="%C%deviceType" />
@@ -309,6 +315,8 @@
               <ParameterRef RefId="%AID%_P-%T%2%CC%129" Id="%AID%_P-%T%2%CC%129_R-%T%2%CC%12901" Name="%C%hcl_auto_off" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%130" Id="%AID%_P-%T%2%CC%130_R-%T%2%CC%13001" Name="%C%hcl_auto_day" />
               <ParameterRef RefId="%AID%_P-%T%2%CC%131" Id="%AID%_P-%T%2%CC%131_R-%T%2%CC%13101" Name="%C%scene" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%132" Id="%AID%_P-%T%2%CC%132_R-%T%2%CC%13201" Name="%C%rgbwBri" />
+              <ParameterRef RefId="%AID%_P-%T%2%CC%133" Id="%AID%_P-%T%2%CC%133_R-%T%2%CC%13301" Name="%C%unlockRestore" />
             </ParameterRefs>
             <ComObjectTable>
               <ComObject Id="%AID%_O-%T%2%CC%000" Name="%C%switch" Text="A%C-1% {{0}}" Number="%K0%" FunctionText="Schalten" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" DatapointType="DPST-1-1" />
@@ -363,6 +371,8 @@
               <ComObjectRef RefId="%AID%_O-%T%2%CC%007" Id="%AID%_O-%T%2%CC%007_R-%T%2%CC%00703" FunctionText="Farbtemperatur Status" DatapointType="DPST-7-600" ObjectSize="2 Bytes" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
               <ComObjectRef RefId="%AID%_O-%T%2%CC%006" Id="%AID%_O-%T%2%CC%006_R-%T%2%CC%00604" FunctionText="Farbe xyY / xy" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
               <ComObjectRef RefId="%AID%_O-%T%2%CC%007" Id="%AID%_O-%T%2%CC%007_R-%T%2%CC%00704" FunctionText="Farbe xyY / xy Status" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
+              <ComObjectRef RefId="%AID%_O-%T%2%CC%006" Id="%AID%_O-%T%2%CC%006_R-%T%2%CC%00605" FunctionText="Farbe RGBW" DatapointType="DPST-251-600" ObjectSize="6 Bytes" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
+              <ComObjectRef RefId="%AID%_O-%T%2%CC%007" Id="%AID%_O-%T%2%CC%007_R-%T%2%CC%00705" FunctionText="Farbe RGBW Status" DatapointType="DPST-251-600" ObjectSize="6 Bytes" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
               <ComObjectRef RefId="%AID%_O-%T%2%CC%017" Id="%AID%_O-%T%2%CC%017_R-%T%2%CC%01701" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
               <ComObjectRef RefId="%AID%_O-%T%2%CC%018" Id="%AID%_O-%T%2%CC%018_R-%T%2%CC%01801" TextParameterRefId="%AID%_P-%T%2%CC%002_R-%T%2%CC%00201" />
             </ComObjectRefs>
@@ -428,33 +438,6 @@
                       </choose>
                     </when>
                   </choose>
-                  <choose ParamRefId="%AID%_P-%T%2%CC%004_R-%T%2%CC%00401">
-                    <when test="1">
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Treppenlicht" UIHint="Headline" Icon="timer-outline" />
-                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%057_R-%T%2%CC%05701" />
-                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%058_R-%T%2%CC%05801" />
-                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%008_R-%T%2%CC%00801" />
-                    </when>
-                  </choose>
-                  <choose ParamRefId="%AID%_P-%T%2%CC%003_R-%T%2%CC%00301">
-                    <when test="1">
-                      <ComObjectRefRef RefId="%AID%_O-%T%2%CC%005_R-%T%2%CC%00501" />
-                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Sperre" UIHint="Headline" Icon="lock-outline" />
-                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%070_R-%T%2%CC%07001" />
-                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%059_R-%T%2%CC%05901" />
-                      <choose ParamRefId="%AID%_P-%T%2%CC%059_R-%T%2%CC%05901">
-                        <when test="3">
-                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%066_R-%T%2%CC%06601" />
-                        </when>
-                      </choose>
-                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%060_R-%T%2%CC%06001" />
-                      <choose ParamRefId="%AID%_P-%T%2%CC%060_R-%T%2%CC%06001">
-                        <when test="3">
-                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%067_R-%T%2%CC%06701" />
-                        </when>
-                      </choose>
-                    </when>
-                  </choose>
                   <choose ParamRefId="%AID%_P-%T%2%CC%005_R-%T%2%CC%00501">
                     <when test="1">
                       <ComObjectRefRef RefId="%AID%_O-%T%2%CC%019_R-%T%2%CC%01901" />
@@ -502,12 +485,59 @@
                           <ComObjectRefRef RefId="%AID%_O-%T%2%CC%006_R-%T%2%CC%00604" />
                           <ComObjectRefRef RefId="%AID%_O-%T%2%CC%007_R-%T%2%CC%00704" />
                         </when>
+                        <when test="4">
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%132_R-%T%2%CC%13201" />
+                          <choose ParamRefId="%AID%_P-%T%2%CC%132_R-%T%2%CC%13201">
+                            <when test="1">
+                              <ParameterSeparator Id="%AID%_PS-nnn" Text="Der größte Kanal des RGBW-Werts ist die Helligkeit (z. B. Home Assistant ohne Helligkeitsadresse). Das Objekt &quot;Dimmen absolut&quot; stellt den Pegel weiterhin direkt, der RGBW-Status passt sich an." UIHint="Information" />
+                            </when>
+                          </choose>
+                          <ComObjectRefRef RefId="%AID%_O-%T%2%CC%006_R-%T%2%CC%00605" />
+                          <ComObjectRefRef RefId="%AID%_O-%T%2%CC%007_R-%T%2%CC%00705" />
+                        </when>
                       </choose>
                       <choose ParamRefId="%AID%_P-%T%2%CC%074_R-%T%2%CC%07401">
                         <when test="!=0">
                           <choose ParamRefId="%AID%_P-%T%2%CC%089_R-%T%2%CC%08901">
                             <when test="1">
                               <ParameterSeparator Id="%AID%_PS-nnn" Text="Diese Konfiguration ist nicht zulässig. Wenn die Helligkeit bei xyY ignoriert werden soll, MUSS die Ansteuerung über XY erfolgen." UIHint="Error" />
+                            </when>
+                          </choose>
+                        </when>
+                      </choose>
+                    </when>
+                  </choose>
+                  <choose ParamRefId="%AID%_P-%T%2%CC%004_R-%T%2%CC%00401">
+                    <when test="1">
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Treppenlicht" UIHint="Headline" Icon="timer-outline" />
+                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%057_R-%T%2%CC%05701" />
+                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%058_R-%T%2%CC%05801" />
+                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%008_R-%T%2%CC%00801" />
+                    </when>
+                  </choose>
+                  <choose ParamRefId="%AID%_P-%T%2%CC%003_R-%T%2%CC%00301">
+                    <when test="1">
+                      <ComObjectRefRef RefId="%AID%_O-%T%2%CC%005_R-%T%2%CC%00501" />
+                      <ParameterSeparator Id="%AID%_PS-nnn" Text="Sperre" UIHint="Headline" Icon="lock-outline" />
+                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%070_R-%T%2%CC%07001" />
+                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%059_R-%T%2%CC%05901" />
+                      <choose ParamRefId="%AID%_P-%T%2%CC%059_R-%T%2%CC%05901">
+                        <when test="3">
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%066_R-%T%2%CC%06601" />
+                        </when>
+                      </choose>
+                      <ParameterRefRef RefId="%AID%_P-%T%2%CC%060_R-%T%2%CC%06001" />
+                      <choose ParamRefId="%AID%_P-%T%2%CC%060_R-%T%2%CC%06001">
+                        <when test="3">
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%067_R-%T%2%CC%06701" />
+                        </when>
+                      </choose>
+                      <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
+                        <when test="4">
+                          <ParameterRefRef RefId="%AID%_P-%T%2%CC%133_R-%T%2%CC%13301" />
+                          <choose ParamRefId="%AID%_P-%T%2%CC%133_R-%T%2%CC%13301">
+                            <when test="1">
+                              <ParameterSeparator Id="%AID%_PS-nnn" Text="RGBW: Befehle während der Sperre werden gespeichert. Beim Entsperren kommt der gespeicherte Zustand (Ein/Aus, Helligkeit, Farbe); &quot;Verhalten bei Entsperren&quot; gilt dann nicht." UIHint="Information" />
                             </when>
                           </choose>
                         </when>
@@ -676,7 +706,7 @@
                           <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                             <when test="9">
                               <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                <when test="0 1 3">
+                                <when test="0 1 3 4">
                                   <ParameterSeparator Id="%AID%_PS-nnn" Text="Farbe" UIHint="Headline" Cell="1,4" />
                                 </when>
                                 <when test="2">
@@ -693,7 +723,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%090_R-%T%2%CC%09001" Cell="2,4" />
                                     </when>
                                     <when test="2">
@@ -712,7 +742,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%092_R-%T%2%CC%09201" Cell="3,4" />
                                     </when>
                                     <when test="2">
@@ -731,7 +761,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%094_R-%T%2%CC%09401" Cell="4,4" />
                                     </when>
                                     <when test="2">
@@ -750,7 +780,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%096_R-%T%2%CC%09601" Cell="5,4" />
                                     </when>
                                     <when test="2">
@@ -769,7 +799,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%098_R-%T%2%CC%09801" Cell="6,4" />
                                     </when>
                                     <when test="2">
@@ -788,7 +818,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%100_R-%T%2%CC%10001" Cell="7,4" />
                                     </when>
                                     <when test="2">
@@ -807,7 +837,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%102_R-%T%2%CC%10201" Cell="8,4" />
                                     </when>
                                     <when test="2">
@@ -826,7 +856,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%104_R-%T%2%CC%10401" Cell="9,4" />
                                     </when>
                                     <when test="2">
@@ -845,7 +875,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%106_R-%T%2%CC%10601" Cell="10,4" />
                                     </when>
                                     <when test="2">
@@ -864,7 +894,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%108_R-%T%2%CC%10801" Cell="11,4" />
                                     </when>
                                     <when test="2">
@@ -883,7 +913,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%110_R-%T%2%CC%11001" Cell="12,4" />
                                     </when>
                                     <when test="2">
@@ -902,7 +932,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%112_R-%T%2%CC%11201" Cell="13,4" />
                                     </when>
                                     <when test="2">
@@ -921,7 +951,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%114_R-%T%2%CC%11401" Cell="14,4" />
                                     </when>
                                     <when test="2">
@@ -940,7 +970,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%116_R-%T%2%CC%11601" Cell="15,4" />
                                     </when>
                                     <when test="2">
@@ -959,7 +989,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%118_R-%T%2%CC%11801" Cell="16,4" />
                                     </when>
                                     <when test="2">
@@ -978,7 +1008,7 @@
                               <choose ParamRefId="%AID%_P-%T%2%CC%001_R-%T%2%CC%00101">
                                 <when test="9">
                                   <choose ParamRefId="%AID%_P-%T%2%CC%073_R-%T%2%CC%07301">
-                                    <when test="0 1 3">
+                                    <when test="0 1 3 4">
                                       <ParameterRefRef RefId="%AID%_P-%T%2%CC%120_R-%T%2%CC%12001" Cell="17,4" />
                                     </when>
                                     <when test="2">
