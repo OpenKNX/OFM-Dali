@@ -852,46 +852,51 @@ bool DaliModule::processFunctionProperty(uint8_t objectIndex, uint8_t propertyId
     if (objectIndex != 160 || propertyId != 1)
         return false;
 
-    switch (data[0])
+    switch (static_cast<FunctionId>(data[0]))
     {
-    case 2:
+    case FunctionId::ReadDeviceType:
         funcHandleType(data, resultData, resultLength);
         return true;
 
-    case 3:
+    case FunctionId::Scan:
         funcHandleScan(data, resultData, resultLength);
         return true;
 
-    case 4:
+    case FunctionId::AssignAddress:
         funcHandleAssign(data, resultData, resultLength);
         return true;
 
-        // case 5:
+        // case FunctionId::Address:
         //     funcHandleAddress(data, resultData, resultLength);
         //     return true;
 
-    case 10:
+    case FunctionId::EvgWrite:
         funcHandleEvgWrite(data, resultData, resultLength);
         return true;
 
-    case 11:
+    case FunctionId::EvgRead:
         funcHandleEvgRead(data, resultData, resultLength);
         return true;
 
-    case 12:
+    case FunctionId::SetScene:
         funcHandleSetScene(data, resultData, resultLength);
         return true;
 
-    case 13:
+    case FunctionId::GetScene:
         funcHandleGetScene(data, resultData, resultLength);
         return true;
 
-    case 14:
+    case FunctionId::Identify:
         funcHandleIdentify(data, resultData, resultLength);
         return true;
-    }
 
-    return false;
+    case FunctionId::ReadInfo:
+        funcHandleReadInfo(data, resultData, resultLength);
+        return true;
+
+    default:
+        return false;
+    }
 }
 
 void DaliModule::funcHandleType(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
@@ -949,6 +954,67 @@ void DaliModule::funcHandleType(uint8_t *data, uint8_t *resultData, uint8_t &res
     {
         resultLength = 2;
     }
+}
+
+void DaliModule::funcHandleReadInfo(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
+{
+    // Reads identity information from Memory Bank 0 (IEC 62386-102 section 9.10.6):
+    // GTIN, firmware version, serial number (identification number), hardware version,
+    // and the physical minimum arc-power level (QUERY_PHYS_MIN, raw arc value).
+    // Note: DALI does not expose a manufacturer name, article number or device name as
+    // readable text - only the numeric GTIN/serial/version
+    uint8_t address = data[1];
+    logInfoP("Reading device info for EVG %i", address);
+
+    resultData[0] = 0x00;
+    uint8_t errorByte = 0;
+
+    // The 2014 edition of Part 102 provides a full serial number and hardware version;
+    // the older 2009 edition (QUERY_VERSION == 1) only guarantees a 4 byte serial number
+    // and defines everything from 0x0F onwards as manufacturer-specific.
+    int16_t partVersion = getInfo(address, Dali::Command::QUERY_VERSION);
+    resultData[MemoryBank0ResultOffset::PART102_VERSION] = (partVersion < 0) ? 0xFF : (uint8_t)partVersion;
+    bool isLegacyBank0 = partVersion == 1;
+
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR1, 0); // select Memory Bank 0
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, MemoryBank0Address::GTIN_START); // DTR0 = start address within the bank
+
+    // Bank 0 addresses 0x03-0x14 are contiguous (GTIN, firmware version, serial number,
+    // hardware version), so a single loop can read all of them - DTR0 auto-increments
+    // after every successful READ MEMORY LOCATION.
+    bool readFailed = false;
+    for (uint8_t i = 0; i < MemoryBank0ResultOffset::BLOCK_LENGTH; i++)
+    {
+        int16_t resp = getInfo(address, Dali::Command::READ_MEMORY_LOCATION);
+        if (resp < 0)
+        {
+            logErrorP("Dali Error (MEM): Code %i at offset %i", resp, i);
+            readFailed = true;
+            resultData[1 + i] = 0xFF;
+            continue;
+        }
+        resultData[1 + i] = (uint8_t)resp;
+    }
+
+    if (readFailed)
+        errorByte |= InfoErrorBit::MEMORY_READ_FAILED;
+    if (isLegacyBank0)
+        errorByte |= InfoErrorBit::LEGACY_BANK0;
+
+    int16_t physMinResp = getInfo(address, Dali::Command::QUERY_PHYS_MIN);
+    if (physMinResp < 0)
+    {
+        logErrorP("Dali Error (PHYSMIN): Code %i", physMinResp);
+        resultData[MemoryBank0ResultOffset::PHYS_MIN_LEVEL] = 0xFF;
+        errorByte |= InfoErrorBit::PHYS_MIN_FAILED;
+    }
+    else
+    {
+        resultData[MemoryBank0ResultOffset::PHYS_MIN_LEVEL] = (uint8_t)physMinResp;
+    }
+
+    resultData[MemoryBank0ResultOffset::ERROR] = errorByte;
+    resultLength = MemoryBank0ResultOffset::ERROR + 1;
 }
 
 void DaliModule::funcHandleScan(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
@@ -1043,7 +1109,7 @@ void DaliModule::funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t 
     logDebugP("set fade rate %s", FadeRateLabels[fadeRateIndex]);
     writeEvgDtrByte(address, fadeRateIndex, Dali::Command::DTR_AS_FADE_RATE);
 
-    // 1byte free
+    writeDimmingCurve(address, data[11]);
 
     uint16_t groupBits = data[12];
     groupBits |= data[13] << 8;
@@ -1093,6 +1159,32 @@ uint8_t DaliModule::readEvgRaw(uint8_t address, uint8_t command, const char *lab
     return (uint8_t)resp;
 }
 
+uint8_t DaliModule::readDimmingCurve(uint8_t address, uint8_t &errorByte)
+{
+    // Dimming curve selection is part of the LED module extended command set (IEC 62386-207),
+    // so gear that isn't a plain LED module (e.g. fluorescent, HID) will simply not respond here.
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::ENABLE_DT, LedModuleDeviceType);
+    int16_t resp = getInfo(address, (uint8_t)Dali::ExtendedCommandDT6::QUERY_DIMMING_CURVE);
+    if (resp < 0)
+    {
+        logDebugP("DIMMCURVE: not supported by this gear");
+        errorByte |= EvgReadErrorBit::DIMM_CURVE;
+        return DimmingCurveUnsupported;
+    }
+    logDebugP("DIMMCURVE: %.2X", resp);
+    return (uint8_t)resp;
+}
+
+void DaliModule::writeDimmingCurve(uint8_t address, uint8_t curve)
+{
+    if (curve == DimmingCurveUnsupported)
+        return;
+
+    logDebugP("set dimming curve %s", curve == 0 ? "logarithmic" : "linear");
+    daliMaster.sendSpecialCommand(Dali::SpecialCommand::SET_DTR, curve);
+    daliMaster.sendExtendedCommand(address, LedModuleDeviceType, (uint8_t)Dali::ExtendedCommandDT6::SELECT_DIMMING_CURVE);
+}
+
 void DaliModule::funcHandleEvgRead(uint8_t *data, uint8_t *resultData, uint8_t &resultLength)
 {
     logInfoP("Starting reading EVG settings");
@@ -1102,16 +1194,16 @@ void DaliModule::funcHandleEvgRead(uint8_t *data, uint8_t *resultData, uint8_t &
 
     uint8_t errorByte = 0;
 
-    resultData[1] = readEvgLevel(address, Dali::Command::QUERY_MIN_LEVEL, "MIN", 0b1, errorByte);
-    resultData[2] = readEvgLevel(address, Dali::Command::QUERY_MAX_LEVEL, "MAX", 0b10, errorByte);
-    resultData[3] = readEvgLevel(address, Dali::Command::QUERY_POWER_ON_LEVEL, "POWER", 0b100, errorByte);
-    resultData[4] = readEvgLevel(address, Dali::Command::QUERY_FAIL_LEVEL, "FAILURE", 0b1000, errorByte);
-    resultData[5] = readEvgRaw(address, Dali::Command::QUERY_FADE_SPEEDS, "FAID", 0b10000, 0xFF, errorByte);
+    resultData[1] = readEvgLevel(address, Dali::Command::QUERY_MIN_LEVEL, "MIN", EvgReadErrorBit::MIN, errorByte);
+    resultData[2] = readEvgLevel(address, Dali::Command::QUERY_MAX_LEVEL, "MAX", EvgReadErrorBit::MAX, errorByte);
+    resultData[3] = readEvgLevel(address, Dali::Command::QUERY_POWER_ON_LEVEL, "POWER", EvgReadErrorBit::POWER, errorByte);
+    resultData[4] = readEvgLevel(address, Dali::Command::QUERY_FAIL_LEVEL, "FAILURE", EvgReadErrorBit::FAILURE, errorByte);
+    resultData[5] = readEvgRaw(address, Dali::Command::QUERY_FADE_SPEEDS, "FAID", EvgReadErrorBit::FADE, 0xFF, errorByte);
 
-    // 1byte free
+    resultData[6] = readDimmingCurve(address, errorByte);
 
-    resultData[7] = readEvgRaw(address, Dali::Command::QUERY_GROUPS_0_7, "GROUPS0-7", 0b1000000, 0, errorByte);
-    resultData[8] = readEvgRaw(address, Dali::Command::QUERY_GROUPS_8_15, "GROUPS8-15", 0b10000000, 0, errorByte);
+    resultData[7] = readEvgRaw(address, Dali::Command::QUERY_GROUPS_0_7, "GROUPS0-7", EvgReadErrorBit::GROUPS_LOW, 0, errorByte);
+    resultData[8] = readEvgRaw(address, Dali::Command::QUERY_GROUPS_8_15, "GROUPS8-15", EvgReadErrorBit::GROUPS_HIGH, 0, errorByte);
 
     resultData[9] = errorByte;
     resultLength = 10;

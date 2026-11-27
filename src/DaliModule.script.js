@@ -12,6 +12,7 @@ var FUNC_SET_SCENE = 12;
 var FUNC_GET_SCENE = 13;
 var FUNC_IDENTIFY = 14;
 var FUNC_FOUND_EVGS = 7;
+var FUNC_READ_INFO = 15;
 
 var CHANNEL_COUNT = 64;
 var SCENE_COUNT = 16;
@@ -24,8 +25,10 @@ var ERR_MAX = 2;
 var ERR_POWER = 4;
 var ERR_FAILURE = 8;
 var ERR_FADE = 16;
+var ERR_DIMMCURVE = 32;
 var ERR_GROUPS_LOW = 64;
 var ERR_GROUPS_HIGH = 128;
+var DIMMING_CURVE_UNSUPPORTED = 255;
 
 // Assign response codes - must match DaliAddressing::AssigningResponse in DaliAddressing.h
 var ASSIGNING_RESPONSE_SUCCESS = 0;
@@ -35,6 +38,21 @@ var ASSIGNING_RESPONSE_NO_RESPONSE_LONG = 3;
 // Note: AssigningResponse only spans 0-4, so a response of 12 can never
 // actually occur - kept here only to document the unreachable case below.
 var ASSIGNING_RESPONSE_CONFIRM_FAILED = 12;
+
+// Raw DALI device type (as resolved by funcHandleType/FUNC_READ_DEVICETYPE) - index matches the value.
+// Wording must stay in sync with the DT0-DT8 Enumeration texts of PT-deviceType in DaliModule.share.xml
+// (that enum is offset by +1 because it also has a "Deaktiviert" = 0 entry).
+var DEVICE_TYPE_LABELS = [
+    "DT0 - Fluoreszierend",
+    "DT1 - Eigenst\u00e4ndige Notallbeleuchtung",
+    "DT2 - Entladungslampe",
+    "DT3 - Niedervolt Halogen",
+    "DT4 - Gl\u00fchlampe",
+    "DT5 - DC Converter (1-10V, 0-10V)",
+    "DT6 - LED",
+    "DT7 - Schaltrelais",
+    "DT8 - Farbe"
+];
 
 function getFloat(data, offset) {
     var level = (data[offset] << 8 | data[offset + 1]);
@@ -69,6 +87,39 @@ function arcToPercent(arc) {
     return Math.pow(10, ((arc - 1) / (253 / 3)) - 1);
 }
 
+// Device info read error bits - must match funcHandleReadInfo in DaliModule.cpp
+var ERR_INFO_MEMORY_READ = 1;
+var ERR_INFO_LEGACY_BANK0 = 2;
+var ERR_INFO_PHYSMIN = 4;
+
+// Splits a decimal GTIN into vendor name (or "Unknown (<country>)") and article/model
+// number (item reference, only known once the vendor's GS1 company prefix matches).
+// A GTIN-14 is 1 indicator digit + a 13-digit body (GS1 prefix + item reference + check
+// digit); a plain GTIN-13/EAN-13 is the same body with an implicit indicator digit "0".
+function parseGtin(gtinDecimal) {
+    var padded = gtinDecimal;
+    while (padded.length < 14)
+        padded = "0" + padded;
+    var body = padded.substr(1);
+
+    for (var i = 0; i < VENDOR_BY_GTIN_PREFIX.length; i++) {
+        var prefix = VENDOR_BY_GTIN_PREFIX[i].prefix;
+        if (body.indexOf(prefix) == 0) {
+            return {
+                vendor: VENDOR_BY_GTIN_PREFIX[i].name,
+                articleNumber: body.substring(prefix.length, body.length - 1)
+            };
+        }
+    }
+
+    var countryPrefix = parseInt(body.substr(0, 3), 10);
+    for (var j = 0; j < GTIN_COUNTRY_PREFIXES.length; j++) {
+        if (countryPrefix >= GTIN_COUNTRY_PREFIXES[j].min && countryPrefix <= GTIN_COUNTRY_PREFIXES[j].max)
+            return { vendor: "Unknown (" + GTIN_COUNTRY_PREFIXES[j].name + ")", articleNumber: "-" };
+    }
+    return { vendor: "Unknown", articleNumber: "-" };
+}
+
 // Unpacks 8 group membership bits (g<startIndex> .. g<startIndex+7>) from a
 // single byte read from the device into the matching ETS parameters.
 function unpackGroupByte(device, prefix, byteValue, startIndex) {
@@ -85,6 +136,34 @@ function packGroupByte(device, prefix, startIndex) {
         value |= getParaInt(device, prefix + "g" + (startIndex + bit)) << bit;
     }
     return value;
+}
+
+function bytesToHex(data, start, end) {
+    var hex = "";
+    for (var i = start; i < end; i++) {
+        var b = data[i].toString(16).toUpperCase();
+        if (b.length < 2)
+            b = "0" + b;
+        hex += b;
+    }
+    return hex;
+}
+
+function bytesToDecimal(data, start, end) {
+    var value = 0;
+    for (var i = start; i < end; i++)
+        value = value * 256 + data[i];
+    return value.toString();
+}
+
+function clearDeviceInfoParas(device, prefix) {
+    setPara(device, prefix + "gtin", "-");
+    setPara(device, prefix + "vendor", "Unknown");
+    setPara(device, prefix + "articleNumber", "-");
+    setPara(device, prefix + "firmwareVersion", "-");
+    setPara(device, prefix + "serialNumber", "-");
+    setPara(device, prefix + "hardwareVersion", "-");
+    setPara(device, prefix + "physMinLevel", "-");
 }
 
 function dali_read(device, online, progress, context) {
@@ -167,6 +246,10 @@ function dali_settingsRead(device, online, progress, context) {
         setPara(device, prefix + "fadeTime", (data[5] >> 4).toString());
         setPara(device, prefix + "fadeRate", (data[5] & 15).toString());
     }
+    if (data[9] & ERR_DIMMCURVE)
+        errors += "Dimmkurve, ";
+    else
+        setPara(device, prefix + "dimmingCurve", data[6]);
     //1 byte free
     if (data[9] & ERR_GROUPS_LOW)
         errors += "Groups 0-7, ";
@@ -259,7 +342,7 @@ function dali_settingsWrite(device, online, progress, context) {
     fade = fade << 4;
     fade |= getParaInt(device, prefix + "fadeRate");
     data[index++] = fade;
-    data[index++] = 0;//1byte free
+    data[index++] = getParaInt(device, prefix + "dimmingCurve");
     data[index++] = packGroupByte(device, prefix, 0);
     data[index++] = packGroupByte(device, prefix, 8);
 
@@ -399,8 +482,10 @@ function dali_scan(device, online, progress, context) {
 
     for (var i = 0; i < CHANNEL_COUNT; i++)
     {
-        var para = device.getParameterByName("DGW_ballast" + i);
-        para.value = "";
+        device.getParameterByName("DGW_ballastLong" + i).value = "";
+        device.getParameterByName("DGW_ballastShort" + i).value = "";
+        device.getParameterByName("DGW_ballastType" + i).value = "";
+        device.getParameterByName("DGW_ballastVendor" + i).value = "";
     }
 
     var counter = 0;
@@ -439,18 +524,39 @@ function dali_scan(device, online, progress, context) {
 
         if (resp[0]) {
             //found ballast
-            var high = "";
-            if (resp[1] < 16) high = "0";
-            high += resp[1].toString(16);
-            if (resp[2] < 16) high += "0";
-            high += resp[2].toString(16);
-            if (resp[3] < 16) high += "0";
-            high += resp[3].toString(16);
-            var para = device.getParameterByName("DGW_ballast" + counter);
-            high = "0x" + high;
-            if (resp[4] < 99)
-            high += " -> " + resp[4];
-            para.value = high;
+            var longAddr = bytesToHex(resp, 1, 4);
+            var shortAddr = resp[4];
+
+            device.getParameterByName("DGW_ballastLong" + counter).value = longAddr;
+
+            if (shortAddr < CHANNEL_COUNT) {
+                device.getParameterByName("DGW_ballastShort" + counter).value = shortAddr.toString();
+
+                try {
+                    var typeResp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_READ_DEVICETYPE, shortAddr]);
+                    if (typeResp[0] == 0 && typeResp[1] < DEVICE_TYPE_LABELS.length)
+                        device.getParameterByName("DGW_ballastType" + counter).value = DEVICE_TYPE_LABELS[typeResp[1]];
+                    else
+                        device.getParameterByName("DGW_ballastType" + counter).value = "Unknown";
+                } catch (e) {
+                    device.getParameterByName("DGW_ballastType" + counter).value = "Unknown";
+                }
+
+                try {
+                    var infoResp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, [FUNC_READ_INFO, shortAddr]);
+                    if (infoResp[0] == 0 && !(infoResp[21] & ERR_INFO_MEMORY_READ))
+                        device.getParameterByName("DGW_ballastVendor" + counter).value = parseGtin(bytesToDecimal(infoResp, 1, 7)).vendor;
+                    else
+                        device.getParameterByName("DGW_ballastVendor" + counter).value = "Unknown";
+                } catch (e) {
+                    device.getParameterByName("DGW_ballastVendor" + counter).value = "Unknown";
+                }
+            } else {
+                device.getParameterByName("DGW_ballastShort" + counter).value = "-";
+                device.getParameterByName("DGW_ballastType" + counter).value = "-";
+                device.getParameterByName("DGW_ballastVendor" + counter).value = "-";
+            }
+
             counter++;
         } else {
             break;
@@ -477,4 +583,49 @@ function dali_identify(device, online, progress, context) {
     data.push(context.group);
     data.push(context.stop);
     online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
+}
+
+function dali_readInfo(device, online, progress, context) {
+    // Reads GTIN, firmware version, serial number, hardware version and the
+    // physical minimum arc-power level from Memory Bank 0 (IEC 62386-102).
+    // Note: DALI does not expose a manufacturer name, article number or device
+    // name as readable text - only these numeric identity fields are available.
+    var prefix = "DGW" + "_" + context.Channel;
+
+    try {
+        progress.setText("Reading device info");
+
+        var data = [FUNC_READ_INFO, context.Channel - 1];
+        online.connect();
+        var resp = online.invokeFunctionProperty(DALI_OBJECT_INDEX, DALI_PROPERTY_ID, data);
+
+        if (resp[0] != 0)
+            throw new Error("Dali Error: " + resp[0]);
+
+        var errorByte = resp[21];
+        if (errorByte & ERR_INFO_MEMORY_READ)
+            throw new Error("Gear did not respond to Memory Bank 0 read");
+
+        var gtin = bytesToDecimal(resp, 1, 7);
+        var gtinInfo = parseGtin(gtin);
+        setPara(device, prefix + "gtin", gtin);
+        setPara(device, prefix + "vendor", gtinInfo.vendor);
+        setPara(device, prefix + "articleNumber", gtinInfo.articleNumber);
+        setPara(device, prefix + "firmwareVersion", resp[7] + "." + resp[8]);
+        setPara(device, prefix + "serialNumber", bytesToDecimal(resp, 9, 17));
+        setPara(device, prefix + "hardwareVersion", resp[17] + "." + resp[18]);
+
+        if (errorByte & ERR_INFO_PHYSMIN)
+            setPara(device, prefix + "physMinLevel", "0");
+        else
+            setPara(device, prefix + "physMinLevel", arcToPercent(resp[20]).toFixed(2).replace(".", ","));
+
+        if (errorByte & ERR_INFO_LEGACY_BANK0)
+            progress.setText("Read (legacy DALI gear, serial number may be incomplete)");
+        else
+            progress.setText("Device info read successfully");
+    } catch (e) {
+        clearDeviceInfoParas(device, prefix);
+        progress.setText("Could not read device info: " + e.message);
+    }
 }

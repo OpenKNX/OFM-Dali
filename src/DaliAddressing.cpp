@@ -419,8 +419,6 @@ void DaliAddressing::stepAddressingCheckSearchShort()
 
 void DaliAddressing::loopAssigning()
 {
-    // if (dali->busIsIdle())
-    // { // wait until bus is idle
     switch (_assState)
     {
     case AssigningState::INIT:
@@ -457,7 +455,6 @@ void DaliAddressing::loopAssigning()
         stepAssigningTerminate();
         break;
     }
-    //}
 }
 
 void DaliAddressing::stepAssigningInit()

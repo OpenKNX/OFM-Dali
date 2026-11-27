@@ -31,6 +31,15 @@ class DaliModule : public OpenKNX::Module
 		static constexpr uint8_t HclCurveCount = DaliConstants::HclCurveCount;
 		static constexpr uint8_t BroadcastAddress = DaliConstants::BroadcastAddress;
 		static constexpr uint16_t DisabledDptValue = 0xFFFF;
+		// DALI device type for "LED Modules" (IEC 62386-207), used to enable the SELECT/QUERY DIMMING CURVE extended commands.
+		static constexpr uint8_t LedModuleDeviceType = 6;
+		static constexpr uint8_t DimmingCurveUnsupported = 0xFF;
+
+		using FunctionId = DaliConstants::FunctionId;
+		using EvgReadErrorBit = DaliConstants::EvgReadErrorBit;
+		using InfoErrorBit = DaliConstants::InfoErrorBit;
+		using MemoryBank0Address = DaliConstants::MemoryBank0Address;
+		using MemoryBank0ResultOffset = DaliConstants::MemoryBank0ResultOffset;
 
 		void loop(bool configured) override;
 		void loop1(bool configured);
@@ -104,12 +113,15 @@ class DaliModule : public OpenKNX::Module
 		void setAllNightMode(bool value);
 
 		void funcHandleType(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
+		void funcHandleReadInfo(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleScan(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleAssign(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleEvgWrite(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void writeEvgDtrByte(uint8_t address, uint8_t value, uint8_t command);
 		uint8_t readEvgLevel(uint8_t address, uint8_t command, const char *label, uint8_t errorBit, uint8_t &errorByte);
 		uint8_t readEvgRaw(uint8_t address, uint8_t command, const char *label, uint8_t errorBit, uint8_t errorFallback, uint8_t &errorByte);
+		uint8_t readDimmingCurve(uint8_t address, uint8_t &errorByte);
+		void writeDimmingCurve(uint8_t address, uint8_t curve);
 		void funcHandleEvgRead(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleSetScene(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
 		void funcHandleGetScene(uint8_t *data, uint8_t *resultData, uint8_t &resultLength);
